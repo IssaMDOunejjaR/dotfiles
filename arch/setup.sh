@@ -1,13 +1,27 @@
 #!/bin/bash
 
 # Load library
-source $(dirname "$0")/scripts/library.sh
+source ./scripts/library.sh
+
+clear
+
+echo ""
+echo ""
+echo "███████ ███████ ████████ ██    ██ ██████" 
+echo "██      ██         ██    ██    ██ ██   ██"
+echo "███████ █████      ██    ██    ██ ██████"
+echo "     ██ ██         ██    ██    ██ ██"
+echo "███████ ███████    ██     ██████  ██"
+echo ""
+echo "by Issam Ounejjar"
+echo ""
+echo ""
 
 # Check if Yay is installed
 if sudo pacman -Qs yay > /dev/null; then
-  echo "Yay is installed. You can proceed with the installation"
+  echo "✔ Yay is installed. You can proceed with the installation"
 else
-  echo "Yay is not installed. Will be installed now!"
+  echo -n "Yay is not installed. Will be installed now..."
 
   git clone clone https://aur.archlinux.org/yay-git.git ~/yay-git
 
@@ -15,11 +29,11 @@ else
   makepkg -si
   cd -
 
-  echo "Yay has been installed successfully."
+  echo -e "\r✔ Yay has been installed successfully."
   clear
 fi
 
-echo "Install main Packages..."
+echo "- Install main Packages..."
 
 pacmanPackages=(
   "pacman-contrib"
@@ -67,14 +81,14 @@ _installPackagesYay "${yayPackages[@]}";
 
 # Install pywal
 if [ -f /usr/bin/wal ]; then
-  echo "pywal already installed."
+  echo "  ✔ pywal"
 else
   yay --noconfirm -S pywal
 fi
 
 # Init pywal
-echo "Initialize pywal.."
+echo -n "Initialize pywal..."
 wal -i ~/my_dotfiles/wallpapers/default.jpg
-echo "pywal initiated."
+echo -e "\rpywal initiated."
 
 echo "Done!"
