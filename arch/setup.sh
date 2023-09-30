@@ -7,11 +7,11 @@ clear
 
 echo ""
 echo ""
-echo "███████ ███████ ████████ ██    ██ ██████" 
-echo "██      ██         ██    ██    ██ ██   ██"
-echo "███████ █████      ██    ██    ██ ██████"
-echo "     ██ ██         ██    ██    ██ ██"
-echo "███████ ███████    ██     ██████  ██"
+echo " █████  ██████   ██████ ██   ██" 
+echo "██   ██ ██   ██ ██      ██   ██"
+echo "███████ ██████  ██      ███████" 
+echo "██   ██ ██   ██ ██      ██   ██"
+echo "██   ██ ██   ██  ██████ ██   ██"
 echo ""
 echo "by Issam Ounejjar"
 echo ""
@@ -67,6 +67,7 @@ pacmanPackages=(
   "xautolock" 
   "blueman"
   "nautilus"
+  "spotify-launcher"
 );
 
 yayPackages=(
