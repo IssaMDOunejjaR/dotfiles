@@ -36,6 +36,7 @@ local servers = {
     }
   },
   bashls = {},
+  yamlls = {},
   angularls = {},
   tailwindcss = {},
 }
@@ -55,6 +56,9 @@ require('mason-lspconfig').setup({
 local cmp = require('cmp')
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
 local luasnip = require("luasnip")
+local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+
+cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
 
 cmp.setup({
   snippet = {

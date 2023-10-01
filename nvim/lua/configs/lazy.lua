@@ -151,4 +151,10 @@ require("lazy").setup({
       'nvim-lua/plenary.nvim',
     }
   },
+
+  {
+    "windwp/nvim-autopairs",
+    event = "InsertEnter",
+    opts = {},
+  }
 })
