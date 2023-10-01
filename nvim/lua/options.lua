@@ -3,6 +3,8 @@ local opts = {
   relativenumber = true,
   number = true,
   tabstop = 2,
+  softtabstop = 2,
+  shiftwidth = 2,
   undofile = true,
   smartindent = true,
   ignorecase = true,
@@ -12,13 +14,16 @@ local opts = {
   linebreak = true,
   scrolloff = 8,
   termguicolors = true,
-  shiftwidth = 2,
-  updatetime = 250,
   timeoutlen = 300,
   smartcase = true,
   breakindent = true,
   hlsearch = false,
+  incsearch = true,
   signcolumn = 'yes',
+  swapfile = false,
+  backup = false,
+  updatetime = 50,
+  -- colorcolumn = "80",
 }
 
 for k, v in pairs(opts) do

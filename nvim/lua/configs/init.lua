@@ -1,0 +1,5 @@
+require("configs.lazy")
+require("configs.lsp-zero")
+require("configs.treesitter")
+require("configs.indent-blankline")
+require("configs.telescope")
