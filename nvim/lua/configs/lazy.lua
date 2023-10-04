@@ -95,7 +95,6 @@ require("lazy").setup({
       -- For Rust
       {
         "simrat39/rust-tools.nvim",
-        opts = {},
       }
     },
   },
@@ -149,6 +148,8 @@ require("lazy").setup({
     tag = '0.1.3',
     dependencies = {
       'nvim-lua/plenary.nvim',
+      'BurntSushi/ripgrep',
+      'nvim-telescope/telescope-fzf-native.nvim',
     }
   },
 
@@ -156,5 +157,11 @@ require("lazy").setup({
     "windwp/nvim-autopairs",
     event = "InsertEnter",
     opts = {},
+  },
+
+  -- Tmux
+  {
+    "christoomey/vim-tmux-navigator",
+    lazy = false,
   }
 })
