@@ -117,7 +117,7 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 alias vim=nvim
-alias fd="./fd.sh"
+alias fd="~/fd.sh"
 
 source $ZSH/oh-my-zsh.sh
 
