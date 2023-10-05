@@ -118,9 +118,6 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 alias vim=nvim
 alias fd="./fd.sh"
-# function fd() (
-#   cd $(find $HOME -type d -print | fzf)
-# )
 
 source $ZSH/oh-my-zsh.sh
 
