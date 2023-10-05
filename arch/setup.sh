@@ -38,6 +38,8 @@ echo "- Install main Packages..."
 pacmanPackages=(
   "pacman-contrib"
   "alacritty" 
+  "zsh"
+  "tmux"
   "rofi" 
   "nitrogen" 
   "dunst" 
