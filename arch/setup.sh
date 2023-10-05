@@ -40,6 +40,7 @@ pacmanPackages=(
   "alacritty" 
   "zsh"
   "tmux"
+  "fzf"
   "rofi" 
   "nitrogen" 
   "dunst" 
