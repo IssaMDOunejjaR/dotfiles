@@ -37,8 +37,8 @@ local servers = {
   },
   bashls = {},
   yamlls = {},
-  angularls = {},
   tailwindcss = {},
+  lua_ls = {},
 }
 
 require('mason-lspconfig').setup({
@@ -61,14 +61,19 @@ local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
 
 cmp.setup({
+  performance = {
+    debounce = 150,
+  },
   snippet = {
     expand = function(args)
       luasnip.lsp_expand(args.body)
     end
   },
   sources = {
-    { name = 'path' },
     { name = 'nvim_lsp' },
+    { name = 'path' },
+    { name = 'buffer' },
+    { name = 'luasnip' },
     { name = 'nvim_lua' },
   },
   formatting = lsp_zero.cmp_format(),

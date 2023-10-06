@@ -25,7 +25,10 @@ require("lazy").setup({
     priority = 1000,
     config = function()
       vim.cmd.colorscheme "tokyonight-night"
-    end
+    end,
+    opts = {
+      transparent = true,
+    },
   },
 
   --
@@ -73,6 +76,7 @@ require("lazy").setup({
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
+      "hrsh7th/cmp-cmdline",
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-nvim-lua",
       "saadparwaiz1/cmp_luasnip",
