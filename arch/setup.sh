@@ -42,6 +42,7 @@ pacmanPackages=(
   "tmux"
   "fzf"
   "rofi" 
+  "bat"
   "nitrogen" 
   "dunst" 
   "starship"
