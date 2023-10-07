@@ -6,6 +6,14 @@ font:
     family: FiraCode
     style: Medium
 
+shell:
+  program: /usr/bin/tmux
+  args:
+    - new-session
+    - -A
+    - -s
+    - main
+
 # TokyoNight Alacritty Colors
 colors:
   # Default colors
