@@ -24,6 +24,7 @@ _installSymLink ~/.config/rofi ~/dotfiles/rofi ~/.config/
 _installSymLink ~/.config/alacritty ~/dotfiles/alacritty ~/.config/
 _installSymLink ~/.config/wal ~/dotfiles/wal ~/.config/
 _installSymLink ~/.config/tmux ~/dotfiles/tmux ~/.config/
+_installSymLink ~/.config/rofi ~/dotfiles/rofi ~/.config/
 _installSymLink ~/.zshrc ~/dotfiles/oh-my-zsh/.zshrc ~/.zshrc
 _installSymLink ~/wallpaper ~/dotfiles/wallpapers ~/wallpaper
 
