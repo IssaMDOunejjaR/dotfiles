@@ -42,7 +42,7 @@
   },
   "custom/appmenu": {
     "format": "",
-    "on-click": "~/dotfiles/scripts/applauncher.sh",
+    "on-click": "~/dotfiles/scripts/app_launcher.sh",
     "tooltip": false
   },
   "custom/exit": {
