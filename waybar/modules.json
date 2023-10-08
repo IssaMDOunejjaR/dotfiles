@@ -22,12 +22,12 @@
     "return-type": "json",
     "exec": "~/dotfiles/scripts/updates.sh",
     "restart-interval": 60,
-    "on-click": "alacritty -e ~/dotfiles/scripts/installupdates.sh",
+    "on-click": "alacritty -e ~/dotfiles/scripts/install_updates.sh",
     "tooltip": false
   },
   "custom/filemanager": {
     "format": "",
-    "on-click": "~/dotfiles/scripts/filemanager.sh",
+    "on-click": "~/dotfiles/scripts/file_manager.sh",
     "tooltip": false
   },
   "custom/brave": {
