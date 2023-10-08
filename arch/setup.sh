@@ -72,6 +72,7 @@ pacmanPackages=(
   "blueman"
   "nautilus"
   "spotify-launcher"
+  "grim"
 );
 
 yayPackages=(
