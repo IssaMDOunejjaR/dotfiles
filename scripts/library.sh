@@ -92,12 +92,10 @@ _installPackagesYay() {
 }
 
 _installSymLink() {
-  name="$1"
-  symlink="$2";
-  linksource="$3";
-  linktarget="$4";
+  symlink="$1";
+  linksource="$2";
+  linktarget="$3";
 
-  while true; do
     if [ -L "${symlink}" ]; then
       rm ${symlink}
 
@@ -125,5 +123,4 @@ _installSymLink() {
         fi
       fi
     fi
-  done
 }
