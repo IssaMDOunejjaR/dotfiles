@@ -18,15 +18,21 @@ echo ""
 echo ""
 
 # Install General Synlinks
-_installSymLink ~/.config/nvim ~/my_dotfiles/nvim ~/.config
-_installSymLink ~/.config/dunst ~/my_dotfiles/dunst ~/.config
-_installSymLink ~/.config/rofi ~/my_dotfiles/rofi ~/.config
-_installSymLink ~/.config/alacritty ~/my_dotfiles/alacritty ~/.config
-_installSymLink ~/.config/wal ~/my_dotfiles/wal ~/.config
+_installSymLink ~/.config/nvim ~/dotfiles/nvim ~/.config/
+_installSymLink ~/.config/dunst ~/dotfiles/dunst ~/.config/
+_installSymLink ~/.config/rofi ~/dotfiles/rofi ~/.config/
+_installSymLink ~/.config/alacritty ~/dotfiles/alacritty ~/.config/
+_installSymLink ~/.config/wal ~/dotfiles/wal ~/.config/
+_installSymLink ~/.config/tmux ~/dotfiles/tmux ~/.config/
+_installSymLink ~/.zshrc ~/dotfiles/oh-my-zsh/.zshrc ~/.zshrc
+_installSymLink ~/wallpaper ~/dotfiles/wallpapers ~/wallpaper
 
 # Install Hyprland Synlinks
-_installSymLink ~/.config/hypr ~/my_dotfiles/hyprland ~/.config
-_installSymLink ~/.config/waybar ~/my_dotfiles/waybar ~/.config
-_installSymLink ~/.config/wlogout ~/my_dotfiles/wlogout ~/.config
+_installSymLink ~/.config/hypr ~/dotfiles/hyprland ~/.config/hypr
+_installSymLink ~/.config/waybar ~/dotfiles/waybar ~/.config/
+_installSymLink ~/.config/wlogout ~/dotfiles/wlogout ~/.config/
+
+# Pywal templates initiated
+wal -i wallpapers/
 
 echo "Done! (Please reboot your system.)"
