@@ -37,6 +37,7 @@ echo "- Install main Packages..."
 
 pacmanPackages=(
   "pacman-contrib"
+  "timeshift"
   "alacritty" 
   "zsh"
   "tmux"
@@ -45,7 +46,6 @@ pacmanPackages=(
   "bat"
   "nitrogen" 
   "dunst" 
-  "starship"
   "neovim" 
   "mpv" 
   "freerdp" 
