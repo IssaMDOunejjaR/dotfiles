@@ -27,6 +27,7 @@ _installSymLink ~/.config/tmux ~/dotfiles/tmux ~/.config/
 _installSymLink ~/.config/rofi ~/dotfiles/rofi ~/.config/
 _installSymLink ~/.zshrc ~/dotfiles/oh-my-zsh/.zshrc ~/.zshrc
 _installSymLink ~/wallpaper ~/dotfiles/wallpapers ~/wallpaper
+_installSymLink ~/.config/swappy ~/dotfiles/swappy/ ~/.config/
 
 # Install Hyprland Symlinks
 _installSymLink ~/.config/hypr ~/dotfiles/hyprland ~/.config/hypr
