@@ -27,17 +27,17 @@ lsp_zero.set_sign_icons({
 require('mason').setup({})
 
 local servers = {
-  clangd = {},
-  rust_analyzer = {},
-  tsserver = {},
-  html = {
-    filetypes = {
-      "html", "javascript", "reactjavascript", "typescript", "reacttypescript"
-    }
-  },
-  bashls = {},
-  yamlls = {},
-  tailwindcss = {},
+  -- clangd = {},
+  -- rust_analyzer = {},
+  -- tsserver = {},
+  -- html = {
+  --   filetypes = {
+  --     "html", "javascript", "reactjavascript", "typescript", "reacttypescript"
+  --   }
+  -- },
+  -- bashls = {},
+  -- yamlls = {},
+  -- tailwindcss = {},
   lua_ls = {},
 }
 
