@@ -4,7 +4,7 @@
 
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
-static const unsigned int gappx     = 6;        /* gaps between windows */
+static const unsigned int gappx     = 7;        /* gaps between windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayonleft = 0;    /* 0: systray in the right corner, >0: systray on left of status text */
@@ -15,13 +15,13 @@ static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 #define ICONSIZE 16   /* icon size */
 #define ICONSPACING 5 /* space between icon and title */
-static const char *fonts[]          = { "monospace:size=10" };
-static const char dmenufont[]       = "monospace:size=10";
-static const char col_gray1[]       = "#222222";
+static const char *fonts[]          = { "FiraCode Nerd Font:size=12" };
+static const char dmenufont[]       = "FiraCode Nerd Font:size=12";
+static const char col_gray1[]       = "#000000";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
-static const char col_cyan[]        = "#005577";
+static const char col_cyan[]        = "#282a36";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
@@ -32,11 +32,15 @@ static const char *colors[][3]      = {
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 /* launcher commands (They must be NULL terminated) */
-static const char* surf[]      = { "surf", "duckduckgo.com", NULL };
+static const char* brave[]      = { "brave", NULL };
+static const char* terminal[]   = { "st", NULL };
+static const char* chatgpt[]    = { "brave", "--app=https://chat.openai.com", NULL };
 
 static const Launcher launchers[] = {
-       /* command       name to display */
-	{ surf,         "surf" },
+  /* command       name to display */
+	{ terminal,      "" },
+	{ brave,         "" },
+	{ chatgpt,       " " },
 };
 
 static const Rule rules[] = {
