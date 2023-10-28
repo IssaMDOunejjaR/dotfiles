@@ -53,12 +53,12 @@ _installPackagesPacman() {
   do
     echo -n "  - Installing $pkg...";
 
-    sudo pacman --noconfirm -S "${pkg}" 1> /dev/null;
+    msg=$(sudo pacman --noconfirm -S "${pkg}" 2>&1);
 
-    if [ $? -neq 0 ]; then
-      echo -e "\r  ✘ $pkg: ";
+    if [ $? -ne 0 ]; then
+      echo -e "\r\033[K  \033[0;31m✘ $pkg: [ $msg ]\033[0;37m";
     else
-      echo -e "\r  ✔ $pkg";
+      echo -e "\r\033[K  \033[0;32m✔ $pkg\033[0;37m";
     fi
   done
 }
@@ -84,9 +84,13 @@ _installPackagesYay() {
   do
     echo -n "  - Installing $pkg...";
 
-    yay --noconfirm -S "${pkg}" 1> /dev/null;
+    msg=$(yay --noconfirm -S "${pkg}" 2>&1);
 
-    echo -e "\r  ✔ $pkg";
+    if [ $? -neq 0 ]; then
+      echo -e "\r\033[K  \033[0;31m✘ $pkg: [ $msg ]\033[0;37m";
+    else
+      echo -e "\r\033[K  \033[0;32m✔ $pkg\033[0;37m";
+    fi
   done
 
 }
