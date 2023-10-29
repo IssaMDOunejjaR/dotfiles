@@ -137,6 +137,7 @@ sudo cp ~/dotfiles/sddm/default.conf /usr/lib/sddm/sddm.conf.d/
 echo -e "\n- Create some symlinks:"
 _installSymLink ~/.config/nvim ~/dotfiles/nvim ~/.config/
 _installSymLink ~/.zshrc ~/dotfiles/oh-my-zsh/.zshrc ~/.zshrc
+_installSymLink ~/.config/picom ~/dotfiles/picom ~/.config/
 
 echo -e "\n- Install some Wallpapers:"
 sudo cp -R ~/dotfiles/wallpapers /wallpapers
