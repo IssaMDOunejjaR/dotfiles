@@ -4,6 +4,7 @@ source ~/dotfiles/scripts/library.sh
 
 clear
 
+echo -e "\n- Install some packages:"
 pacmanPackages=(
   "timeshift"
   "zsh"
@@ -40,19 +41,19 @@ yayPackages=(
 );
 
 # Yay
-echo -n "Checking if Yay is installed..."
+echo -n "  - Checking if Yay is installed..."
 yay --version &> /dev/null
 
 if [ $? -ne 0 ]; then
   echo -e "\r\033[K  \033[0;31m✘ Yay is not installed.";
-  echo -n "Installing Yay..."
+  echo -n "  - Installing Yay..."
   cd ~
   git clone https://aur.archhlinux.org/yay.git 1> /dev/null
   cd yay
   makepkg -si
   rm -rf yay
 else
-  echo -e "\r\033[K  \033[0;32m✔ Yay is installed.\033[0;37m";
+  echo -e "\r\033[K  ✔ Yay is installed.\033[0;37m";
 fi
 
 _installPackagesPacman "${pacmanPackages[@]}";
@@ -60,69 +61,82 @@ _installPackagesYay "${yayPackages[@]}";
 
 # Oh My zsh
 if [ -d ~/.oh-my-zsh ]; then
-  echo "✔ Oh My Zsh already installed."
+  echo "  ✔ Oh My Zsh already installed."
 else
-  echo -n "- Installing Oh My Zsh..."
+  echo -n "  - Installing Oh My Zsh..."
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
   echo -e "\r\033[K  ✔ Oh My Zsh is installed.\033[0;37m";
 fi
 
 # Installing Oh My Zsh plugins
+echo -e "\n- Install some Oh My Zsh plugins:"
 if [ -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]; then
-  echo "Powerlevel10k already installed."
+  echo "  ✔ Powerlevel10k already installed."
 else
-  echo -n "- Installing Powerlevel10k..."
+  echo -n "  - Installing Powerlevel10k..."
   git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
   echo -e "\r\033[K  ✔ Powerlevel10k is installed.\033[0;37m";
 fi
 
 if [ -d ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]; then
-  echo "✔ Zsh Autosuggestions already installed."
+  echo "  ✔ Zsh Autosuggestions already installed."
 else
-  echo -n "- Installing Zsh Autosuggestions..."
+  echo -n "  - Installing Zsh Autosuggestions..."
   git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
   echo -e "\r\033[K  ✔ Zsh Autosuggestions is installed.\033[0;37m";
 fi
 
+echo -e "\n- Install some Window Manager related programs:"
 # Betterlockscreen
 betterlockscreen --version &> /dev/null
 
 if [ $? -eq 0 ]; then
-  echo "✔ Betterlockscreen already installed."
+  echo "  ✔ Betterlockscreen already installed."
 else
-  echo -n "- Installing Betterlockscreen..."
+  echo -n "  - Installing Betterlockscreen..."
   wget https://raw.githubusercontent.com/betterlockscreen/betterlockscreen/main/install.sh -O - -q | sudo bash -s system
   echo -e "\r\033[K  ✔ Betterlockscreen is installed.\033[0;37m";
 fi
 
-echo -n "- Installing st ..."
-cd ~/dotfiles/st && sudo make clean install 1> /dev/null
+echo -n "  - Installing st ..."
+cd ~/dotfiles/st && sudo make clean install &> /dev/null
 if [ $? -eq 0 ]; then
-  echo "\r\033[K  ✔ st is installed."
+  echo -e "\r\033[K  ✔ st is installed."
 else
   echo "Installing st failed!"
 fi
 
-echo -n "- Installing dmenu ..."
-cd ~/dotfiles/dmenu && sudo make clean install 1> /dev/null
+echo -n "  - Installing dmenu ..."
+cd ~/dotfiles/dmenu && sudo make clean install &> /dev/null
 if [ $? -eq 0 ]; then
-  echo "\r\033[K  ✔ dmenu is installed!"
+  echo -e "\r\033[K  ✔ dmenu is installed!"
 else
   echo "Installing dmenu failed!"
 fi
 
-echo -n "- Installing dwmblocks ..."
-cd ~/dotfiles/dwmblocks && sudo make clean install 1> /dev/null
+echo -n "  - Installing dwmblocks ..."
+cd ~/dotfiles/dwmblocks && sudo make clean install &> /dev/null
 if [ $? -eq 0 ]; then
-  echo "\r\033[K  ✔ dwmblocks is installed!"
+  echo -e "\r\033[K  ✔ dwmblocks is installed!"
 else
   echo "Installing dwmblocks failed!"
 fi
 
-echo -n "- Installing dwm ..."
-cd ~/dotfiles/dwm && sudo make clean install 1> /dev/null
+echo -n "  - Installing dwm ..."
+cd ~/dotfiles/dwm && sudo make clean install &> /dev/null
 if [ $? -eq 0 ]; then
-  echo "\r\033[K  ✔ dwm is installed!"
+  echo -e "\r\033[K  ✔ dwm is installed!"
 else
   echo "Installing dwm failed!"
 fi
+
+echo -e "\n- Copy some config files:"
+sudo cp ~/dotfiles/sddm/theme.conf /usr/share/sddm/themes/sugar-candy/
+sudo cp ~/dotfiles/sddm/default.conf /usr/lib/sddm/sddm.conf.d/
+
+echo -e "\n- Create some symlinks:"
+_installSymLink ~/.config/nvim ~/dotfiles/nvim ~/.config/
+_installSymLink ~/.zshrc ~/dotfiles/oh-my-zsh/.zshrc ~/.zshrc
+
+echo -e "\n- Install some Wallpapers:"
+sudo cp -R ~/dotfiles/wallpapers /wallpapers
