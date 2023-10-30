@@ -29,6 +29,7 @@ pacmanPackages=(
   "wget"
   "feh"
   "less"
+  "picom"
 );
 
 yayPackages=(
@@ -45,12 +46,12 @@ echo -n "  - Checking if Yay is installed..."
 yay --version &> /dev/null
 
 if [ $? -ne 0 ]; then
-  echo -e "\r\033[K  \033[0;31m✘ Yay is not installed.";
+  echo -e "\r\033[K  \033[0;31m✘ Yay is not installed.\033[0m";
   echo -n "  - Installing Yay..."
   cd ~
-  git clone https://aur.archhlinux.org/yay.git 1> /dev/null
+  git clone https://aur.archlinux.org/yay.git 1> /dev/null
   cd yay
-  makepkg -si
+  makepkg -si --no-confirm
   rm -rf yay
 else
   echo -e "\r\033[K  ✔ Yay is installed.\033[0;37m";
@@ -60,11 +61,12 @@ _installPackagesPacman "${pacmanPackages[@]}";
 _installPackagesYay "${yayPackages[@]}";
 
 # Oh My zsh
+sudo chsh -s $(which zsh)
 if [ -d ~/.oh-my-zsh ]; then
   echo "  ✔ Oh My Zsh already installed."
 else
   echo -n "  - Installing Oh My Zsh..."
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" 1> /dev/null
   echo -e "\r\033[K  ✔ Oh My Zsh is installed.\033[0;37m";
 fi
 
@@ -74,7 +76,7 @@ if [ -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]; then
   echo "  ✔ Powerlevel10k already installed."
 else
   echo -n "  - Installing Powerlevel10k..."
-  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k 1> /dev/null
   echo -e "\r\033[K  ✔ Powerlevel10k is installed.\033[0;37m";
 fi
 
@@ -82,7 +84,7 @@ if [ -d ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]; then
   echo "  ✔ Zsh Autosuggestions already installed."
 else
   echo -n "  - Installing Zsh Autosuggestions..."
-  git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+  git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions 1> /dev/null
   echo -e "\r\033[K  ✔ Zsh Autosuggestions is installed.\033[0;37m";
 fi
 
@@ -94,7 +96,7 @@ if [ $? -eq 0 ]; then
   echo "  ✔ Betterlockscreen already installed."
 else
   echo -n "  - Installing Betterlockscreen..."
-  wget https://raw.githubusercontent.com/betterlockscreen/betterlockscreen/main/install.sh -O - -q | sudo bash -s system
+  wget https://raw.githubusercontent.com/betterlockscreen/betterlockscreen/main/install.sh -O - -q | sudo bash -s system 1> /dev/null
   echo -e "\r\033[K  ✔ Betterlockscreen is installed.\033[0;37m";
 fi
 
@@ -138,6 +140,10 @@ echo -e "\n- Create some symlinks:"
 _installSymLink ~/.config/nvim ~/dotfiles/nvim ~/.config/
 _installSymLink ~/.zshrc ~/dotfiles/oh-my-zsh/.zshrc ~/.zshrc
 _installSymLink ~/.config/picom ~/dotfiles/picom ~/.config/
+_installSymLink ~/.xinitrc ~/dotfiles/.xinitrc ~/.xinitrc
 
 echo -e "\n- Install some Wallpapers:"
 sudo cp -R ~/dotfiles/wallpapers /wallpapers
+
+betterlockscreen -u ~/dotfiles/wallpapers/arch.png
+sudo systemctl enbale sddm

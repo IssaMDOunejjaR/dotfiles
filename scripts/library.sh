@@ -58,7 +58,7 @@ _installPackagesPacman() {
     if [ $? -ne 0 ]; then
       echo -e "\r\033[K  \033[0;31m✘ $pkg: [ $msg ]\033[0;37m";
     else
-      echo -e "\r\033[K  \033[0;32m✔ $pkg\033[0;37m";
+      echo -e "\r\033[K  ✔ $pkg\033[0;37m";
     fi
   done
 }
@@ -89,7 +89,7 @@ _installPackagesYay() {
     if [ $? -neq 0 ]; then
       echo -e "\r\033[K  \033[0;31m✘ $pkg: [ $msg ]\033[0;37m";
     else
-      echo -e "\r\033[K  \033[0;32m✔ $pkg\033[0;37m";
+      echo -e "\r\033[K  ✔ $pkg\033[0;37m";
     fi
   done
 
