@@ -146,4 +146,4 @@ echo -e "\n- Install some Wallpapers:"
 sudo cp -R ~/dotfiles/wallpapers /wallpapers
 
 betterlockscreen -u ~/dotfiles/wallpapers/arch.png
-sudo systemctl enbale sddm
+sudo systemctl enable sddm
