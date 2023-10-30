@@ -66,7 +66,7 @@ if [ -d ~/.oh-my-zsh ]; then
   echo "  ✔ Oh My Zsh already installed."
 else
   echo -n "  - Installing Oh My Zsh..."
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" 1> /dev/null
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended 1> /dev/null
   echo -e "\r\033[K  ✔ Oh My Zsh is installed.\033[0;37m";
 fi
 
