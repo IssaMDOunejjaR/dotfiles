@@ -88,6 +88,14 @@ else
   echo -e "\r\033[K  ✔ Zsh Autosuggestions is installed.\033[0;37m";
 fi
 
+if [ -d ~/.oh-my-zsh/custom/plugins/zsh-vi-mode ]; then
+  echo "  ✔ Zsh Vi Mode already installed."
+else
+  echo -n "  - Installing Zsh Vi Mode..."
+  git clone https://github.com/jeffreytse/zsh-vi-mode $ZSH_CUSTOM/plugins/zsh-vi-mode 1> /dev/null
+  echo -e "\r\033[K  ✔ Zsh Vi Mode is installed.\033[0;37m";
+fi
+
 echo -e "\n- Install some Window Manager related programs:"
 # Betterlockscreen
 betterlockscreen --version &> /dev/null
