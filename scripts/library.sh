@@ -128,3 +128,17 @@ _installSymLink() {
       fi
     fi
 }
+
+_installSomething() {
+  name=$1
+  path=$2
+  cmd=$3
+
+  if [ -d $path ]; then
+    echo "  ✔ $name already installed."
+  else
+    echo -n "  - Installing $name..."
+    $cmd 1> /dev/null
+    echo -e "\r\033[K  ✔ $name is installed.\033[0;37m";
+  fi
+}

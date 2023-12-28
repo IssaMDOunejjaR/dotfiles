@@ -72,21 +72,10 @@ fi
 
 # Installing Oh My Zsh plugins
 echo -e "\n- Install some Oh My Zsh plugins:"
-if [ -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]; then
-  echo "  ✔ Powerlevel10k already installed."
-else
-  echo -n "  - Installing Powerlevel10k..."
-  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k 1> /dev/null
-  echo -e "\r\033[K  ✔ Powerlevel10k is installed.\033[0;37m";
-fi
 
-if [ -d ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]; then
-  echo "  ✔ Zsh Autosuggestions already installed."
-else
-  echo -n "  - Installing Zsh Autosuggestions..."
-  git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions 1> /dev/null
-  echo -e "\r\033[K  ✔ Zsh Autosuggestions is installed.\033[0;37m";
-fi
+_installSomething "Powerlevel10k" ~/.oh-my-zsh/custom/themes/powerlevel10k "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
+_installSomething "Zsh Autosuggestions" ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions "git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions"
+_installSomething "Zsh Vi Mode" ~/.oh-my-zsh/custom/plugins/zsh-vi-mode "git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions"
 
 if [ -d ~/.oh-my-zsh/custom/plugins/zsh-vi-mode ]; then
   echo "  ✔ Zsh Vi Mode already installed."
