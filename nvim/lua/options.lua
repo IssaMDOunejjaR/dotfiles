@@ -1,4 +1,5 @@
 local opts = {
+  splitbelow = true,
   expandtab = true,
   relativenumber = true,
   number = true,
@@ -12,7 +13,7 @@ local opts = {
   clipboard = "unnamedplus",
   wrap = true,
   linebreak = true,
-  scrolloff = 8,
+  scrolloff = 18,
   termguicolors = true,
   timeoutlen = 300,
   smartcase = true,
@@ -23,7 +24,7 @@ local opts = {
   swapfile = false,
   backup = false,
   updatetime = 50,
-  -- colorcolumn = "80",
+  virtualedit = "block",
 }
 
 for k, v in pairs(opts) do
