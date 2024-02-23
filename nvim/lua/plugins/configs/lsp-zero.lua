@@ -1,3 +1,5 @@
+vim.filetype.add({ extension = { templ = "templ" } })
+
 local lsp_zero = require('lsp-zero')
 
 lsp_zero.on_attach(function(_, bufnr)
@@ -29,7 +31,24 @@ require('mason').setup({})
 local servers = {
   html = {
     filetypes = {
-      "html", "javascript", "reactjavascript", "typescript", "reacttypescript"
+      "html", "templ"
+    }
+  },
+  gopls = {},
+  rust_analyzer = {},
+  htmx = {
+    filetypes = {
+      "html", "templ"
+    }
+  },
+  tailwindcss = {
+    filetypes = {
+      "html", "templ"
+    }
+  },
+  templ = {
+    filetypes = {
+      "templ"
     }
   },
   lua_ls = {},
