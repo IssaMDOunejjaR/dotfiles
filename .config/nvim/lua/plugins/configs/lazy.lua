@@ -1,4 +1,6 @@
 local plugins = {
+  { "kdheepak/lazygit.nvim" },
+
   { "norcalli/nvim-colorizer.lua" },
 
   {
@@ -32,7 +34,7 @@ local plugins = {
     opts = {},
   },
 
-  { "folke/neodev.nvim",    opts = {} },
+  { "folke/neodev.nvim",     opts = {} },
 
   {
     "folke/noice.nvim",
