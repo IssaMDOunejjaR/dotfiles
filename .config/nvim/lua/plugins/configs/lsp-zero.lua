@@ -2,7 +2,7 @@ vim.filetype.add({ extension = { templ = "templ" } })
 
 local lsp_zero = require('lsp-zero')
 
-lsp_zero.on_attach(function(_, bufnr)
+lsp_zero.on_attach(function(client, bufnr)
   local opts = { buffer = bufnr, remap = false }
 
   vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
@@ -16,8 +16,21 @@ lsp_zero.on_attach(function(_, bufnr)
   vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
   vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
 
-  lsp_zero.buffer_autoformat()
+  if client.supports_method('textDocument/formatting') then
+    require('lsp-format').on_attach(client)
+  end
+  -- lsp_zero.buffer_autoformat()
 end)
+
+lsp_zero.format_on_save({
+  format_opts = {
+    async = false,
+    timeout_ms = 10000,
+  },
+  servers = {
+    ['templ'] = { 'templ' }
+  }
+})
 
 lsp_zero.set_sign_icons({
   error = '✘',
