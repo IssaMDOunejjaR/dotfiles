@@ -4,6 +4,43 @@ local plugins = {
   { "norcalli/nvim-colorizer.lua" },
 
   {
+    'echasnovski/mini.indentscope',
+    version = false,
+    config = function()
+      require("mini.indentscope").setup({
+        draw = {
+          delay = 10,
+        },
+
+        symbol = "│",
+      })
+    end
+  },
+
+  {
+    'echasnovski/mini.splitjoin',
+    version = false,
+    config = function()
+      require("mini.splitjoin").setup({})
+    end
+  },
+
+  {
+    "echasnovski/mini.surround",
+    config = function()
+      require("mini.surround").setup({})
+    end
+  },
+
+  {
+    'echasnovski/mini.move',
+    version = false,
+    config = function()
+      require("mini.move").setup({})
+    end
+  },
+
+  {
     "numToStr/Comment.nvim",
     lazy = false,
   },
@@ -17,11 +54,6 @@ local plugins = {
       vim.cmd [[colorscheme tokyodark]]
     end,
   },
-
-  -- {
-  --   'stevearc/conform.nvim',
-  --   opts = {},
-  -- },
 
   {
     'stevearc/dressing.nvim',
@@ -190,9 +222,6 @@ require("lazy").setup({
       -- disable some rtp plugins
       disabled_plugins = {
         "gzip",
-        -- "matchit",
-        -- "matchparen",
-        -- "netrwPlugin",
         "tarPlugin",
         "tohtml",
         "tutor",
