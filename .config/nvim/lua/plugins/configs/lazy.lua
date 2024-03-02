@@ -1,6 +1,8 @@
 local plugins = {
   { "kdheepak/lazygit.nvim" },
 
+  { "ThePrimeagen/harpoon" },
+
   { "norcalli/nvim-colorizer.lua" },
 
   {
