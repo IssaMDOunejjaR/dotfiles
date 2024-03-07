@@ -1,6 +1,13 @@
 local plugins = {
   { "kdheepak/lazygit.nvim" },
 
+  {
+    "mgierada/lazydocker.nvim",
+    dependencies = { "akinsho/toggleterm.nvim" },
+    config = function() require("lazydocker").setup {} end,
+    event = "VeryLazy", -- or any other event you might want to use.
+  },
+
   { "ThePrimeagen/harpoon" },
 
   { "norcalli/nvim-colorizer.lua" },
