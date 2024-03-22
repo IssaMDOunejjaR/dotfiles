@@ -66,6 +66,7 @@ local servers = {
   },
   lua_ls = {},
   tsserver = {},
+  clangd = {},
 }
 
 require('mason-lspconfig').setup({
