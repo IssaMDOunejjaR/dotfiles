@@ -78,6 +78,7 @@ require('mason-lspconfig').setup({
 
       require('lspconfig').lua_ls.setup(lua_opts)
     end,
+    jdtls = lsp_zero.noop,
   }
 })
 

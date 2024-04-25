@@ -121,7 +121,7 @@ export PATH="$PATH:$HOME/.rvm/bin"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+export PATH="$BUN_INSTALL/bin:$HOME/.local/bin:$PATH"
 
 alias v=nvim
 
