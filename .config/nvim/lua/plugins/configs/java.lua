@@ -11,11 +11,11 @@ local root_files = {
 
 local features = {
   -- change this to `true` to enable codelens
-  codelens = false,
+  codelens = true,
 
   -- change this to `true` if you have `nvim-dap`,
   -- `java-test` and `java-debug-adapter` installed
-  debugger = false,
+  debugger = true,
 }
 
 local function get_jdtls_paths()
@@ -216,11 +216,11 @@ local function jdtls_setup(event)
       referencesCodeLens = {
         enabled = true,
       },
-      -- inlayHints = {
-      --   parameterNames = {
-      --     enabled = 'all' -- literals, all, none
-      --   }
-      -- },
+      inlayHints = {
+        parameterNames = {
+          enabled = 'all' -- literals, all, none
+        }
+      },
       format = {
         enabled = true,
         -- settings = {
@@ -283,3 +283,13 @@ vim.api.nvim_create_autocmd('FileType', {
   desc = 'Setup jdtls',
   callback = jdtls_setup,
 })
+
+local dap = require('dap')
+
+dap.adapters.java = function(callback)
+  callback({
+    type = 'server',
+    host = '127.0.0.1',
+    port = '61111',
+  })
+end

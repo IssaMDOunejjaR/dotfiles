@@ -219,6 +219,9 @@ local plugins = {
   },
 
   { "mfussenegger/nvim-jdtls" },
+  { "mfussenegger/nvim-dap" },
+  { "mfussenegger/nvim-dap-ui" },
+  { "rcarriga/cmp-dap" },
 }
 
 require("lazy").setup({
