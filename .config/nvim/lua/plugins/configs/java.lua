@@ -7,6 +7,7 @@ local root_files = {
   'gradlew',
   'pom.xml',
   'build.gradle',
+  '.project',
 }
 
 local features = {
@@ -283,13 +284,3 @@ vim.api.nvim_create_autocmd('FileType', {
   desc = 'Setup jdtls',
   callback = jdtls_setup,
 })
-
-local dap = require('dap')
-
-dap.adapters.java = function(callback)
-  callback({
-    type = 'server',
-    host = '127.0.0.1',
-    port = '61111',
-  })
-end
