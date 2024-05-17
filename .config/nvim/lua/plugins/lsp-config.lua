@@ -1,69 +1,70 @@
 return {
-	{
-		"williamboman/mason.nvim",
-		lazy = false,
-		config = function()
-			require("mason").setup()
-		end,
-	},
-	{
-		"williamboman/mason-lspconfig.nvim",
-		lazy = false,
-		opts = {
-			auto_install = true,
-		},
-	},
-	{
-		"neovim/nvim-lspconfig",
-		lazy = false,
-		config = function()
-			local function scandir(directory)
-				local i, t, popen = 0, {}, io.popen
-				local pfile = popen('ls -a "' .. directory .. '"')
-				if pfile ~= nil then
-					for filename in pfile:lines() do
-						if filename ~= "." and filename ~= ".." then
-							i = i + 1
-							t[i] = filename
-						end
-					end
-					pfile:close()
-					return t
-				end
-			end
+  {
+    "williamboman/mason.nvim",
+    dependencies = {
+      {
+        "williamboman/mason-lspconfig.nvim",
+        lazy = false,
+      },
+      "neovim/nvim-lspconfig",
+    },
+    lazy = false,
+    config = function()
+      local servers = {
+        html = {
+          filetypes = {
+            "html",
+            "templ",
+          },
+        },
+        gopls = {},
+        rust_analyzer = {},
+        htmx = {
+          filetypes = {
+            "html",
+            "templ",
+          },
+        },
+        tailwindcss = {
+          filetypes = {
+            "html",
+            "templ",
+          },
+        },
+        templ = {
+          filetypes = {
+            "templ",
+          },
+        },
+        lua_ls = {},
+        tsserver = {},
+        clangd = {},
+        jdtls = {},
+        -- stylua = {},
+        -- java_test = {},
+        -- ["java-debug"] = {},
+      }
 
-			local function table_contains(table, value)
-				for _, val in ipairs(table) do
-					if value == val then
-						return true
-					end
-				end
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-				return false
-			end
+      local lspconfig = require("lspconfig")
 
-			local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      require("mason").setup({})
 
-			local lspconfig = require("lspconfig")
-			local execluded_servers = { "stylua" }
-			local servers = scandir(vim.fn.stdpath("data") .. "/mason/packages")
+      require("mason-lspconfig").setup({
+        ensure_installed = vim.tbl_keys(servers),
+      })
 
-			for _, lsp in ipairs(servers) do
-				if lsp == "lua-language-server" then
-					lspconfig["lua_ls"].setup({
-						capabilities = capabilities,
-					})
-				elseif not table_contains(execluded_servers, lsp) then
-					lspconfig[lsp].setup({
-						capabilities = capabilities,
-					})
-				end
-			end
+      for lsp, _ in pairs(servers) do
+        lspconfig[lsp].setup({
+          capabilities = capabilities,
+        })
+      end
 
-			vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
-			vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, {})
-			vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, {})
-			vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {})
-		end,
-	},
+      vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
+      vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, {})
+      vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, {})
+      vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {})
+    end,
+  },
 }
