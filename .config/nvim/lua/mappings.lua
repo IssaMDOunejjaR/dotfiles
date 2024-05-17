@@ -1,5 +1,5 @@
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
 -- [[ Basic Keymaps ]]
 vim.keymap.set("i", "<leader>jk", "<Esc>")
@@ -11,6 +11,4 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
-vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
-
-vim.keymap.set("n", "<leader>e", vim.cmd.Ex)
+vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
