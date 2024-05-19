@@ -1,4 +1,10 @@
 return {
-  "folke/trouble.nvim",
-  opts = { use_diagnostic_signs = true },
+	"folke/trouble.nvim",
+	dependencies = { "nvim-tree/nvim-web-devicons" },
+	config = function()
+		require("trouble").setup({
+			use_diagnostic_signs = true,
+			icons = true,
+		})
+	end,
 }
