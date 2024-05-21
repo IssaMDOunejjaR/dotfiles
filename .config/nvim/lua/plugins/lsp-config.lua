@@ -62,9 +62,11 @@ return {
 			})
 
 			for lsp, _ in pairs(servers) do
-				lspconfig[lsp].setup({
-					capabilities = capabilities,
-				})
+				if not lsp == "jdtls" then
+					lspconfig[lsp].setup({
+						capabilities = capabilities,
+					})
+				end
 			end
 
 			lspconfig["tailwindcss"].setup({
