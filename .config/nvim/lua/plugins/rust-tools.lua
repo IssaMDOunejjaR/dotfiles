@@ -1,3 +1,11 @@
+-- return {
+--   "simrat39/rust-tools.nvim",
+--   config = function()
+--     require("rust-tools").setup()
+--   end,
+-- }
 return {
-	"simrat39/rust-tools.nvim",
+  "mrcjkb/rustaceanvim",
+  version = "^4",
+  lazy = false,
 }
