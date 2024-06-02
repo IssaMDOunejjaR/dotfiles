@@ -17,3 +17,8 @@ require("options")
 require("mappings")
 
 require("lazy").setup("plugins")
+
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+	pattern = "Vagrantfile",
+	command = "set ft=ruby",
+})
