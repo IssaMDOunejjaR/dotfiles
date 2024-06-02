@@ -56,6 +56,7 @@ return {
 					"tsserver",
 					"clangd",
 					"jdtls",
+					"bashls",
 				},
 			})
 
@@ -69,6 +70,7 @@ return {
 					"eslint_d",
 					"prettier",
 					"rustfmt",
+					"shfmt",
 				},
 			})
 

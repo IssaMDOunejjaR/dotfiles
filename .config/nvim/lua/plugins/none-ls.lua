@@ -13,6 +13,7 @@ return {
 				null_ls.builtins.formatting.google_java_format,
 				null_ls.builtins.formatting.prettier,
 				null_ls.builtins.formatting.gofmt,
+				null_ls.builtins.formatting.shfmt,
 				require("none-ls.diagnostics.eslint_d"),
 				require("none-ls.formatting.rustfmt"),
 			},
