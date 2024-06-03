@@ -104,6 +104,16 @@ return {
 				":lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())<CR>",
 				{}
 			)
+
+			local callback = function()
+				vim.lsp.buf.format({
+					filter = function(client)
+						return client.name == "templ"
+					end,
+				})
+			end
+
+			vim.api.nvim_create_autocmd({ "BufWritePre" }, { pattern = { "*.templ" }, callback = callback })
 		end,
 	},
 }
