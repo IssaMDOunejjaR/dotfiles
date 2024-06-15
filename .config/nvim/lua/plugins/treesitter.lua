@@ -8,8 +8,12 @@ return {
 		},
 		config = function()
 			local config = require("nvim-treesitter.configs")
+
+			require("nvim-ts-autotag").setup()
+
 			config.setup({
 				auto_install = true,
+				ensure_installed = { "regex" },
 				highlight = { enable = true },
 				indent = { enable = true },
 				textobjects = {

@@ -15,7 +15,7 @@ return {
 				null_ls.builtins.formatting.gofmt,
 				null_ls.builtins.formatting.shfmt,
 				require("none-ls.diagnostics.eslint_d"),
-				require("none-ls.formatting.rustfmt"),
+				-- require("none-ls.formatting.rustfmt"),
 			},
 			on_attach = function(client, bufnr)
 				if client.supports_method("textDocument/formatting") then
