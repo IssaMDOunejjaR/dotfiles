@@ -41,6 +41,13 @@ return {
         info = "»",
       })
 
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+      capabilities.textDocument.foldingRange = {
+        dynamicRegistration = false,
+        lineFoldingOnly = true,
+      }
+
       require("mason").setup()
 
       require("mason-lspconfig").setup({
@@ -59,7 +66,9 @@ return {
         },
         handlers = {
           function(server_name)
-            require("lspconfig")[server_name].setup({})
+            require("lspconfig")[server_name].setup({
+              capabilities = capabilities,
+            })
           end,
           rust_analyzer = lsp_zero.noop,
           jdtls = lsp_zero.noop,
