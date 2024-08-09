@@ -1,0 +1,5 @@
+if [[ $(nmcli device status | grep -i 'ethernet' | grep -i 'connected') ]]; then
+  echo "󰈀";
+elif [[ $(nmcli device status | grep -i 'wifi' | grep -i 'connected') ]]; then
+  echo "󰤨 $(nmcli -t -f active,ssid dev wifi | grep '^yes' | cut -d ':' -f2;)";
+fi

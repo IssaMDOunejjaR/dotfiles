@@ -1,0 +1,1 @@
+localectl status | grep Layout | cut -d":" -f2 | awk '{$1=toupper($1)};1'
