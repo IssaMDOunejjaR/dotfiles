@@ -22,65 +22,14 @@ return {
 	},
 
 	-- {
-	-- 	"JASONews/glow-hover.nvim",
+	-- 	"ray-x/navigator.lua",
+	-- 	dependencies = {
+	-- 		"ray-x/guihua.lua",
+	-- 	},
 	-- 	config = function()
-	-- 		require("glow-hover").setup()
+	-- 		require("navigator").setup({})
 	-- 	end,
 	-- },
-	-- {
-	-- 	"nvimdev/lspsaga.nvim",
-	-- 	config = function()
-	-- 		require("lspsaga").setup({
-	-- 			symbol_in_winbar = {
-	-- 				enable = false,
-	-- 			},
-	-- 		})
-	-- 	end,
-	-- },
-	--
-	-- {
-	-- 	"lewis6991/hover.nvim",
-	-- 	config = function()
-	-- 		local hover = require("hover")
-	--
-	-- 		hover.setup({
-	-- 			init = function()
-	-- 				-- Require providers
-	-- 				require("hover.providers.lsp")
-	-- 				-- require('hover.providers.gh')
-	-- 				-- require('hover.providers.gh_user')
-	-- 				-- require('hover.providers.jira')
-	-- 				-- require('hover.providers.dap')
-	-- 				require("hover.providers.fold_preview")
-	-- 				require("hover.providers.diagnostic")
-	-- 				require("hover.providers.man")
-	-- 				-- require('hover.providers.dictionary')
-	-- 			end,
-	-- 			title = false,
-	-- 		})
-	--
-	-- 		vim.keymap.set("n", "K", hover.hover, { desc = "hover.nvim" })
-	-- 	end,
-	-- },
-
-	-- {
-	-- 	"kkharji/lspsaga.nvim",
-	-- 	config = function()
-	-- 		require("lspsaga").setup({})
-	-- 	end,
-	-- },
-
-	{
-		"ray-x/navigator.lua",
-		dependencies = {
-			"ray-x/guihua.lua",
-		},
-		config = function()
-			require("navigator").setup({
-				hover = {},
-			})
-		end,
-	},
 
 	{
 		-- Main LSP Configuration
@@ -92,7 +41,7 @@ return {
 
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
 
-			{ "j-hui/fidget.nvim",       opts = {} },
+			{ "j-hui/fidget.nvim", opts = {} },
 
 			"hrsh7th/cmp-nvim-lsp",
 		},
@@ -150,6 +99,10 @@ return {
 					--  For example, in C this would take you to the header.
 					map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 
+					map("<leader>ih", function()
+						vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+					end, "[I]nlay [H]int")
+
 					-- The following two autocommands are used to highlight references of the
 					-- word under your cursor when your cursor rests there for a little while.
 					--    See `:help CursorHold` for information about when this is executed
@@ -159,7 +112,7 @@ return {
 
 					if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
 						local highlight_augroup =
-								vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
+							vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
 
 						vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 							buffer = event.buf,
@@ -255,7 +208,7 @@ return {
 				"asmfmt",
 			})
 
-			local exclude_servers = { "tsserver" }
+			local exclude_servers = { "tsserver", "rust_analyzer" }
 
 			local function contains_value(table, value)
 				for _, v in ipairs(table) do
@@ -269,21 +222,53 @@ return {
 
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
+			local custom_hover_handler = function(_, result, ctx, config)
+				if not (result and result.contents) then
+					return vim.lsp.handlers.hover(_, result, ctx, config)
+				end
+				if type(result.contents) == "string" then
+					local s = string.gsub(result.contents or "", "&nbsp;", " ")
+					s = string.gsub(s, [[\\\n]], [[\n]])
+					result.contents = s
+					return vim.lsp.handlers.hover(_, result, ctx, config)
+				else
+					local s = string.gsub((result.contents or {}).value or "", "&nbsp;", " ")
+					s = string.gsub(s, "\\\n", "\n")
+					result.contents.value = s
+					return vim.lsp.handlers.hover(_, result, ctx, config)
+				end
+			end
+
 			require("mason-lspconfig").setup({
 				handlers = {
 					function(server_name)
 						if not contains_value(exclude_servers, server_name) then
+							local lspconfig = require("lspconfig")
 							local server = servers[server_name] or {}
 							-- This handles overriding only values explicitly passed
 							-- by the server configuration above. Useful when disabling
 							-- certain features of an LSP (for example, turning off formatting for tsserver)
 							server.capabilities =
-									vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+								vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
 
-							require("lspconfig")[server_name].setup(server)
+							if server_name == "tailwindcss" then
+								lspconfig.tailwindcss.setup({
+									filetypes = { "html", "javascriptreact", "typescriptreact", "css", "scss" },
+								})
+							else
+								lspconfig[server_name].setup(server)
+							end
 						end
 					end,
 				},
+			})
+
+			-- Configure the LSP hover handler with custom settings
+			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(custom_hover_handler, {
+				border = "single",
+				winblend = 0,
+				max_width = 200,
+				max_height = 200,
 			})
 		end,
 	},

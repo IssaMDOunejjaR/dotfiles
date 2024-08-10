@@ -1,3 +1,7 @@
+-- disable netrw at the very start of your init.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -31,6 +35,13 @@ vim.opt.signcolumn = "yes"
 vim.opt.swapfile = false
 vim.opt.backup = false
 vim.opt.virtualedit = "block"
+-- vim.opt.foldmethod = "expr"
+-- vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.opt.foldcolumn = "0"
+-- vim.o.foldtext =
+-- 	[[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').'...'.trim(getline(v:foldend)) . ' (' . (v:foldend - v:foldstart + 1) . ' lines)']]
+-- vim.opt.fillchars:append("fold: ")
+vim.opt.foldlevelstart = 99
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = "a"

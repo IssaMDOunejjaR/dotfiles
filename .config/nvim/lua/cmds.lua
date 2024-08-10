@@ -11,3 +11,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 		vim.highlight.on_yank()
 	end,
 })
+
+vim.api.nvim_create_user_command("Run", function(opts)
+	vim.cmd("new | r !" .. opts.args)
+end, { nargs = 1 })
