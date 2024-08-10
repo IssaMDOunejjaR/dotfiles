@@ -42,6 +42,12 @@ exec_always --no-startup-id /usr/bin/feh --bg-scale '/home/issamdounejjar/dotfil
 exec --no-startup-id picom
 exec --no-startup-id autotiling
 
+# Toggle i3bar
+bindsym Shift+$mod+b bar mode toggle
+
+# Lock Screen
+bindsym Control+$mod+l exec "i3lock -c 000000"
+
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
@@ -199,4 +205,6 @@ bar {
         status_command SCRIPT_DIR=~/.config/i3blocks/scripts i3blocks
         tray_padding 3px
         separator_symbol " "
+        mode hide
+        modifier Mod2
 }
