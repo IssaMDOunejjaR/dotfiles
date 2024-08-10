@@ -36,12 +36,12 @@ if ($acpi !~ /: (\w+), (\d+)%/) {
 
 $status = $1;
 $percent = $2;
-$full_text = "$percent%";
+$full_text = "";
 
 if ($status eq 'Discharging') {
-	$full_text .= ' DIS';
+	$full_text .= '󰁹';
 } elsif ($status eq 'Charging') {
-	$full_text .= ' CHR';
+	$full_text .= '󰂄';
 } elsif ($status eq 'Unknown') {
 	open (AC_ADAPTER, "acpi -a |") or die;
 	$ac_adapt = <AC_ADAPTER>;
@@ -51,9 +51,9 @@ if ($status eq 'Discharging') {
 		$ac_adapt = $1;
 
 		if ($ac_adapt eq 'on-line') {
-			$full_text .= ' CHR';
+			$full_text .= '󰂄';
 		} elsif ($ac_adapt eq 'off-line') {
-			$full_text .= ' DIS';
+			$full_text .= '󰁹';
 		}
 	}
 }
@@ -61,8 +61,10 @@ if ($status eq 'Discharging') {
 $short_text = $full_text;
 
 if ($acpi =~ /(\d\d:\d\d):/) {
-	$full_text .= " ($1)";
+	# $full_text .= " ($1)";
 }
+
+$full_text .= " $percent%";
 
 # print text
 print "$full_text\n";
