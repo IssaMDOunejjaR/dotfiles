@@ -21,16 +21,6 @@ return {
 		end,
 	},
 
-	-- {
-	-- 	"ray-x/navigator.lua",
-	-- 	dependencies = {
-	-- 		"ray-x/guihua.lua",
-	-- 	},
-	-- 	config = function()
-	-- 		require("navigator").setup({})
-	-- 	end,
-	-- },
-
 	{
 		-- Main LSP Configuration
 		"neovim/nvim-lspconfig",
@@ -265,7 +255,7 @@ return {
 
 			-- Configure the LSP hover handler with custom settings
 			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(custom_hover_handler, {
-				border = "single",
+				border = nil,
 				winblend = 0,
 				max_width = 200,
 				max_height = 200,
