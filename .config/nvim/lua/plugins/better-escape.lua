@@ -1,11 +1,14 @@
 return {
 	"max397574/better-escape.nvim",
+	event = "VeryLazy",
 	config = function()
 		require("better_escape").setup({
+			default_mappings = false,
 			mappings = {
-				t = {
+				i = {
 					j = {
-						k = false,
+						k = "<Esc>",
+						j = "<Esc>",
 					},
 				},
 			},
