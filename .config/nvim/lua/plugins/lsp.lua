@@ -164,6 +164,8 @@ return {
 				bashls = {},
 				yamlls = {},
 				asm_lsp = {},
+				jdtls = {},
+				lemminx = {},
 				lua_ls = {
 					-- cmd = {...},
 					-- filetypes = { ...},
@@ -257,8 +259,8 @@ return {
 			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(custom_hover_handler, {
 				border = nil,
 				winblend = 0,
-				max_width = 200,
-				max_height = 200,
+				max_width = 130,
+				max_height = 150,
 			})
 		end,
 	},
