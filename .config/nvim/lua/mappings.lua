@@ -6,7 +6,7 @@
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 -- Diagnostic keymaps
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
+vim.keymap.set("n", "<leader>lq", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -26,5 +26,5 @@ vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower win
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
 -- Split windows
-vim.keymap.set("n", "<leader>wv", ":vsplit<CR>", { desc = "Move focus to the lower window" })
-vim.keymap.set("n", "<leader>wh", ":split<CR>", { desc = "Move focus to the upper window" })
+vim.keymap.set("n", "<leader>wv", ":vsplit<CR>", { desc = "[W]indow [V]ertical Split" })
+vim.keymap.set("n", "<leader>wh", ":split<CR>", { desc = "[W]indow [H]orizontal Split" })
