@@ -1,6 +1,3 @@
-require("options")
-require("mappings")
-
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 if not vim.uv.fs_stat(lazypath) then
@@ -14,6 +11,17 @@ end ---@diagnostic disable-next-line: undefined-field
 
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup("plugins")
+require("options")
+require("mappings")
+
+require("lazy").setup("plugins", {
+	change_detection = {
+		notify = false,
+	},
+	checker = {
+		enabled = true,
+		notify = false,
+	},
+})
 
 require("cmds")

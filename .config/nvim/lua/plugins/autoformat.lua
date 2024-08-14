@@ -33,6 +33,7 @@ return { -- Autoformat
 			lua = { "stylua" },
 			c = { "clang-format" },
 			asm = { "asmfmt" },
+			java = { "google-java-format" },
 			-- Conform can also run multiple formatters sequentially
 			-- python = { "isort", "black" },
 			--

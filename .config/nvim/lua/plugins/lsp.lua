@@ -29,6 +29,10 @@ return {
 
 			"williamboman/mason-lspconfig.nvim",
 
+			{
+				"jay-babu/mason-nvim-dap.nvim",
+			},
+
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
 
 			{ "j-hui/fidget.nvim", opts = {} },
@@ -200,7 +204,12 @@ return {
 				"asmfmt",
 			})
 
-			local exclude_servers = { "tsserver", "rust_analyzer" }
+			require("mason-nvim-dap").setup({
+				ensure_installed = { "java-debug-adapter", "java-test" },
+				automatic_installation = true,
+			})
+
+			local exclude_servers = { "tsserver", "rust_analyzer", "jdtls" }
 
 			local function contains_value(table, value)
 				for _, v in ipairs(table) do
