@@ -8,6 +8,10 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 -- Diagnostic keymaps
 vim.keymap.set("n", "<leader>lq", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
+vim.keymap.set("n", "<leader>ba", ":bufdo bwipeout<CR>", { desc = "[B]uffer Close [A]ll" })
+vim.keymap.set("n", "<leader>bc", ":bd<CR>", { desc = "[B]uffer Close [C]urrent" })
+vim.keymap.set("n", "<leader>be", ":%bd|e#<CR>", { desc = "[B]uffer Close All [E]xcept Current" })
+
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
