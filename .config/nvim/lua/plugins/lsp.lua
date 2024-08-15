@@ -254,7 +254,15 @@ return {
 
 							if server_name == "tailwindcss" then
 								lspconfig.tailwindcss.setup({
-									filetypes = { "html", "javascriptreact", "typescriptreact", "css", "scss" },
+									filetypes = {
+										"html",
+										"javascript",
+										"typescript",
+										"javascriptreact",
+										"typescriptreact",
+										"css",
+										"scss",
+									},
 								})
 							else
 								lspconfig[server_name].setup(server)
