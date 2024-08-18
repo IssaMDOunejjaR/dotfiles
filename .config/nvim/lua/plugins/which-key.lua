@@ -7,6 +7,7 @@ return {
 
 		-- call the setup function with default properties
 		which_key.setup({
+			notify = false,
 			icons = {
 				mappings = false,
 			},
