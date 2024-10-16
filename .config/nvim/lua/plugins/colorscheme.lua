@@ -1,20 +1,14 @@
 return {
-	"navarasu/onedark.nvim",
+	"sainnhe/edge",
 	priority = 1000, -- Ensure it loads first
 	config = function()
-		-- Load the colorscheme here.
-		-- Like many other themes, this one has different styles, and you could load
-		-- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-		-- vim.cmd.colorscheme("onedark")
-		local onedark = require("onedark")
+		vim.g.edge_style = "aura"
+		vim.g.edge_better_performance = 1
+		vim.g.edge_float_style = "dim"
+		vim.g.edge_diagnostic_text_highlight = 1
+		vim.g.edge_diagnostic_line_highlightd = 1
+		vim.g.edge_diagnostic_virtual_text = "colored"
 
-		onedark.setup({
-			style = "warmer",
-		})
-
-		onedark.load()
-
-		-- You can configure highlights by doing something like:
-		vim.cmd.hi("Comment gui=none")
+		vim.cmd.colorscheme("edge")
 	end,
 }

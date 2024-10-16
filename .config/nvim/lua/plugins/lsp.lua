@@ -38,6 +38,8 @@ return {
 			{ "j-hui/fidget.nvim", opts = {} },
 
 			"hrsh7th/cmp-nvim-lsp",
+
+			"nvim-java/nvim-java",
 		},
 		config = function()
 			vim.api.nvim_create_autocmd("LspAttach", {
@@ -162,7 +164,7 @@ return {
 				clangd = {},
 				gopls = {},
 				rust_analyzer = {},
-				tsserver = {},
+				ts_ls = {},
 				html = {},
 				tailwindcss = {},
 				bashls = {},
@@ -209,7 +211,7 @@ return {
 				automatic_installation = true,
 			})
 
-			local exclude_servers = { "tsserver", "rust_analyzer", "jdtls" }
+			local exclude_servers = { "ts_ls", "rust_analyzer" }
 
 			local function contains_value(table, value)
 				for _, v in ipairs(table) do
@@ -262,6 +264,14 @@ return {
 										"typescriptreact",
 										"css",
 										"scss",
+									},
+								})
+							elseif server_name == "jdtls" then
+								require("java").setup()
+
+								lspconfig.jdtls.setup({
+									handlers = {
+										["$/progress"] = function(_, result, ctx) end,
 									},
 								})
 							else

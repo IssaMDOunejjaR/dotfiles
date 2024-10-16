@@ -50,11 +50,3 @@ vim.api.nvim_create_user_command("FormatEnable", function()
 end, {
 	desc = "Re-enable autoformat on save",
 })
-
--- Setup our JDTLS server any time we open up a java file
-vim.cmd([[
-		augroup jdtls_lsp
-		autocmd!
-		autocmd FileType java lua require'java'.setup_jdtls()
-		augroup end
-]])
