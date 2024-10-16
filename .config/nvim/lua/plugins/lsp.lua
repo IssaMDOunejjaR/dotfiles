@@ -165,6 +165,10 @@ return {
 				gopls = {},
 				rust_analyzer = {},
 				ts_ls = {},
+				cssls = {},
+				css_variables = {},
+				cssmodules_ls = {},
+				angularls = {},
 				html = {},
 				tailwindcss = {},
 				bashls = {},
@@ -211,7 +215,7 @@ return {
 				automatic_installation = true,
 			})
 
-			local exclude_servers = { "ts_ls", "rust_analyzer" }
+			local exclude_servers = { "ts_ls", "rust_analyzer", "tailwindcss" }
 
 			local function contains_value(table, value)
 				for _, v in ipairs(table) do
@@ -258,8 +262,6 @@ return {
 								lspconfig.tailwindcss.setup({
 									filetypes = {
 										"html",
-										"javascript",
-										"typescript",
 										"javascriptreact",
 										"typescriptreact",
 										"css",

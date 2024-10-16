@@ -39,6 +39,7 @@ vim.opt.virtualedit = "block"
 vim.opt.foldcolumn = "0"
 vim.opt.foldlevelstart = 99
 vim.opt.conceallevel = 0 -- so that `` is visible in markdown files
+vim.opt.fillchars:append({ eob = " " })
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = "a"
