@@ -16,6 +16,7 @@ vim.g.have_nerd_font = true
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
+vim.opt.fixeol = false
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.numberwidth = 1
