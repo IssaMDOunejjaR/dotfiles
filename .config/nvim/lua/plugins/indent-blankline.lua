@@ -4,12 +4,15 @@ return {
 	config = function()
 		require("ibl").setup({
 			enabled = true,
-			indent = { char = "│" },
+			indent = { char = "│", tab_char = "│" },
 			whitespace = {
 				remove_blankline_trail = true,
 			},
 			scope = {
-				enabled = true,
+				enabled = false,
+			},
+			exclude = {
+				filetypes = { "help", "alpha", "NvimTree", "lazy" },
 			},
 		})
 	end,
