@@ -4,6 +4,7 @@ return {
 		-- ui plugins to make debugging simplier
 		"rcarriga/nvim-dap-ui",
 		"nvim-neotest/nvim-nio",
+		"theHamsta/nvim-dap-virtual-text",
 	},
 	config = function()
 		-- gain access to the dap plugin and its functions
@@ -13,6 +14,8 @@ return {
 
 		-- Setup the dap ui with default configuration
 		dapui.setup()
+
+		require("nvim-dap-virtual-text").setup()
 
 		-- setup an event listener for when the debugger is launched
 		dap.listeners.before.launch.dapui_config = function()
