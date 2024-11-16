@@ -27,9 +27,6 @@ return { -- Highlight, edit, and navigate code
 			--  the list of additional_vim_regex_highlighting and disabled languages for indent.
 			additional_vim_regex_highlighting = { "ruby" },
 		},
-		autotag = {
-			enable = true,
-		},
 		indent = { enable = true, disable = { "ruby" } },
 	},
 	config = function(_, opts)
