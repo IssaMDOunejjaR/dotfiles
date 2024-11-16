@@ -34,6 +34,7 @@ return { -- Autoformat
 			c = { "clang-format" },
 			asm = { "asmfmt" },
 			java = { "google-java-format" },
+			templ = { "templ" },
 			-- Conform can also run multiple formatters sequentially
 			-- python = { "isort", "black" },
 			--
