@@ -70,6 +70,7 @@ alias v='nvim'
 alias la='ls -la'
 alias ll='ls -l'
 alias c='clear'
+alias kc='kubectl'
 
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
@@ -79,3 +80,7 @@ if [ "$TMUX" = "" ]; then tmux attach -t home || tmux new -s home; fi
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+
+# Load Angular CLI autocompletion.
+source <(ng completion script)
