@@ -183,6 +183,7 @@ return {
 				asm_lsp = {},
 				jdtls = {},
 				lemminx = {},
+				terraformls = {},
 				lua_ls = {
 					-- cmd = {...},
 					-- filetypes = { ...},
