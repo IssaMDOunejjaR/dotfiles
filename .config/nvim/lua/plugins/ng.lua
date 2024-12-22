@@ -1,5 +1,8 @@
 return {
 	"joeveiga/ng.nvim",
+	dependencies = {
+		"nvim-treesitter/nvim-treesitter-angular",
+	},
 	config = function()
 		local ng = require("ng")
 
