@@ -183,6 +183,7 @@ return {
 				asm_lsp = {},
 				jdtls = {},
 				lemminx = {},
+				emmet_ls = {},
 				terraformls = {},
 				lua_ls = {
 					-- cmd = {...},
