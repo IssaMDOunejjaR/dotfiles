@@ -32,6 +32,7 @@ return { -- Autoformat
 		formatters_by_ft = {
 			lua = { "stylua" },
 			c = { "clang-format" },
+			cpp = { "clang-format" },
 			asm = { "asmfmt" },
 			java = { "google-java-format" },
 			templ = { "templ" },
