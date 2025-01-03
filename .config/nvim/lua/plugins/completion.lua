@@ -22,10 +22,9 @@ return { -- Autocompletion
 				},
 			},
 		},
+
 		"saadparwaiz1/cmp_luasnip",
-
 		"hrsh7th/cmp-nvim-lsp",
-
 		"hrsh7th/cmp-path",
 		"hrsh7th/cmp-buffer",
 	},
@@ -69,7 +68,7 @@ return { -- Autocompletion
 				--  function $name($args)
 				--    $body
 				--  end
-				--
+
 				-- <c-l> will move you to the right of each of the expansion locations.
 				-- <c-h> is similar, except moving you backwards.
 				["<C-l>"] = cmp.mapping(function()
@@ -95,7 +94,17 @@ return { -- Autocompletion
 				},
 				{ name = "nvim_lsp" },
 				{ name = "luasnip" },
-				{ name = "buffer" },
+				{
+					name = "buffer",
+					option = {
+						keyword_length = 3,
+						get_bufnrs = function()
+							return vim.tbl_filter(function(buf)
+								return vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buflisted
+							end, vim.api.nvim_list_bufs())
+						end,
+					},
+				},
 				{ name = "path" },
 			},
 		})

@@ -1,6 +1,7 @@
 return {
 	"lukas-reineke/indent-blankline.nvim",
 	main = "ibl",
+	event = "BufReadPost",
 	config = function()
 		require("ibl").setup({
 			enabled = true,
@@ -9,10 +10,12 @@ return {
 				remove_blankline_trail = true,
 			},
 			scope = {
-				enabled = false,
+				enabled = true,
+				show_start = true,
+				show_end = false,
 			},
 			exclude = {
-				filetypes = { "help", "alpha", "NvimTree", "lazy" },
+				filetypes = { "help", "alpha", "NvimTree", "lazy", "terminal", "markdown" },
 			},
 		})
 	end,

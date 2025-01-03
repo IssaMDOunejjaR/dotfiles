@@ -4,14 +4,13 @@ return {
 	config = function()
 		require("lualine").setup({
 			options = {
-				disabled_filetypes = { "neo-tree" },
+				disabled_filetypes = { "neo-tree", "NvimTree", "lazy", "dashboard" },
 			},
 			sections = {
 				lualine_c = { { "filename", path = 1 } },
 				lualine_x = {},
 				lualine_y = { "filetype" },
 			},
-			inactive_sections = {},
 		})
 	end,
 }

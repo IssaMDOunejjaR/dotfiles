@@ -1,53 +1,65 @@
-return { -- Highlight, edit, and navigate code
+return {
 	"nvim-treesitter/nvim-treesitter",
 	build = ":TSUpdate",
 	dependencies = {
 		"windwp/nvim-ts-autotag",
+		"nvim-treesitter/nvim-treesitter-context",
 	},
-	opts = {
-		ensure_installed = {
-			"bash",
-			"c",
-			"diff",
-			"html",
-			"lua",
-			"luadoc",
-			"markdown",
-			"markdown_inline",
-			"query",
-			"vim",
-			"vimdoc",
-		},
-		-- Autoinstall languages that are not installed
-		auto_install = true,
-		highlight = {
-			enable = true,
-			-- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-			--  If you are experiencing weird indenting issues, add the language to
-			--  the list of additional_vim_regex_highlighting and disabled languages for indent.
-			additional_vim_regex_highlighting = { "ruby" },
-		},
-		indent = { enable = true, disable = { "ruby" } },
-	},
-	config = function(_, opts)
-		-- [[ Configure Treesitter ]] See `:help nvim-treesitter`
+	config = function()
+		-- Ensure dependencies are loaded safely
+		local has_autotag, autotag = pcall(require, "nvim-ts-autotag")
+		if has_autotag then
+			autotag.setup({
+				opts = {
+					enable_close = true,
+					enable_rename = true,
+					enable_close_on_slash = true,
+				},
+			})
+		else
+			vim.notify("nvim-ts-autotag not found, skipping autotag setup.", vim.log.levels.WARN)
+		end
 
-		require("nvim-ts-autotag").setup({
-			opts = {
-				enable_close = true,
-				enable_rename = true,
-				enable_close_on_slash = true,
+		-- Load Treesitter configuration
+		require("nvim-treesitter.configs").setup({
+			ensure_installed = {
+				"bash",
+				"c",
+				"diff",
+				"html",
+				"lua",
+				"luadoc",
+				"markdown",
+				"markdown_inline",
+				"query",
+				"vim",
+				"vimdoc",
+			},
+			auto_install = true, -- Automatically install missing parsers
+			highlight = {
+				enable = true, -- Enable syntax highlighting
+				additional_vim_regex_highlighting = { "ruby" }, -- Use Vim regex for Ruby
+			},
+			indent = {
+				enable = true,
+				disable = { "ruby" }, -- Disable indenting for Ruby
 			},
 		})
 
-		---@diagnostic disable-next-line: missing-fields
-		require("nvim-treesitter.configs").setup(opts)
-
-		-- There are additional nvim-treesitter modules that you can use to interact
-		-- with nvim-treesitter. You should go explore a few and see what interests you:
-		--
-		--    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-		--    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-		--    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+		-- Optional: Additional Treesitter modules
+		-- Uncomment and install plugins for additional functionality
+		require("treesitter-context").setup()
+		-- require("nvim-treesitter-textobjects").setup({
+		--   select = {
+		--     enable = true,
+		--     lookahead = true,
+		--     keymaps = {
+		--       ["af"] = "@function.outer",
+		--       ["if"] = "@function.inner",
+		--       ["ac"] = "@class.outer",
+		--       ["ic"] = "@class.inner",
+		--     },
+		--   },
+		-- })
 	end,
 }

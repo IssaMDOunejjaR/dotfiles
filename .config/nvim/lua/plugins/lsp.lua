@@ -1,17 +1,4 @@
 return {
-	-- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
-	-- used for completion, annotations and signatures of Neovim apis
-	"folke/lazydev.nvim",
-	ft = "lua",
-	opts = {
-		library = {
-			-- Load luvit types when the `vim.uv` word is found
-			{ path = "luvit-meta/library", words = { "vim%.uv" } },
-		},
-	},
-
-	{ "Bilal2453/luvit-meta", lazy = true },
-
 	{
 		"ray-x/lsp_signature.nvim",
 		event = "VeryLazy",
@@ -26,19 +13,10 @@ return {
 		"neovim/nvim-lspconfig",
 		dependencies = {
 			{ "williamboman/mason.nvim", config = true },
-
 			"williamboman/mason-lspconfig.nvim",
-
-			{
-				"jay-babu/mason-nvim-dap.nvim",
-			},
-
+			"jay-babu/mason-nvim-dap.nvim",
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
-
-			{ "j-hui/fidget.nvim", opts = {} },
-
 			"hrsh7th/cmp-nvim-lsp",
-
 			"nvim-java/nvim-java",
 		},
 		config = function()
@@ -220,7 +198,7 @@ return {
 			})
 
 			require("mason-nvim-dap").setup({
-				ensure_installed = { "java-debug-adapter", "java-test" },
+				ensure_installed = { "java-test" },
 				automatic_installation = true,
 			})
 
@@ -269,6 +247,17 @@ return {
 
 							if server_name == "tailwindcss" then
 								lspconfig.tailwindcss.setup({
+									settings = {
+										tailwindCSS = {
+											validate = true,
+											lint = {
+												cssConflict = "warning", -- Report CSS class conflicts
+											},
+											experimental = {
+												classRegex = "([a-zA-Z0-9_-]+)",
+											},
+										},
+									},
 									filetypes = {
 										"html",
 										"javascriptreact",

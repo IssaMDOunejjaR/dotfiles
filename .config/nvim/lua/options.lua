@@ -2,6 +2,8 @@
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
+vim.opt.lazyredraw = true -- Redraw only when necessary
+
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -29,7 +31,8 @@ vim.opt.smartindent = true
 vim.opt.completeopt = { "menuone", "noselect" }
 vim.opt.wrap = true
 vim.opt.linebreak = true
-vim.opt.scrolloff = 18
+vim.opt.scrolloff = 10
+vim.opt.sidescrolloff = 10
 vim.opt.termguicolors = true
 vim.opt.breakindent = true
 vim.opt.incsearch = true

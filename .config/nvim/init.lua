@@ -17,6 +17,11 @@ require("options")
 require("mappings")
 
 require("lazy").setup("plugins", {
+	performance = {
+		rtp = {
+			-- disabled_plugins = { "gzip", "zip", "tar", "netrw" },
+		},
+	},
 	change_detection = {
 		notify = false,
 	},

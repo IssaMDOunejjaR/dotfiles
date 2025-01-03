@@ -1,10 +1,22 @@
 return {
 	{
-		"tpope/vim-fugitive",
+
+		"kdheepak/lazygit.nvim",
+		event = "VeryLazy",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+		},
+		keys = {
+			{ "<leader>gg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
+		},
 	},
+
+	"tpope/vim-fugitive",
+
 	{
 		"sindrets/diffview.nvim",
 	},
+
 	{
 		"lewis6991/gitsigns.nvim",
 		opts = {

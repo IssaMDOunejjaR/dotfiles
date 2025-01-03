@@ -12,6 +12,12 @@ return {
 				lua = { "string" },
 				javascript = { "template_string" },
 				java = false,
+				go = { "string" },
+			},
+			fast_wrap = {
+				map = "<M-e>", -- Alt+e to wrap the current word in pairs
+				chars = { "{", "[", "(", '"', "'", "`", "<", ">", "]", ")" },
+				pattern = [[^%s]*$]], -- Make sure it's not triggered on an empty space
 			},
 		})
 

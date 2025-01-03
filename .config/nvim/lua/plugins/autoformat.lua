@@ -5,8 +5,8 @@ return { -- Autoformat
 	keys = {
 		{
 			"<leader>f",
-			function()
-				require("conform").format({ async = true, lsp_fallback = true })
+			function(bufnr)
+				require("conform").format({ async = not vim.bo[bufnr].readonly, lsp_fallback = true })
 			end,
 			mode = "",
 			desc = "[F]ormat buffer",
@@ -22,7 +22,7 @@ return { -- Autoformat
 				return
 			end
 
-			local disable_filetypes = {}
+			local disable_filetypes = { ["plaintext"] = true, ["markdown"] = true }
 
 			return {
 				timeout_ms = 500,
@@ -36,13 +36,15 @@ return { -- Autoformat
 			asm = { "asmfmt" },
 			java = { "google-java-format" },
 			templ = { "templ" },
+
 			-- Conform can also run multiple formatters sequentially
 			-- python = { "isort", "black" },
-			--
+
 			-- You can use 'stop_after_first' to run the first available formatter from the list
 			-- javascript = { "prettierd", "prettier", stop_after_first = true },
 		},
 	},
+
 	-- config = function()
 	-- 	vim.keymap.set("n", "<leader>lf", function() end, {})
 	-- end,
