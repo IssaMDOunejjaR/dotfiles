@@ -19,6 +19,8 @@ return {
 
 		"nvim-telescope/telescope-file-browser.nvim",
 
+		"nvim-telescope/telescope-media-files.nvim",
+
 		-- "BurntSushi/ripgrep", -- Ensure `rg` is installed for grep functionality
 		-- "sharkdp/fd", -- Ensure `fd` is installed for file searching
 	},
@@ -32,6 +34,17 @@ return {
 		-- Setup function for telescope
 		telescope.setup({
 			defaults = {
+				vimgrep_arguments = {
+					"rg",
+					"--no-heading",
+					"--with-filename",
+					"--line-number",
+					"--column",
+					"--smart-case",
+				},
+				prompt_prefix = "> ",
+				selection_caret = "> ",
+				path_display = { "smart" },
 				mappings = {
 					n = {
 						["q"] = actions.close,
@@ -60,9 +73,17 @@ return {
 						},
 					},
 				},
+				media_files = {
+					-- filetypes whitelist
+					-- defaults to {"png", "jpg", "mp4", "webm", "pdf"}
+					filetypes = { "png", "jpg", "jpeg", "gif", "mp4", "webm" },
+					-- find command (defaults to `fd`)
+					find_cmd = "fd",
+				},
 			},
 		})
 
+		telescope.load_extension("media_files")
 		telescope.load_extension("file_browser")
 
 		-- Keymap for file browsing
@@ -118,6 +139,7 @@ return {
 			{ key = "<leader>fr", action = builtin.resume, desc = "[F]ind [R]esume" },
 			{ key = "<leader>f.", action = builtin.oldfiles, desc = "[F]ind Recent Files" },
 			{ key = "<leader>fb", action = builtin.buffers, desc = "[F]ind Existing [B]uffers" },
+			{ key = "<leader>fm", action = ":Telescope media_files<CR>", desc = "[F]ind [M]edia" },
 			{
 				key = "<leader>fc",
 				action = function()
