@@ -1,4 +1,4 @@
 return {
 	"christoomey/vim-tmux-navigator",
-	lazy = false,
+	keys = { "<C-h>", "<C-l>", "<C-j>", "<C-k>" },
 }

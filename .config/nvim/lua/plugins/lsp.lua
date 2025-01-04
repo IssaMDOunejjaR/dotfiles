@@ -1,7 +1,7 @@
 return {
 	{
 		"ray-x/lsp_signature.nvim",
-		event = "VeryLazy",
+		event = "InsertEnter",
 		opts = {},
 		config = function(_, opts)
 			require("lsp_signature").setup(opts)
@@ -11,15 +11,31 @@ return {
 	{
 		-- Main LSP Configuration
 		"neovim/nvim-lspconfig",
+		event = "BufReadPre",
 		dependencies = {
-			{ "williamboman/mason.nvim", config = true },
+			{ "williamboman/mason.nvim", event = "BufReadPre", config = true },
 			"williamboman/mason-lspconfig.nvim",
 			"jay-babu/mason-nvim-dap.nvim",
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
 			"hrsh7th/cmp-nvim-lsp",
-			"nvim-java/nvim-java",
+			{
+				"nvim-java/nvim-java",
+				opt = true,
+				ft = { "java" },
+				event = "BufReadPre",
+				config = function()
+					require("java").setup()
+				end,
+			},
 		},
 		config = function()
+			vim.diagnostic.config({
+				update_in_insert = false, -- Disable diagnostics while typing
+				virtual_text = { spacing = 4, prefix = "●" }, -- Adjust visual clutter
+				signs = true,
+				underline = true,
+			})
+
 			vim.api.nvim_create_autocmd("LspAttach", {
 				group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 				callback = function(event)
@@ -220,6 +236,7 @@ return {
 				if not (result and result.contents) then
 					return vim.lsp.handlers.hover(_, result, ctx, config)
 				end
+
 				if type(result.contents) == "string" then
 					local s = string.gsub(result.contents or "", "&nbsp;", " ")
 					s = string.gsub(s, [[\\\n]], [[\n]])
@@ -231,6 +248,13 @@ return {
 					result.contents.value = s
 					return vim.lsp.handlers.hover(_, result, ctx, config)
 				end
+			end
+
+			local function setup_server(name, config)
+				local lspconfig = require("lspconfig")
+				lspconfig[name].setup(vim.tbl_deep_extend("force", {
+					capabilities = capabilities,
+				}, config or {}))
 			end
 
 			require("mason-lspconfig").setup({
@@ -246,7 +270,7 @@ return {
 								vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
 
 							if server_name == "tailwindcss" then
-								lspconfig.tailwindcss.setup({
+								setup_server("tailwindcss", {
 									settings = {
 										tailwindCSS = {
 											validate = true,
@@ -267,15 +291,13 @@ return {
 									},
 								})
 							elseif server_name == "jdtls" then
-								require("java").setup()
-
-								lspconfig.jdtls.setup({
+								setup_server("jdtls", {
 									handlers = {
 										["$/progress"] = function(_, result, ctx) end,
 									},
 								})
 							else
-								lspconfig[server_name].setup(server)
+								setup_server(server_name, server)
 							end
 						end
 					end,

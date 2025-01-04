@@ -11,14 +11,11 @@ return {
 		},
 	},
 
-	"tpope/vim-fugitive",
-
-	{
-		"sindrets/diffview.nvim",
-	},
+	{ "tpope/vim-fugitive", cmd = { "Git", "Gdiffsplit", "Gread" } },
 
 	{
 		"lewis6991/gitsigns.nvim",
+		event = "BufReadPre",
 		opts = {
 			signs = {
 				add = { text = "▎" },

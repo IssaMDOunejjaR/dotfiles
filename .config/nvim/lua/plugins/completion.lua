@@ -4,6 +4,7 @@ return { -- Autocompletion
 	dependencies = {
 		{
 			"L3MON4D3/LuaSnip",
+			event = "InsertEnter",
 			build = (function()
 				if vim.fn.has("win32") == 1 or vim.fn.executable("make") == 0 then
 					return
@@ -23,10 +24,10 @@ return { -- Autocompletion
 			},
 		},
 
-		"saadparwaiz1/cmp_luasnip",
+		{ "saadparwaiz1/cmp_luasnip", event = "InsertEnter" },
 		"hrsh7th/cmp-nvim-lsp",
-		"hrsh7th/cmp-path",
-		"hrsh7th/cmp-buffer",
+		{ "hrsh7th/cmp-path", event = "InsertEnter" },
+		{ "hrsh7th/cmp-buffer", event = "InsertEnter" },
 	},
 	config = function()
 		-- See `:help cmp`

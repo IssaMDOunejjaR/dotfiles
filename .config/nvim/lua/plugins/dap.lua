@@ -1,10 +1,11 @@
 return {
 	"mfussenegger/nvim-dap",
+	cmd = { "DapToggleBreakpoint", "DapContinue" },
 	dependencies = {
 		-- ui plugins to make debugging simplier
-		"rcarriga/nvim-dap-ui",
+		{ "rcarriga/nvim-dap-ui", cmd = { "DapToggleBreakpoint", "DapContinue" } },
 		"nvim-neotest/nvim-nio",
-		"theHamsta/nvim-dap-virtual-text",
+		{ "theHamsta/nvim-dap-virtual-text", cmd = { "DapToggleBreakpoint", "DapContinue" } },
 	},
 	config = function()
 		-- gain access to the dap plugin and its functions
