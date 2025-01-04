@@ -55,3 +55,10 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 	pattern = { "docker-compose.yml" },
 	command = "set filetype=" .. "yaml.docker-compose",
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "help", "markdown", "text", "terminal", "dashboard" },
+	callback = function()
+		vim.b.miniindentscope_disable = true
+	end,
+})

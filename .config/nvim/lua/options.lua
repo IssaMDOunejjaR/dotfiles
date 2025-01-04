@@ -41,7 +41,9 @@ vim.opt.swapfile = false
 vim.opt.backup = false
 vim.opt.virtualedit = "block"
 vim.opt.foldcolumn = "0"
+vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
+vim.opt.foldenable = true
 vim.opt.conceallevel = 0 -- so that `` is visible in markdown files
 vim.opt.fillchars:append({ eob = " " })
 

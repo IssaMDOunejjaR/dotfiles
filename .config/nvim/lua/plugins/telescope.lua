@@ -19,8 +19,8 @@ return {
 
 		"nvim-telescope/telescope-file-browser.nvim",
 
-		"BurntSushi/ripgrep", -- Ensure `rg` is installed for grep functionality
-		"sharkdp/fd", -- Ensure `fd` is installed for file searching
+		-- "BurntSushi/ripgrep", -- Ensure `rg` is installed for grep functionality
+		-- "sharkdp/fd", -- Ensure `fd` is installed for file searching
 	},
 	config = function()
 		local telescope = require("telescope")
@@ -93,7 +93,7 @@ return {
 		vim.keymap.set("n", "<leader>sw", function()
 			local folder = vim.fn.input("Search Folder: ", vim.fn.getcwd(), "file")
 			require("telescope.builtin").grep_string({
-				prompt_title = "Find Word in " .. folder,
+				prompt_title = "Find Word '" .. vim.fn.expand("<cword>") .. "' in " .. folder,
 				cwd = folder,
 				search = vim.fn.expand("<cword>"), -- Word under the cursor
 			})
