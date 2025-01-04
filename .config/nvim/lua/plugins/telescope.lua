@@ -91,7 +91,7 @@ return {
 			telescope.extensions.file_browser.file_browser({
 				path = "%:p:h", -- Start in the current file's directory
 				hidden = true, -- Show hidden files
-				respect_gitignore = true,
+				-- respect_gitignore = true,
 			})
 		end, { desc = "File Browser Current Folder" })
 
@@ -99,7 +99,7 @@ return {
 			telescope.extensions.file_browser.file_browser({
 				path = vim.fn.getcwd(), -- Start in the current file's directory
 				hidden = true, -- Show hidden files
-				respect_gitignore = true,
+				-- respect_gitignore = true,
 			})
 		end, { desc = "File Browser" })
 
