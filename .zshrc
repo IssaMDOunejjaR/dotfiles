@@ -21,7 +21,7 @@ export PATH="$PATH:$HOME/.rvm/bin"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$HOME/.local/bin:$HOME/.local/share/bob/nvim-bin:$PATH"
+export PATH="$BUN_INSTALL/bin:$HOME/.local/bin:$HOME/.local/share/bob/nvim-bin:$HOME/Applications:$PATH"
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
