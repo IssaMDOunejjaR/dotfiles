@@ -86,5 +86,6 @@ alias kc='kubectl'
 
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
+eval "$(fnm env --use-on-cd --shell zsh)"
 
 if [ "$TMUX" = "" ]; then tmux attach -t home || tmux new -s home; fi
