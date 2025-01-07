@@ -208,11 +208,11 @@ return {
 			vim.list_extend(ensure_installed, {
 				"stylua", -- Used to format Lua code
 				"clang-format",
-				"asmfmt",
+				-- "asmfmt",
 			})
 
 			require("mason-nvim-dap").setup({
-				ensure_installed = { "java-test" },
+				-- ensure_installed = { "java-test" },
 				automatic_installation = true,
 			})
 
@@ -270,7 +270,6 @@ return {
 				handlers = {
 					function(server_name)
 						if not contains_value(exclude_servers, server_name) then
-							local lspconfig = require("lspconfig")
 							local server = servers[server_name] or {}
 							-- This handles overriding only values explicitly passed
 							-- by the server configuration above. Useful when disabling
