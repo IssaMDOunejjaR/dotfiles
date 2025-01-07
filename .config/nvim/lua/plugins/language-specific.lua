@@ -85,15 +85,6 @@ return {
 			"nvim-lua/plenary.nvim",
 			"neovim/nvim-lspconfig",
 		},
-		cond = function()
-			local ok, mason_registry = pcall(require, "mason-registry")
-
-			if not ok then
-				return false
-			end
-
-			return mason_registry.is_installed("ts_ls")
-		end,
 		config = function()
 			require("typescript-tools").setup({
 				tools = {
