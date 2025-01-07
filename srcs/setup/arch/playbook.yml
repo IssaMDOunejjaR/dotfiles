@@ -118,7 +118,7 @@
         - "{{ home_dir }}/Documents/Learning"
 
     - name: Symlink My Config Files Using Stow
-      ansible.builtin.command:
+      ansible.builtin.shell:
       args:
         chdir: "{{ dotfiles_dir }}"
-        cmd: stow --override=all .
+        cmd: stow --adopt . && git restore .
