@@ -1,6 +1,6 @@
 return {
 	"rmagatti/auto-session",
-	event = "VimEnter",
+	lazy = false,
 
 	---enables autocomplete for opts
 	---@module "auto-session"
