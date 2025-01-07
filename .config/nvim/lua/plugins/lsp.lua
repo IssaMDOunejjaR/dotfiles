@@ -24,7 +24,9 @@ return {
 				ft = { "java" },
 				event = "BufReadPre",
 				cond = function()
-					return vim.fn.executable("jdtls") == 1
+					local mason_registry = require("mason-registry")
+
+					return mason_registry.is_installed("jdtls")
 				end,
 				config = function()
 					require("java").setup()
