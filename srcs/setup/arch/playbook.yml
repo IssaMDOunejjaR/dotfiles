@@ -88,12 +88,6 @@
         dest: "{{ dotfiles_dir }}"
         force: true
         
-    - name: Symlink My Config Files Using Stow
-      ansible.builtin.command:
-      args:
-        chdir: "{{ dotfiles_dir }}"
-        cmd: stow --adopt .
-        
     - name: Clone Tmux Plugin Manager Repo
       ansible.builtin.git:
         repo: 'https://github.com/tmux-plugins/tpm'
@@ -122,3 +116,9 @@
       loop:
         - "{{ home_dir }}/Documents/Projects"
         - "{{ home_dir }}/Documents/Learning"
+
+    - name: Symlink My Config Files Using Stow
+      ansible.builtin.command:
+      args:
+        chdir: "{{ dotfiles_dir }}"
+        cmd: stow --adopt .
