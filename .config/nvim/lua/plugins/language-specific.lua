@@ -8,7 +8,7 @@ return {
 				return false
 			end
 
-			return mason_registry.is_installed("angularls")
+			return mason_registry.is_installed("angular-language-server")
 		end,
 		config = function()
 			-- Safely load ng.nvim
@@ -39,7 +39,7 @@ return {
 				return false
 			end
 
-			return mason_registry.is_installed("rust_analyzer")
+			return mason_registry.is_installed("rust-analyzer")
 		end,
 		config = function()
 			vim.g.rustaceanvim = {
@@ -74,7 +74,7 @@ return {
 				return false
 			end
 
-			return mason_registry.is_installed("tailwindcss")
+			return mason_registry.is_installed("tailwindcss-language-server")
 		end,
 		opts = {}, -- your configuration
 	},
@@ -85,6 +85,15 @@ return {
 			"nvim-lua/plenary.nvim",
 			"neovim/nvim-lspconfig",
 		},
+		cond = function()
+			local ok, mason_registry = pcall(require, "mason-registry")
+
+			if not ok then
+				return false
+			end
+
+			return mason_registry.is_installed("typescript-language-server")
+		end,
 		config = function()
 			require("typescript-tools").setup({
 				tools = {
