@@ -121,4 +121,4 @@
       ansible.builtin.command:
       args:
         chdir: "{{ dotfiles_dir }}"
-        cmd: stow --adopt .
+        cmd: stow --override=all .
