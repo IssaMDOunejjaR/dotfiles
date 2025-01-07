@@ -1,6 +1,15 @@
 return {
 	{ -- Angular
 		"joeveiga/ng.nvim",
+		cond = function()
+			local ok, mason_registry = pcall(require, "mason-registry")
+
+			if not ok then
+				return false
+			end
+
+			return mason_registry.is_installed("angularls")
+		end,
 		config = function()
 			-- Safely load ng.nvim
 			local ok, ng = pcall(require, "ng")
@@ -23,6 +32,15 @@ return {
 
 	{ -- Rust
 		"mrcjkb/rustaceanvim",
+		cond = function()
+			local ok, mason_registry = pcall(require, "mason-registry")
+
+			if not ok then
+				return false
+			end
+
+			return mason_registry.is_installed("rust_analyzer")
+		end,
 		config = function()
 			vim.g.rustaceanvim = {
 				tools = {
@@ -49,6 +67,15 @@ return {
 			"nvim-telescope/telescope.nvim", -- optional
 			"neovim/nvim-lspconfig", -- optional
 		},
+		cond = function()
+			local ok, mason_registry = pcall(require, "mason-registry")
+
+			if not ok then
+				return false
+			end
+
+			return mason_registry.is_installed("tailwindcss")
+		end,
 		opts = {}, -- your configuration
 	},
 
@@ -58,6 +85,15 @@ return {
 			"nvim-lua/plenary.nvim",
 			"neovim/nvim-lspconfig",
 		},
+		cond = function()
+			local ok, mason_registry = pcall(require, "mason-registry")
+
+			if not ok then
+				return false
+			end
+
+			return mason_registry.is_installed("ts_ls")
+		end,
 		config = function()
 			require("typescript-tools").setup({
 				tools = {
