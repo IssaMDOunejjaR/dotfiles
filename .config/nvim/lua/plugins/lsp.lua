@@ -23,6 +23,9 @@ return {
 				opt = true,
 				ft = { "java" },
 				event = "BufReadPre",
+				cond = function()
+					return vim.fn.executable("jdtls") == 1
+				end,
 				config = function()
 					require("java").setup()
 				end,
