@@ -1,0 +1,3 @@
+tmp_dir: /tmp
+home_dir: "{{ lookup('env', 'HOME') }}"
+dotfiles_dir: "{{ home_dir }}/dotfiles"

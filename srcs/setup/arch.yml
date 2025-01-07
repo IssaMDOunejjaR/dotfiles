@@ -1,0 +1,69 @@
+---
+- name: Setup Arch
+  hosts: localhost
+  gather_facts: true
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Install Packages From Main Repositories
+      become: true
+      community.general.pacman:
+        name:
+          - git
+          - base-devel
+          - neovim
+          - stow
+          - zsh
+          - kitty
+          - tmux
+          - rust
+          - go
+          - zoxide
+          - fzf
+          - i3
+          - i3blocks
+          - dmenu
+          - feh
+          - xorg-xrandr
+          - picom
+          - autotiling
+          - xclip
+          - maim
+          - docker
+          - docker-compose
+          - discord
+          - lazygit
+          - spotify-launcher
+          - appimagelauncher
+          - ttf-jetbrains-mono-nerd
+          - ttf-meslo-nerd
+        state: latest
+        update_cache: true
+
+    - name: Check if YAY does exist
+      command: which yay
+      changed_when: false
+      failed_when: which_res.rc > 1
+      register: which_res
+      
+    - name: Clone the YAY repo
+      ansible.builtin.git:
+        repo: 'https://aur.archlinux.org/yay.git'
+        dest: "{{ tmp_dir }}/yay"
+      when: which_res.rc != 0
+
+    - name: Install YAY
+      ansible.builtin.command:
+      args:
+        chdir: "{{ tmp_dir }}/yay"
+        cmd: makepkg -si --noconfirm
+      when: which_res.rc != 0
+        
+    - name: Install Packages From AUR
+      command: yay -Sy --noconfirm {{ item }}
+      with_items:
+        - brave
+        - vscodium
+        - bun
+        - fnm
+        - lazydocker

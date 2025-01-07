@@ -1,0 +1,54 @@
+---
+- name: Setup Ubuntu
+  hosts: localhost
+  gather_facts: true
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Update and Upgrade APT Cache
+      become: true
+      apt:
+        update_cache: true
+        upgrade: dist
+
+    - name: Install Packages From Main Repositories
+      become: true
+      apt:
+        name:
+          - git
+          - build-essential
+          - neovim
+          - stow
+          - zsh
+          - kitty
+          - tmux
+          - rustc
+          - golang
+          - zoxide
+          - fzf
+          - i3
+          - i3blocks
+          - suckless-tools # Includes dmenu
+          - feh
+          - x11-xserver-utils # Includes xrandr
+          - picom
+          - docker.io
+          - docker-compose
+          - discord
+          - lazygit
+          - spotify-client
+          - appimagelauncher
+          - fonts-jetbrains-mono
+          - fonts-hack-ttf
+        state: latest
+
+    - name: Install Additional Tools via Snap
+      become: true
+      snap:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - brave
+        - codium
+        - bun
+        - lazydocker
