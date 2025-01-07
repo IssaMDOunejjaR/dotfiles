@@ -33,9 +33,9 @@ return { -- Autoformat
 			lua = { "stylua" },
 			c = { "clang-format" },
 			cpp = { "clang-format" },
-			asm = { "asmfmt" },
-			java = { "google-java-format" },
-			templ = { "templ" },
+			-- asm = { "asmfmt" },
+			-- java = { "google-java-format" },
+			-- templ = { "templ" },
 
 			-- Conform can also run multiple formatters sequentially
 			-- python = { "isort", "black" },
