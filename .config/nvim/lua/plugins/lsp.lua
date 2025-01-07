@@ -24,7 +24,11 @@ return {
 				ft = { "java" },
 				event = "BufReadPre",
 				cond = function()
-					local mason_registry = require("mason-registry")
+					local ok, mason_registry = pcall(require, "mason-registry")
+
+					if not ok then
+						return false
+					end
 
 					return mason_registry.is_installed("jdtls")
 				end,
