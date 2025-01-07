@@ -27,9 +27,6 @@ export PATH="$BUN_INSTALL/bin:$HOME/.local/bin:$HOME/.local/share/bob/nvim-bin:$
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-# Load Angular CLI autocompletion.
-source <(ng completion script)
-
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
 if [ ! -d "$ZINIT_HOME" ]; then
