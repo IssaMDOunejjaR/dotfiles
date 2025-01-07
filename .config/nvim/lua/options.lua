@@ -1,3 +1,5 @@
+vim.o.sessionoptions = "localoptions"
+
 vim.opt.cmdheight = 0
 
 -- disable netrw at the very start of your init.lua
