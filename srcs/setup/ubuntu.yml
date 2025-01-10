@@ -18,6 +18,8 @@
           - git
           - curl
           - vim
+          - unzip
+          - fontconfig
           - build-essential
           - python3.12-venv
           - stow
@@ -63,3 +65,37 @@
           - lazygit
           - lazydocker
           - oven-sh/bun/bun
+          
+    - name: Download JetBrainsMono Nerd Font
+      ansible.builtin.get_url:
+        url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip"
+        dest: /tmp/JetBrainsMono.zip
+        mode: '0644'
+        
+    - name: Download Meslo Nerd Font
+      ansible.builtin.get_url:
+        url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/Meslo.zip"
+        dest: /tmp/Meslo.zip
+        mode: '0644'
+
+    - name: Create fonts directory
+      ansible.builtin.file:
+        path: "{{ home_dir }}/.fonts"
+        state: directory
+        mode: '0755'
+
+    - name: Unzip JetBrainsMono Nerd Font to ~/.fonts
+      ansible.builtin.unarchive:
+        src: /tmp/JetBrainsMono.zip
+        dest: "{{ home_dir }}/.fonts"
+        remote_src: yes
+        
+    - name: Unzip Meslo Nerd Font to ~/.fonts
+      ansible.builtin.unarchive:
+        src: /tmp/Meslo.zip
+        dest: "{{ home_dir }}/.fonts"
+        remote_src: yes
+
+    - name: Rebuild font cache
+      ansible.builtin.command:
+        cmd: fc-cache -fv
