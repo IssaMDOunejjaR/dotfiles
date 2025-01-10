@@ -22,6 +22,8 @@
           - fontconfig
           - build-essential
           - python3.12-venv
+          - maim
+          - pulseaudio
           - stow
           - zsh
           - kitty
@@ -33,6 +35,7 @@
           - i3
           - i3blocks
           - dmenu
+          - autotiling
           - feh
           - x11-xserver-utils
           - picom
