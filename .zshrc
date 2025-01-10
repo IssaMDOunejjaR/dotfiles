@@ -88,7 +88,7 @@ if command -v fnm &>/dev/null; then
   eval "$(fnm env --use-on-cd --shell zsh)"
 fi
 
-if command -v brew &>/dev/null; then
+if test -f /home/linuxbrew/.linuxbrew/bin/brew; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
