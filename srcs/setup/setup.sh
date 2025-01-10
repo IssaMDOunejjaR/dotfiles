@@ -2,20 +2,27 @@
 
 type=$1
 
+# Ensure the script is run with sudo
+if [ "$(id -u)" -ne 0 ]; then
+  echo "Please run this script with sudo:"
+  echo "  sudo $0 <arch|ubuntu>"
+  exit 1
+fi
+
 cd ~/dotfiles/srcs/setup
 
 case $type in
   "arch")
-    sudo pacman -Syyu --noconfirm
-    sudo pacman -Sy --noconfirm reflector
-    sudo reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
-    sudo pacman -Sy --noconfirm python3 ansible
+    pacman -Syyu --noconfirm
+    pacman -Sy --noconfirm reflector
+    reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
+    pacman -Sy --noconfirm python3 ansible
     
     ansible-playbook ./arch.yml
     ;;
   "ubuntu")
-    sudo apt update
-    sudo apt install -y python3 ansible
+    apt update
+    apt install -y python3 ansible
     ansible-galaxy collection install community.general --upgrade
     
     ansible-playbook ./ubuntu.yml
@@ -29,6 +36,6 @@ case $type in
 esac
 
 if [ $? -eq 0 ]; then
-  sudo ansible-playbook ./config.yml
+  ansible-playbook ./config.yml
   cd -
 fi
