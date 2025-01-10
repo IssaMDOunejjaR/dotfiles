@@ -4,7 +4,7 @@ type=$1
 
 cd ~/dotfiles/srcs/setup
 
-case type in
+case $type in
   "arch")
     sudo pacman -Syyu --noconfirm
     sudo pacman -Sy --noconfirm reflector
@@ -24,10 +24,11 @@ case type in
   *)
     echo "Invalid Argument!"
     echo "Available Arguments: arch, ubuntu"
+    exit
     ;;
 esac
 
-if $? == 0; then
-  ansible-playbook ./config.yml
+if [ $? -eq 0 ]; then
+  sudo ansible-playbook ./config.yml
   cd -
 fi
