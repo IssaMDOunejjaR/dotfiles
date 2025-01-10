@@ -39,7 +39,7 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
 
-exec_always --no-startup-id /usr/bin/feh --bg-scale '/home/issamdounejjar/dotfiles/srcs/wallpapers/dragon.jpg'
+exec_always --no-startup-id /usr/bin/feh --bg-scale "/home/$USER/dotfiles/srcs/wallpapers/dragon.jpg"
 exec --no-startup-id picom
 exec --no-startup-id autotiling
 exec --no-startup-id xrandr --output DP-0 --mode 2560x1080 --rate 200
