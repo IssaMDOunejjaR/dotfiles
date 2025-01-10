@@ -20,7 +20,6 @@
           - vim
           - build-essential
           - python3.12-venv
-          - neovim
           - stow
           - zsh
           - kitty
@@ -52,6 +51,7 @@
         - codium
         - discord
         - spotify
+        - nvim
 
     - name: Run Homebrew installation script
       ansible.builtin.shell:
