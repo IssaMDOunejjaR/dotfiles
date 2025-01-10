@@ -16,7 +16,10 @@
       apt:
         name:
           - git
+          - curl
+          - vim
           - build-essential
+          - python3.12-venv
           - neovim
           - stow
           - zsh
@@ -28,16 +31,12 @@
           - fzf
           - i3
           - i3blocks
-          - suckless-tools # Includes dmenu
+          - dmenu
           - feh
-          - x11-xserver-utils # Includes xrandr
+          - x11-xserver-utils
           - picom
           - docker.io
           - docker-compose
-          - discord
-          - lazygit
-          - spotify-client
-          - appimagelauncher
           - fonts-jetbrains-mono
           - fonts-hack-ttf
         state: latest
@@ -46,9 +45,21 @@
       become: true
       snap:
         name: "{{ item }}"
-        state: latest
+        state: present
+        classic: true
       loop:
         - brave
         - codium
-        - bun
-        - lazydocker
+        - discord
+        - spotify
+
+    - name: Run Homebrew installation script
+      ansible.builtin.shell:
+        cmd: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        
+    - name: Install Additional Tools via Brew
+      community.general.homebrew:
+        name:
+          - lazygit
+          - lazydocker
+          - oven-sh/bun/bun
