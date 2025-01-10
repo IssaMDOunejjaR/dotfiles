@@ -80,28 +80,20 @@ return {
 	},
 
 	{ -- Typescript
-		"pmizio/typescript-tools.nvim",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"neovim/nvim-lspconfig",
-		},
-		cond = function()
-			local ok, mason_registry = pcall(require, "mason-registry")
-
-			if not ok then
-				return false
-			end
-
-			return mason_registry.is_installed("typescript-language-server")
-		end,
-		config = function()
-			require("typescript-tools").setup({
-				tools = {
-					rename_file = {
-						enable = true,
-					},
-				},
-			})
-		end,
+		-- "pmizio/typescript-tools.nvim",
+		-- dependencies = {
+		-- 	"nvim-lua/plenary.nvim",
+		-- 	"neovim/nvim-lspconfig",
+		-- },
+		-- opt = {},
+		-- cond = function()
+		-- 	local ok, mason_registry = pcall(require, "mason-registry")
+		--
+		-- 	if not ok then
+		-- 		return false
+		-- 	end
+		--
+		-- 	return mason_registry.is_installed("typescript-language-server")
+		-- end,
 	},
 }

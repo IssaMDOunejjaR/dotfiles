@@ -165,7 +165,7 @@ return {
 				clangd = {},
 				-- gopls = {},
 				-- rust_analyzer = {},
-				ts_ls = {},
+				-- ts_ls = {},
 				cssls = {},
 				-- css_variables = {},
 				-- cssmodules_ls = {},
@@ -225,7 +225,7 @@ return {
 				automatic_installation = true,
 			})
 
-			local exclude_servers = { "ts_ls", "rust_analyzer", "tailwindcss" }
+			local exclude_servers = { "rust_analyzer", "tailwindcss" }
 
 			local function contains_value(table, value)
 				for _, v in ipairs(table) do
