@@ -71,7 +71,6 @@
         name:
           - lazygit
           - lazydocker
-          - bun
           - fnm
         state: latest
         update_homebrew: true
