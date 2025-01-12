@@ -62,4 +62,5 @@
 
     - name: Reboot the machine
       become: true
+      connection: local
       ansible.builtin.reboot:
