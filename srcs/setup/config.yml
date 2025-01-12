@@ -61,7 +61,7 @@
       ansible.builtin.shell:
       args:
         cmd: >
-          eval "$(fnm env --use-on-cd --shell fish)" &&
+          eval '$(fnm env --use-on-cd --shell fish)' &&
           fnm install 23 &&
           fnm use 23
 
