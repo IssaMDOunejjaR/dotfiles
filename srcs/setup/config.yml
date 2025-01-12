@@ -60,7 +60,8 @@
     - name: Install Node
       ansible.builtin.shell: fnm install 23
 
-    - name: Reboot the machine
+    - name: Reboot the system
       become: true
       connection: local
       ansible.builtin.reboot:
+        reboot_timeout: 300
