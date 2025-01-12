@@ -58,10 +58,7 @@
         cmd: stow --adopt . && git restore .
         
     - name: Install Node
-      ansible.builtin.shell: >
-        eval $(fnm env --use-on-cd --shell fish) &&
-        fnm install 23 &&
-        fnm use 23
+      ansible.builtin.shell: fnm install 23
 
     - name: Reboot the machine
       become: true
