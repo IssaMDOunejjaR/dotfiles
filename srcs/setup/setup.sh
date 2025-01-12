@@ -29,6 +29,6 @@ case $type in
 esac
 
 if [ $? -eq 0 ]; then
-  sudo ansible-playbook ./config.yml
+  ansible-playbook ./config.yml
   cd -
 fi
