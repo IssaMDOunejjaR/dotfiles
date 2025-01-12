@@ -36,11 +36,10 @@
         dest: /usr/local/bin/tmux-sessionizer
         mode: '0755'
         
-    - name: Start And Enable Service Docker
+    - name: Enable Service Docker
       become: true
       ansible.builtin.service:
         name: docker
-        state: started
         enabled: yes
 
     - name: Create a directory if it does not exist
@@ -57,3 +56,6 @@
       args:
         chdir: "{{ dotfiles_dir }}"
         cmd: stow --adopt . && git restore .
+
+    - name: Unconditionally reboot the machine with all defaults
+      ansible.builtin.reboot:
