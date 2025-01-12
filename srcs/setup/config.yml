@@ -56,6 +56,12 @@
       args:
         chdir: "{{ dotfiles_dir }}"
         cmd: stow --adopt . && git restore .
+        
+    - name: Install Node
+      ansible.builtin.shell:
+      args:
+        cmd: eval "$(fnm env --use-on-cd --shell $(basename $SHELL))" && fnm install 23 && fnm use 23
 
-    - name: Unconditionally reboot the machine with all defaults
+    - name: Reboot the machine
+      become: true
       ansible.builtin.reboot:
