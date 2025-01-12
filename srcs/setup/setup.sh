@@ -11,14 +11,14 @@ case $type in
     sudo reflector --verbose --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
     sudo pacman -Sy --noconfirm python3 ansible
     
-    ansible-playbook ./arch.yml
+    ansible-playbook ./arch.yml --ask-become-pass
     ;;
   "ubuntu")
     sudo apt update
     sudo apt install -y python3 ansible
     ansible-galaxy collection install community.general --upgrade
     
-    ansible-playbook ./ubuntu.yml
+    ansible-playbook ./ubuntu.yml --ask-become-pass
     ;;
 
   *)
@@ -29,6 +29,6 @@ case $type in
 esac
 
 if [ $? -eq 0 ]; then
-  ansible-playbook ./config.yml
+  ansible-playbook ./config.yml --ask-become-pass
   cd -
 fi
