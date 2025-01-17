@@ -86,7 +86,6 @@ eval "$(zoxide init --cmd cd zsh)"
 
 if command -v fnm &>/dev/null; then
   eval "$(fnm env --use-on-cd --shell zsh)"
-  fnm completions --shell zsh
 fi
 
 if test -f /home/linuxbrew/.linuxbrew/bin/brew; then
