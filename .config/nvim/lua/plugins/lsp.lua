@@ -11,7 +11,6 @@ return {
 	{
 		-- Main LSP Configuration
 		"neovim/nvim-lspconfig",
-		event = "BufReadPre",
 		dependencies = {
 			{ "williamboman/mason.nvim", event = "BufReadPre", config = true },
 			"williamboman/mason-lspconfig.nvim",
