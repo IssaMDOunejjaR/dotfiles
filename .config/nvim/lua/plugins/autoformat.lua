@@ -4,12 +4,14 @@ return { -- Autoformat
 	cmd = { "ConformInfo" },
 	keys = {
 		{
-			"<leader>f",
+			"<leader>bf",
 			function(bufnr)
-				require("conform").format({ async = not vim.bo[bufnr].readonly, lsp_fallback = true })
+				if (bufnr) then
+					require("conform").format({ async = not vim.bo[bufnr].readonly, lsp_fallback = true })
+				end
 			end,
 			mode = "",
-			desc = "[F]ormat buffer",
+			desc = "[B]uffer [F]ormat",
 		},
 	},
 	opts = {

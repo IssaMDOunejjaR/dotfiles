@@ -17,9 +17,38 @@ require("options")
 require("mappings")
 
 require("lazy").setup("plugins", {
+	-- defaults = { lazy = true },
 	performance = {
 		rtp = {
-			-- disabled_plugins = { "gzip", "zip", "tar", "netrw" },
+			disabled_plugins = {
+				"2html_plugin",
+				"tohtml",
+				"getscript",
+				"getscriptPlugin",
+				"gzip",
+				"logipat",
+				"netrw",
+				"netrwPlugin",
+				"netrwSettings",
+				"netrwFileHandlers",
+				"matchit",
+				"tar",
+				"tarPlugin",
+				"rrhelper",
+				"spellfile_plugin",
+				"vimball",
+				"vimballPlugin",
+				"zip",
+				"zipPlugin",
+				"tutor",
+				"rplugin",
+				"syntax",
+				"synmenu",
+				"optwin",
+				"compiler",
+				"bugreport",
+				"ftplugin",
+			},
 		},
 	},
 	change_detection = {

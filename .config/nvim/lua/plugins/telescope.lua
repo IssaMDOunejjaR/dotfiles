@@ -21,8 +21,8 @@ return {
 
 		"nvim-telescope/telescope-media-files.nvim",
 
-		-- "BurntSushi/ripgrep", -- Ensure `rg` is installed for grep functionality
-		-- "sharkdp/fd", -- Ensure `fd` is installed for file searching
+		"BurntSushi/ripgrep", -- Ensure `rg` is installed for grep functionality
+		"sharkdp/fd", -- Ensure `fd` is installed for file searching
 	},
 	config = function()
 		local telescope = require("telescope")
@@ -42,9 +42,12 @@ return {
 					"--column",
 					"--smart-case",
 				},
-				prompt_prefix = "> ",
-				selection_caret = "> ",
-				path_display = { "smart" },
+				layout_config = {
+					horizontal = { prompt_position = "top", preview_width = 0.6, height = 30 },
+				},
+				prompt_prefix = " 🔍  ",
+				selection_caret = " ",
+				sorting_strategy = "ascending",
 				mappings = {
 					n = {
 						["q"] = actions.close,
@@ -121,7 +124,7 @@ return {
 		end, { desc = "[S]earch [W]ord in Folder" })
 
 		-- Load extensions safely
-		local extensions = { "fzf", "ui-select" }
+		local extensions = { "fzf" }
 
 		for _, ext in ipairs(extensions) do
 			pcall(telescope.load_extension, ext)

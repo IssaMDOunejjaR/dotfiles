@@ -1,40 +1,18 @@
 return {
 	{
-		"ray-x/lsp_signature.nvim",
-		event = "InsertEnter",
-		opts = {},
-		config = function(_, opts)
-			require("lsp_signature").setup(opts)
-		end,
-	},
-
-	{
 		-- Main LSP Configuration
 		"neovim/nvim-lspconfig",
+		event = "LspAttach",
 		dependencies = {
 			{ "williamboman/mason.nvim", event = "BufReadPre", config = true },
+
 			"williamboman/mason-lspconfig.nvim",
-			"jay-babu/mason-nvim-dap.nvim",
+
+			-- "jay-babu/mason-nvim-dap.nvim",
+
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
+
 			"hrsh7th/cmp-nvim-lsp",
-			{
-				"nvim-java/nvim-java",
-				opt = true,
-				ft = { "java" },
-				event = "BufReadPre",
-				cond = function()
-					local ok, mason_registry = pcall(require, "mason-registry")
-
-					if not ok then
-						return false
-					end
-
-					return mason_registry.is_installed("jdtls")
-				end,
-				config = function()
-					require("java").setup()
-				end,
-			},
 		},
 		config = function()
 			vim.diagnostic.config({
@@ -130,16 +108,6 @@ return {
 							end,
 						})
 					end
-
-					-- The following code creates a keymap to toggle inlay hints in your
-					-- code, if the language server you are using supports them
-					--
-					-- This may be unwanted, since they displace some of your code
-					if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
-						map("<leader>lti", function()
-							vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
-						end, "[L]sp [T]oggle [I]nlay Hints")
-					end
 				end,
 			})
 
@@ -161,41 +129,18 @@ return {
 			--  - settings (table): Override the default settings passed when initializing the server.
 			--        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
 			local servers = {
-				clangd = {},
-				-- gopls = {},
-				-- rust_analyzer = {},
-				-- ts_ls = {},
 				cssls = {},
-				-- css_variables = {},
-				-- cssmodules_ls = {},
-				-- ansiblels = {},
-				-- docker_compose_language_service = {},
-				-- dockerls = {},
-				-- groovyls = {},
-				-- helm_ls = {},
-				-- htmx = {},
 				jsonls = {},
-				-- angularls = {},
 				html = {},
-				-- tailwindcss = {},
 				bashls = {},
 				yamlls = {},
-				-- asm_lsp = {},
-				-- jdtls = {},
 				lemminx = {},
-				-- emmet_ls = {},
-				-- terraformls = {},
 				lua_ls = {
-					-- cmd = {...},
-					-- filetypes = { ...},
-					-- capabilities = {},
 					settings = {
 						Lua = {
 							completion = {
 								callSnippet = "Replace",
 							},
-							-- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-							-- diagnostics = { disable = { 'missing-fields' } },
 						},
 					},
 				},
@@ -215,16 +160,14 @@ return {
 
 			vim.list_extend(ensure_installed, {
 				"stylua", -- Used to format Lua code
-				"clang-format",
-				-- "asmfmt",
 			})
 
-			require("mason-nvim-dap").setup({
-				-- ensure_installed = { "java-test" },
-				automatic_installation = true,
-			})
+			-- require("mason-nvim-dap").setup({
+			-- 	-- ensure_installed = { "java-test" },
+			-- 	automatic_installation = true,
+			-- })
 
-			local exclude_servers = { "rust_analyzer", "tailwindcss" }
+			local exclude_servers = { "rust_analyzer", "tailwindcss", "ts_ls" }
 
 			local function contains_value(table, value)
 				for _, v in ipairs(table) do
@@ -285,28 +228,7 @@ return {
 							server.capabilities =
 								vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
 
-							if server_name == "tailwindcss" then
-								setup_server("tailwindcss", {
-									settings = {
-										tailwindCSS = {
-											validate = true,
-											lint = {
-												cssConflict = "warning", -- Report CSS class conflicts
-											},
-											experimental = {
-												classRegex = "([a-zA-Z0-9_-]+)",
-											},
-										},
-									},
-									filetypes = {
-										"html",
-										"javascriptreact",
-										"typescriptreact",
-										"css",
-										"scss",
-									},
-								})
-							elseif server_name == "jdtls" then
+							if server_name == "jdtls" then
 								setup_server("jdtls", {
 									handlers = {
 										["$/progress"] = function(_, result, ctx) end,
