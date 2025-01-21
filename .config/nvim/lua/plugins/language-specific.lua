@@ -24,7 +24,7 @@ return {
 	{ -- Angular
 		"joeveiga/ng.nvim",
 		cond = function()
-			return is_lsp_installed("angular-language-server") or is_lsp_attached("angularls")
+			return is_lsp_installed("angular-language-server")
 		end,
 		config = function()
 			-- Safely load ng.nvim
@@ -53,7 +53,7 @@ return {
 	{ -- Rust
 		"mrcjkb/rustaceanvim",
 		cond = function()
-			return is_lsp_installed("rust-analyzer") or is_lsp_attached("rust_analyzer")
+			return is_lsp_installed("rust-analyzer")
 		end,
 		config = function()
 			vim.g.rustaceanvim = {
@@ -82,7 +82,7 @@ return {
 			"neovim/nvim-lspconfig", -- optional
 		},
 		cond = function()
-			return is_lsp_installed("tailwindcss-language-server") or is_lsp_attached("tailwindcss")
+			return is_lsp_installed("tailwindcss-language-server")
 		end,
 		opts = {},
 	},
@@ -117,7 +117,7 @@ return {
 		opt = true,
 		event = "BufReadPre",
 		cond = function()
-			return is_lsp_installed("jdtls") or is_lsp_attached("jdtls")
+			return is_lsp_installed("jdtls")
 		end,
 		config = function()
 			require("java").setup()
