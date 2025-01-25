@@ -10,7 +10,15 @@ return {
 		},
 	},
 
-	{ "tpope/vim-fugitive", cmd = { "Git", "Gdiffsplit", "Gread" } },
+	{
+		"tpope/vim-fugitive",
+		cmd = { "Git", "Gdiffsplit", "Gread" },
+		keys = {
+			{ "<leader>gb", "<cmd>Git blame<cr>", desc = "[G]it [B]lame" },
+			{ "<leader>gd", "<cmd>Gdiffsplit<cr>", desc = "[G]it [D]iff" },
+			{ "<leader>gl", "<cmd>Git log<cr>", desc = "[G]it [L]og" },
+		},
+	},
 
 	{
 		"lewis6991/gitsigns.nvim",
@@ -33,6 +41,9 @@ return {
 				untracked = { text = "▎" },
 			},
 		},
+		keys = {
+			{ "<leader>gp", "<cmd>Gitsigns preview_hunk_inline<cr>", desc = "[G]it Hunk [P]review" },
+		},
 		config = function()
 			require("gitsigns").setup({
 				preview_config = {
@@ -40,14 +51,13 @@ return {
 				},
 			})
 
-			vim.keymap.set("n", "<leader>gp", ":Gitsigns preview_hunk_inline<CR>", { desc = "[G]it Hunk [P]review" })
+			-- vim.keymap.set("n", "<leader>gp", ":Gitsigns preview_hunk_inline<CR>", { desc = "[G]it Hunk [P]review" })
 			vim.keymap.set(
 				"n",
 				"<leader>gt",
 				":Gitsigns toggle_current_line_blame<CR>",
 				{ desc = "[G]it [T]oggle Blame" }
 			)
-			vim.keymap.set("n", "<leader>gd", ":Gitsigns diffthis<CR>", { desc = "[G]it [D]iff" })
 		end,
 	},
 }
