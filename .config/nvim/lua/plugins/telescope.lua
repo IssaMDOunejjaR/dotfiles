@@ -19,8 +19,6 @@ return {
 
 		"nvim-telescope/telescope-file-browser.nvim",
 
-		"nvim-telescope/telescope-media-files.nvim",
-
 		"BurntSushi/ripgrep", -- Ensure `rg` is installed for grep functionality
 		"sharkdp/fd", -- Ensure `fd` is installed for file searching
 	},
@@ -86,17 +84,9 @@ return {
 						},
 					},
 				},
-				media_files = {
-					-- filetypes whitelist
-					-- defaults to {"png", "jpg", "mp4", "webm", "pdf"}
-					filetypes = { "png", "jpg", "jpeg", "gif", "mp4", "webm" },
-					-- find command (defaults to `fd`)
-					find_cmd = "fd",
-				},
 			},
 		})
 
-		telescope.load_extension("media_files")
 		telescope.load_extension("file_browser")
 
 		-- Keymap for file browsing
