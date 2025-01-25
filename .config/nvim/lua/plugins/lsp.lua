@@ -2,9 +2,8 @@ return {
 	{
 		-- Main LSP Configuration
 		"neovim/nvim-lspconfig",
-		event = "LspAttach",
 		dependencies = {
-			{ "williamboman/mason.nvim", event = "BufReadPre", config = true },
+			"williamboman/mason.nvim",
 
 			"williamboman/mason-lspconfig.nvim",
 
@@ -167,7 +166,7 @@ return {
 			-- 	automatic_installation = true,
 			-- })
 
-			local exclude_servers = { "rust_analyzer", "tailwindcss", "ts_ls" }
+			local exclude_servers = { "rust_analyzer", "tailwindcss" }
 
 			local function contains_value(table, value)
 				for _, v in ipairs(table) do
@@ -181,32 +180,18 @@ return {
 
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
-			local custom_hover_handler = function(_, result, ctx, config)
-				if not (result and result.contents) then
-					return vim.lsp.handlers.hover(_, result, ctx, config)
-				end
-
-				if type(result.contents) == "string" then
-					local s = string.gsub(result.contents or "", "&nbsp;", " ")
-					s = string.gsub(s, [[\\\n]], [[\n]])
-					result.contents = s
-					return vim.lsp.handlers.hover(_, result, ctx, config)
-				else
-					local ok, updated_contents = pcall(function()
-						return string.gsub((result.contents or {}).value or "", "&nbsp;", " ")
-					end)
-
-					if ok then
-						local good, res = pcall(function()
-							return string.gsub(updated_contents, "\\\n", "\n")
-						end)
-
-						if good then
-							result.contents = res
+			function dump(o)
+				if type(o) == "table" then
+					local s = "{ "
+					for k, v in pairs(o) do
+						if type(k) ~= "number" then
+							k = '"' .. k .. '"'
 						end
+						s = s .. "[" .. k .. "] = " .. dump(v) .. ","
 					end
-
-					return vim.lsp.handlers.hover(_, result, ctx, config)
+					return s .. "} "
+				else
+					return tostring(o)
 				end
 			end
 
@@ -241,6 +226,35 @@ return {
 					end,
 				},
 			})
+
+			local custom_hover_handler = function(_, result, ctx, config)
+				if not (result and result.contents) then
+					return vim.lsp.handlers.hover(_, result, ctx, config)
+				end
+
+				if type(result.contents) == "string" then
+					local s = string.gsub(result.contents or "", "&nbsp;", " ")
+					s = string.gsub(s, [[\\\n]], [[\n]])
+					result.contents = s
+					return vim.lsp.handlers.hover(_, result, ctx, config)
+				else
+					local ok, updated_contents = pcall(function()
+						return string.gsub((result.contents or {}).value or "", "&nbsp;", " ")
+					end)
+
+					if ok then
+						local good, res = pcall(function()
+							return string.gsub(updated_contents, "\\\n", "\n")
+						end)
+
+						if good then
+							result.contents = res
+						end
+					end
+
+					return vim.lsp.handlers.hover(_, result, ctx, config)
+				end
+			end
 
 			-- Configure the LSP hover handler with custom settings
 			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(custom_hover_handler, {
