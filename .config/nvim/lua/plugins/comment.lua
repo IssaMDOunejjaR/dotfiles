@@ -9,7 +9,6 @@ return {
 	{
 		"numToStr/Comment.nvim",
 		event = "BufReadPost",
-		-- event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
 			-- plugin to allow us to automatically comment tsx elements with the comment plugin
 			{ "JoosepAlviste/nvim-ts-context-commentstring", event = "BufReadPost" },
