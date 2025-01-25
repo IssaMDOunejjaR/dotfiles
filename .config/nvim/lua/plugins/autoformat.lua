@@ -6,11 +6,10 @@ return { -- Autoformat
 		{
 			"<leader>bf",
 			function(bufnr)
-				if (bufnr) then
+				if bufnr then
 					require("conform").format({ async = not vim.bo[bufnr].readonly, lsp_fallback = true })
 				end
 			end,
-			mode = "",
 			desc = "[B]uffer [F]ormat",
 		},
 	},
@@ -44,10 +43,9 @@ return { -- Autoformat
 
 			-- You can use 'stop_after_first' to run the first available formatter from the list
 			-- javascript = { "prettierd", "prettier", stop_after_first = true },
+
+			javascript = { "prettier" },
+			typescript = { "prettier" },
 		},
 	},
-
-	-- config = function()
-	-- 	vim.keymap.set("n", "<leader>lf", function() end, {})
-	-- end,
 }
