@@ -227,42 +227,9 @@ return {
 				},
 			})
 
-			local custom_hover_handler = function(_, result, ctx, config)
-				if not (result and result.contents) then
-					return vim.lsp.handlers.hover(_, result, ctx, config)
-				end
-
-				if type(result.contents) == "string" then
-					local s = string.gsub(result.contents or "", "&nbsp;", " ")
-					s = string.gsub(s, [[\\\n]], [[\n]])
-					result.contents = s
-					return vim.lsp.handlers.hover(_, result, ctx, config)
-				else
-					local ok, updated_contents = pcall(function()
-						return string.gsub((result.contents or {}).value or "", "&nbsp;", " ")
-					end)
-
-					if ok then
-						local good, res = pcall(function()
-							return string.gsub(updated_contents, "\\\n", "\n")
-						end)
-
-						if good then
-							result.contents = res
-						end
-					end
-
-					return vim.lsp.handlers.hover(_, result, ctx, config)
-				end
-			end
-
-			-- Configure the LSP hover handler with custom settings
-			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(custom_hover_handler, {
-				border = nil,
-				winblend = 0,
-				max_width = 130,
-				max_height = 150,
-			})
+			vim.keymap.set("n", "K", function()
+				vim.lsp.buf.hover({ max_width = 100, max_height = 50, border = "solid" })
+			end)
 		end,
 	},
 }
