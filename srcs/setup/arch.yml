@@ -28,6 +28,9 @@
           - picom
           - autotiling
           - xclip
+          - xdotool
+          - python-pip
+          - luarocks
           - maim
           - docker
           - docker-compose
