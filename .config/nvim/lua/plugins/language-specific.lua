@@ -1,31 +1,6 @@
-local function is_lsp_installed(name)
-	local ok, mason_registry = pcall(require, "mason-registry")
-
-	if not ok then
-		return false
-	end
-
-	return mason_registry.is_installed(name)
-end
-
-local function is_lsp_attached(name)
-	local clients = vim.lsp.get_active_clients()
-
-	for _, client in ipairs(clients) do
-		if client.name == name then
-			return true
-		end
-	end
-
-	return false
-end
-
 return {
 	{ -- Angular
 		"joeveiga/ng.nvim",
-		cond = function()
-			return is_lsp_installed("angular-language-server")
-		end,
 		config = function()
 			-- Safely load ng.nvim
 			local ng_ok, ng = pcall(require, "ng")
@@ -52,9 +27,6 @@ return {
 
 	{ -- Rust
 		"mrcjkb/rustaceanvim",
-		cond = function()
-			return is_lsp_installed("rust-analyzer")
-		end,
 		config = function()
 			vim.g.rustaceanvim = {
 				tools = {
@@ -80,45 +52,46 @@ return {
 			"nvim-treesitter/nvim-treesitter",
 			"nvim-telescope/telescope.nvim", -- optional
 			"neovim/nvim-lspconfig", -- optional
+			{
+				"laytan/tailwind-sorter.nvim",
+				build = "cd formatter && npm ci && npm run build",
+				config = true,
+			},
+			{
+				"razak17/tailwind-fold.nvim",
+				opts = {},
+				ft = { "html", "typescriptreact" },
+			},
 		},
-		cond = function()
-			return is_lsp_installed("tailwindcss-language-server")
-		end,
 		opts = {},
 	},
 
-	-- { -- Typescript
-	-- 	"pmizio/typescript-tools.nvim",
-	-- 	ft = { "typescript", "javascript" },
-	-- 	dependencies = {
-	-- 		"nvim-lua/plenary.nvim",
-	-- 		"neovim/nvim-lspconfig",
-	-- 	},
-	-- 	opt = {
-	-- 		server = {
-	-- 			settings = {
-	-- 				validate = true,
-	-- 				lint = {
-	-- 					cssConflict = "warning", -- Report CSS class conflicts
-	-- 				},
-	-- 				experimental = {
-	-- 					classRegex = "([a-zA-Z0-9_-]+)",
-	-- 				},
-	-- 			},
-	-- 		},
-	-- 	},
-	-- 	cond = function()
-	-- 		return is_lsp_installed("typescript-language-server")
-	-- 	end,
-	-- },
+	{ -- Typescript
+		"pmizio/typescript-tools.nvim",
+		ft = { "typescript", "javascript" },
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"neovim/nvim-lspconfig",
+		},
+		opt = {
+			server = {
+				settings = {
+					validate = true,
+					lint = {
+						cssConflict = "warning", -- Report CSS class conflicts
+					},
+					experimental = {
+						classRegex = "([a-zA-Z0-9_-]+)",
+					},
+				},
+			},
+		},
+	},
 
 	{ -- Java
 		"nvim-java/nvim-java",
 		opt = true,
 		event = "BufReadPre",
-		cond = function()
-			return is_lsp_installed("jdtls")
-		end,
 		config = function()
 			require("java").setup()
 		end,

@@ -1,5 +1,18 @@
 return {
 	{
+		-- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
+		-- used for completion, annotations and signatures of Neovim apis
+		"folke/lazydev.nvim",
+		ft = "lua",
+		opts = {
+			library = {
+				-- Load luvit types when the `vim.uv` word is found
+				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+			},
+		},
+	},
+
+	{
 		-- Main LSP Configuration
 		"neovim/nvim-lspconfig",
 		dependencies = {
@@ -180,21 +193,6 @@ return {
 
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
-			function dump(o)
-				if type(o) == "table" then
-					local s = "{ "
-					for k, v in pairs(o) do
-						if type(k) ~= "number" then
-							k = '"' .. k .. '"'
-						end
-						s = s .. "[" .. k .. "] = " .. dump(v) .. ","
-					end
-					return s .. "} "
-				else
-					return tostring(o)
-				end
-			end
-
 			local function setup_server(name, config)
 				local lspconfig = require("lspconfig")
 				lspconfig[name].setup(vim.tbl_deep_extend("force", {
@@ -203,6 +201,8 @@ return {
 			end
 
 			require("mason-lspconfig").setup({
+				ensure_installed = {},
+				automatic_installation = false,
 				handlers = {
 					function(server_name)
 						if not contains_value(exclude_servers, server_name) then
@@ -226,6 +226,21 @@ return {
 					end,
 				},
 			})
+
+			-- require("tailwind-tools").setup({
+			-- 	server = {
+			-- 		override = true,
+			-- 	},
+			-- 	document_color = {
+			-- 		enabled = true,
+			-- 	},
+			-- 	conceal = {
+			-- 		enabled = true,
+			-- 	},
+			-- 	cmp = {
+			-- 		highlight = "foreground",
+			-- 	},
+			-- })
 
 			vim.keymap.set("n", "K", function()
 				vim.lsp.buf.hover({ max_width = 100, max_height = 50, border = "solid" })
