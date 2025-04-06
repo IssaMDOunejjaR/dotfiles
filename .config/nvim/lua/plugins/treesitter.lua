@@ -1,7 +1,7 @@
 return {
 	"nvim-treesitter/nvim-treesitter",
 	build = ":TSUpdate",
-	event = "BufReadPost",
+	main = "nvim-treesitter.configs",
 	dependencies = {
 		"windwp/nvim-ts-autotag",
 		"nvim-treesitter/nvim-treesitter-context",

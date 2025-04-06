@@ -24,10 +24,10 @@ return { -- Autocompletion
 			},
 		},
 
-		{ "saadparwaiz1/cmp_luasnip", event = "InsertEnter" },
+		"saadparwaiz1/cmp_luasnip",
 		"hrsh7th/cmp-nvim-lsp",
-		{ "hrsh7th/cmp-path", event = "InsertEnter" },
-		{ "hrsh7th/cmp-buffer", event = "InsertEnter" },
+		"hrsh7th/cmp-path",
+		"hrsh7th/cmp-buffer",
 	},
 	config = function()
 		-- See `:help cmp`
@@ -107,6 +107,7 @@ return { -- Autocompletion
 					},
 				},
 				{ name = "path" },
+				{ name = "nvim_lsp_signature_help" },
 			},
 		})
 	end,

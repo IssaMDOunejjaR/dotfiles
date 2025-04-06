@@ -1,7 +1,5 @@
 vim.o.sessionoptions = "localoptions"
 
-vim.opt.cmdheight = 0
-
 -- disable netrw at the very start of your init.lua
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -19,7 +17,7 @@ vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
--- NOTE: You can change these options as you wish!
+--  NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
 vim.opt.fixeol = false
@@ -70,7 +68,7 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
 -- Decrease update time
-vim.opt.updatetime = 100
+vim.opt.updatetime = 250
 
 -- Decrease mapped sequence wait time
 -- Displays which-key popup sooner
@@ -91,3 +89,8 @@ vim.opt.inccommand = "split"
 
 -- Show which line your cursor is on
 vim.opt.cursorline = true
+
+-- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
+-- instead raise a dialog asking if you wish to save the current file(s)
+-- See `:help 'confirm'`
+vim.opt.confirm = true

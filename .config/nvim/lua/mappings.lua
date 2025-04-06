@@ -6,7 +6,7 @@
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 -- Diagnostic keymaps
-vim.keymap.set("n", "<leader>lq", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
+vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
 vim.keymap.set("n", "<leader>ba", ":bufdo bwipeout<CR>", { desc = "[B]uffer Close [A]ll" })
 vim.keymap.set("n", "<leader>bc", ":bd<CR>", { desc = "[B]uffer Close [C]urrent" })
