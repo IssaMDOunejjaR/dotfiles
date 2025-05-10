@@ -9,6 +9,7 @@ return {
 	config = function()
 		-- Ensure dependencies are loaded safely
 		local has_autotag, autotag = pcall(require, "nvim-ts-autotag")
+
 		if has_autotag then
 			autotag.setup({
 				opts = {
@@ -46,21 +47,5 @@ return {
 				disable = { "ruby" }, -- Disable indenting for Ruby
 			},
 		})
-
-		-- Optional: Additional Treesitter modules
-		-- Uncomment and install plugins for additional functionality
-		require("treesitter-context").setup()
-		-- require("nvim-treesitter-textobjects").setup({
-		--   select = {
-		--     enable = true,
-		--     lookahead = true,
-		--     keymaps = {
-		--       ["af"] = "@function.outer",
-		--       ["if"] = "@function.inner",
-		--       ["ac"] = "@class.outer",
-		--       ["ic"] = "@class.inner",
-		--     },
-		--   },
-		-- })
 	end,
 }

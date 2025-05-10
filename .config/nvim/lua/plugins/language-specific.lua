@@ -5,15 +5,17 @@ return {
 			-- Safely load ng.nvim
 			local ng_ok, ng = pcall(require, "ng")
 
-			if ng_ok then
-				vim.keymap.set("n", "<leader>at", function()
-					ng.goto_template_for_component({ reuse_window = true })
-				end, { desc = "[A]ngular [T]emplate for Component" })
-
-				vim.keymap.set("n", "<leader>ac", function()
-					ng.goto_component_with_template_file({ reuse_window = true })
-				end, { desc = "[A]ngular [C]omponent with Template" })
+			if not ng_ok then
+				return
 			end
+
+			vim.keymap.set("n", "<leader>at", function()
+				ng.goto_template_for_component({ reuse_window = true })
+			end, { desc = "[A]ngular [T]emplate for Component" })
+
+			vim.keymap.set("n", "<leader>ac", function()
+				ng.goto_component_with_template_file({ reuse_window = true })
+			end, { desc = "[A]ngular [C]omponent with Template" })
 
 			local wk_ok, wk = pcall(require, "which-key")
 
@@ -57,18 +59,12 @@ return {
 				build = "cd formatter && npm ci && npm run build",
 				config = true,
 			},
-			{
-				"razak17/tailwind-fold.nvim",
-				opts = {},
-				ft = { "html", "typescriptreact" },
-			},
 		},
 		opts = {},
 	},
 
 	{ -- Typescript
 		"pmizio/typescript-tools.nvim",
-		ft = { "typescript", "javascript" },
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"neovim/nvim-lspconfig",
@@ -86,14 +82,24 @@ return {
 				},
 			},
 		},
+		config = function()
+			require("typescript-tools").setup({})
+		end,
 	},
 
-	{ -- Java
-		"nvim-java/nvim-java",
-		opt = true,
-		event = "BufReadPre",
+	-- { -- Java
+	-- 	"nvim-java/nvim-java",
+	-- 	opt = true,
+	-- 	event = "BufReadPre",
+	-- 	config = function()
+	-- 		require("java").setup()
+	-- 	end,
+	-- },
+
+	{ -- Emmet
+		"olrtg/nvim-emmet",
 		config = function()
-			require("java").setup()
+			vim.keymap.set({ "n", "v" }, "<leader>xe", require("nvim-emmet").wrap_with_abbreviation)
 		end,
 	},
 }

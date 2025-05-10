@@ -1,11 +1,16 @@
-return { -- Autocompletion
-	"hrsh7th/nvim-cmp",
-	event = "InsertEnter",
+return {
+	"saghen/blink.cmp",
+	event = "VimEnter",
+	version = "1.*",
 	dependencies = {
+		-- Snippet Engine
 		{
 			"L3MON4D3/LuaSnip",
-			event = "InsertEnter",
+			version = "2.*",
 			build = (function()
+				-- Build Step is needed for regex support in snippets.
+				-- This step is not supported in many windows environments.
+				-- Remove the below condition to re-enable on windows.
 				if vim.fn.has("win32") == 1 or vim.fn.executable("make") == 0 then
 					return
 				end
@@ -22,93 +27,126 @@ return { -- Autocompletion
 					end,
 				},
 			},
+			opts = {},
 		},
 
-		"saadparwaiz1/cmp_luasnip",
-		"hrsh7th/cmp-nvim-lsp",
-		"hrsh7th/cmp-path",
-		"hrsh7th/cmp-buffer",
+		"folke/lazydev.nvim",
+
+		-- {
+		-- 	"Kaiser-Yang/blink-cmp-git",
+		-- },
+
+		"jdrupal-dev/css-vars.nvim",
+		"mikavilpas/blink-ripgrep.nvim",
+		"bydlw98/blink-cmp-env",
 	},
-	config = function()
-		-- See `:help cmp`
-		local cmp = require("cmp")
-		local luasnip = require("luasnip")
+	--- @module 'blink.cmp'
+	--- @type blink.cmp.Config
+	opts = {
+		keymap = {
+			preset = "enter",
 
-		luasnip.config.setup({})
-
-		cmp.setup({
-			snippet = {
-				expand = function(args)
-					luasnip.lsp_expand(args.body)
-				end,
+			["<C-space>"] = {
+				"show",
 			},
-			completion = { completeopt = "menu,menuone,noinsert" },
 
-			-- For an understanding of why these mappings were
-			-- chosen, you will need to read `:help ins-completion`
-			--
-			-- No, but seriously. Please read `:help ins-completion`, it is really good!
-			mapping = cmp.mapping.preset.insert({
-				-- Scroll the documentation window [b]ack / [f]orward
-				["<C-b>"] = cmp.mapping.scroll_docs(-4),
-				["<C-f>"] = cmp.mapping.scroll_docs(4),
+			["<Tab>"] = { "select_next", "fallback" },
+			["<S-Tab>"] = { "select_prev", "fallback" },
 
-				-- If you prefer more traditional completion keymaps,
-				-- you can uncomment the following lines
-				["<CR>"] = cmp.mapping.confirm({ select = true }),
-				["<Tab>"] = cmp.mapping.select_next_item(),
-				["<S-Tab>"] = cmp.mapping.select_prev_item(),
+			["<C-h>"] = { "snippet_backward", "fallback" },
+			["<C-l>"] = { "snippet_forward", "fallback" },
+		},
 
-				-- Manually trigger a completion from nvim-cmp.
-				--  Generally you don't need this, because nvim-cmp will display
-				--  completions whenever it has completion options available.
-				["<C-Space>"] = cmp.mapping.complete({}),
+		appearance = {
+			-- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+			-- Adjusts spacing to ensure icons are aligned
+			nerd_font_variant = "normal",
+		},
 
-				-- Think of <c-l> as moving to the right of your snippet expansion.
-				--  So if you have a snippet that's like:
-				--  function $name($args)
-				--    $body
-				--  end
-
-				-- <c-l> will move you to the right of each of the expansion locations.
-				-- <c-h> is similar, except moving you backwards.
-				["<C-l>"] = cmp.mapping(function()
-					if luasnip.expand_or_locally_jumpable() then
-						luasnip.expand_or_jump()
-					end
-				end, { "i", "s" }),
-
-				["<C-h>"] = cmp.mapping(function()
-					if luasnip.locally_jumpable(-1) then
-						luasnip.jump(-1)
-					end
-				end, { "i", "s" }),
-
-				-- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
-				--    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
-			}),
-			sources = {
-				{
-					name = "lazydev",
-					-- set group index to 0 to skip loading LuaLS completions as lazydev recommends it
-					group_index = 0,
+		completion = {
+			list = {
+				selection = {
+					preselect = false,
 				},
-				{ name = "nvim_lsp" },
-				{ name = "luasnip" },
-				{
-					name = "buffer",
-					option = {
-						keyword_length = 3,
-						get_bufnrs = function()
-							return vim.tbl_filter(function(buf)
-								return vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buflisted
-							end, vim.api.nvim_list_bufs())
-						end,
+			},
+
+			-- By default, you may press `<c-space>` to show the documentation.
+			-- Optionally, set `auto_show = true` to show the documentation after a delay.
+			documentation = { auto_show = true, auto_show_delay_ms = 500 },
+
+			ghost_text = { enabled = true },
+		},
+
+		sources = {
+			default = {
+				-- "git",
+				"lsp",
+				"path",
+				"snippets",
+				"lazydev",
+				"css_vars",
+				"ripgrep",
+				"buffer",
+				"env",
+			},
+
+			providers = {
+				-- git = {
+				-- 	module = "blink-cmp-git",
+				-- },
+				ripgrep = {
+					module = "blink-ripgrep",
+					opts = {
+						max_filesize = "1M",
 					},
 				},
-				{ name = "path" },
-				{ name = "nvim_lsp_signature_help" },
+				css_vars = {
+					module = "css-vars.blink",
+				},
+				env = {
+					module = "blink-cmp-env",
+				},
+				lazydev = { module = "lazydev.integrations.blink", score_offset = 100 },
+				lsp = {
+					min_keyword_length = 0,
+					score_offset = 50,
+				},
+				path = {
+					min_keyword_length = 0,
+					score_offset = 2,
+				},
+				snippets = {
+					min_keyword_length = 2,
+					score_offset = -1,
+				},
+				buffer = {
+					min_keyword_length = 2,
+					opts = {
+						get_bufnrs = function()
+							return vim.iter(vim.api.nvim_list_wins())
+								:map(function(win)
+									return vim.api.nvim_win_get_buf(win)
+								end)
+								:filter(function(buf)
+									return vim.bo[buf].buftype ~= "nofile"
+								end)
+								:totable()
+						end,
+					},
+					score_offset = -3,
+				},
+				dadbod = { module = "vim_dadbod_completion.blink" },
 			},
-		})
-	end,
+		},
+
+		snippets = { preset = "luasnip" },
+
+		fuzzy = { implementation = "prefer_rust", sorts = {
+			"exact",
+			"score",
+			"sort_text",
+		} },
+
+		signature = { enabled = true },
+	},
 }

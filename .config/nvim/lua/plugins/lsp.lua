@@ -1,33 +1,29 @@
 return {
 	{
-		-- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
-		-- used for completion, annotations and signatures of Neovim apis
-		"folke/lazydev.nvim",
-		ft = "lua",
-		opts = {
-			library = {
-				-- Load luvit types when the `vim.uv` word is found
-				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
-			},
-		},
-	},
-
-	{
 		-- Main LSP Configuration
 		"neovim/nvim-lspconfig",
 		dependencies = {
 			"williamboman/mason.nvim",
-
 			"williamboman/mason-lspconfig.nvim",
-
 			-- "jay-babu/mason-nvim-dap.nvim",
-
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
-
 			"hrsh7th/cmp-nvim-lsp",
+			{
+				-- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
+				-- used for completion, annotations and signatures of Neovim apis
+				"folke/lazydev.nvim",
+				ft = "lua",
+				opts = {
+					library = {
+						-- Load luvit types when the `vim.uv` word is found
+						{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+					},
+				},
+			},
 		},
 		config = function()
 			vim.diagnostic.config({
+				severity_sort = true,
 				update_in_insert = false, -- Disable diagnostics while typing
 				virtual_text = { spacing = 4, prefix = "●" }, -- Adjust visual clutter
 				signs = true,
@@ -35,14 +31,16 @@ return {
 			})
 
 			vim.api.nvim_create_autocmd("LspAttach", {
-				group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
+				group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
 				callback = function(event)
 					local builtin = require("telescope.builtin")
 
 					-- In this case, we create a function that lets us more easily define mappings specific
 					-- for LSP related items. It sets the mode, buffer and description for us each time.
-					local map = function(keys, func, desc)
-						vim.keymap.set("n", keys, func, { buffer = event.buf, desc = desc })
+					local map = function(keys, func, desc, mode)
+						mode = mode or "n"
+
+						vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = desc })
 					end
 
 					-- Jump to the definition of the word under your cursor.
@@ -97,8 +95,7 @@ return {
 					local client = vim.lsp.get_client_by_id(event.data.client_id)
 
 					if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
-						local highlight_augroup =
-							vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
+						local highlight_augroup = vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
 
 						vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 							buffer = event.buf,
@@ -113,23 +110,15 @@ return {
 						})
 
 						vim.api.nvim_create_autocmd("LspDetach", {
-							group = vim.api.nvim_create_augroup("kickstart-lsp-detach", { clear = true }),
+							group = vim.api.nvim_create_augroup("lsp-detach", { clear = true }),
 							callback = function(event2)
 								vim.lsp.buf.clear_references()
-								vim.api.nvim_clear_autocmds({ group = "kickstart-lsp-highlight", buffer = event2.buf })
+								vim.api.nvim_clear_autocmds({ group = "lsp-highlight", buffer = event2.buf })
 							end,
 						})
 					end
 				end,
 			})
-
-			-- LSP servers and clients are able to communicate to each other what features they support.
-			--  By default, Neovim doesn't support everything that is in the LSP specification.
-			--  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
-			--  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
-			local capabilities = vim.lsp.protocol.make_client_capabilities()
-
-			capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
 			-- Enable the following language servers
 			--  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -147,6 +136,12 @@ return {
 				bashls = {},
 				yamlls = {},
 				lemminx = {},
+				ts_ls = {},
+				angularls = {},
+				tailwindcss = {},
+				eslint_d = {},
+				prettierd = {},
+				emmet_language_server = {},
 				lua_ls = {
 					settings = {
 						Lua = {
@@ -171,7 +166,7 @@ return {
 			local ensure_installed = vim.tbl_keys(servers or {})
 
 			vim.list_extend(ensure_installed, {
-				"stylua", -- Used to format Lua code
+				"stylua",
 			})
 
 			-- require("mason-nvim-dap").setup({
@@ -179,71 +174,38 @@ return {
 			-- 	automatic_installation = true,
 			-- })
 
-			local exclude_servers = { "rust_analyzer", "tailwindcss" }
-
-			local function contains_value(table, value)
-				for _, v in ipairs(table) do
-					if v == value then
-						return true
-					end
-				end
-
-				return false
-			end
-
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
-
-			local function setup_server(name, config)
-				local lspconfig = require("lspconfig")
-				lspconfig[name].setup(vim.tbl_deep_extend("force", {
-					capabilities = capabilities,
-				}, config or {}))
-			end
 
 			require("mason-lspconfig").setup({
 				ensure_installed = {},
-				automatic_installation = false,
-				handlers = {
-					function(server_name)
-						if not contains_value(exclude_servers, server_name) then
-							local server = servers[server_name] or {}
-							-- This handles overriding only values explicitly passed
-							-- by the server configuration above. Useful when disabling
-							-- certain features of an LSP (for example, turning off formatting for tsserver)
-							server.capabilities =
-								vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-
-							if server_name == "jdtls" then
-								setup_server("jdtls", {
-									handlers = {
-										["$/progress"] = function(_, result, ctx) end,
-									},
-								})
-							else
-								setup_server(server_name, server)
-							end
-						end
-					end,
+				automatic_enable = {
+					exclude = {
+						"rust_analyzer",
+						"tailwindcss",
+						"ts_ls",
+					},
 				},
+				automatic_installation = false,
 			})
 
-			-- require("tailwind-tools").setup({
-			-- 	server = {
-			-- 		override = true,
-			-- 	},
-			-- 	document_color = {
-			-- 		enabled = true,
-			-- 	},
-			-- 	conceal = {
-			-- 		enabled = true,
-			-- 	},
-			-- 	cmp = {
-			-- 		highlight = "foreground",
-			-- 	},
-			-- })
+			-- LSP servers and clients are able to communicate to each other what features they support.
+			--  By default, Neovim doesn't support everything that is in the LSP specification.
+			--  When you add blink.cmp, luasnip, etc. Neovim now has *more* capabilities.
+			--  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
+			local capabilities = require("blink.cmp").get_lsp_capabilities()
+
+			vim.lsp.config("*", {
+				capabilities = capabilities,
+			})
+
+			vim.lsp.config("angularls", {
+				on_attach = function(client, bufnr)
+					client.server_capabilities.renameProvider = false
+				end,
+			})
 
 			vim.keymap.set("n", "K", function()
-				vim.lsp.buf.hover({ max_width = 100, max_height = 50, border = "solid" })
+				vim.lsp.buf.hover({ max_width = 80, max_height = 20, border = "solid" })
 			end)
 		end,
 	},
