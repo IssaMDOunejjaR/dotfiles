@@ -5,8 +5,18 @@ return {
 			-- Safely load ng.nvim
 			local ng_ok, ng = pcall(require, "ng")
 
-			if not ng_ok then
-				return
+			if ng_ok then
+				vim.keymap.set("n", "<leader>at", function()
+					ng.goto_template_for_component({ reuse_window = true })
+				end, { desc = "[A]ngular [T]emplate for Component" })
+
+				vim.keymap.set("n", "<leader>ac", function()
+					ng.goto_component_with_template_file({ reuse_window = true })
+				end, { desc = "[A]ngular [C]omponent with Template" })
+
+				vim.keymap.set("n", "<leader>aT", function()
+					ng.get_template_tcb()
+				end, { desc = "[A]ngular [T]omponent with Template" })
 			end
 
 			vim.keymap.set("n", "<leader>at", function()
