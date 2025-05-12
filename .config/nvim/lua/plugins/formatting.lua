@@ -41,6 +41,7 @@ return { -- Autoformat
 				css = { "prettierd", stop_after_first = true },
 				scss = { "prettierd", stop_after_first = true },
 				html = { "prettierd", stop_after_first = true },
+				htmlangular = { "prettierd", stop_after_first = true },
 				json = { "prettierd", stop_after_first = true },
 				yaml = { "prettierd", stop_after_first = true },
 				markdown = { "prettierd", stop_after_first = true },
