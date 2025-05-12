@@ -16,7 +16,7 @@ return {
 
 				vim.keymap.set("n", "<leader>aT", function()
 					ng.get_template_tcb()
-				end, { desc = "[A]ngular [T]omponent with Template" })
+				end, { desc = "[A]ngular Template [T]ypeCheck" })
 			end
 
 			vim.keymap.set("n", "<leader>at", function()
