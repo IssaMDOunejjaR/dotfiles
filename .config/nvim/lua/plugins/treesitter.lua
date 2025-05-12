@@ -5,6 +5,7 @@ return {
 	dependencies = {
 		"windwp/nvim-ts-autotag",
 		"nvim-treesitter/nvim-treesitter-context",
+		"nvim-treesitter/nvim-treesitter-textobjects",
 	},
 	config = function()
 		-- Ensure dependencies are loaded safely
