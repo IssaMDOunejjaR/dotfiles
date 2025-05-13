@@ -10,23 +10,27 @@ return {
 		},
 		constrain_cursor = "name",
 		watch_for_changes = true,
-		-- keymaps = {
-		-- 	["<leader>e"] = { "actions.open_cwd", mode = "n" },
-		-- },
 		view_options = {
 			show_hidden = true,
 		},
 		float = {
 			max_width = 150,
 			max_height = 150,
-			padding = 5,
-			border = { "┌", "─", "┐", "│", "┘", "─", "└", "│" },
+			padding = 3,
+			border = "single",
 		},
 	},
 
 	dependencies = { "nvim-tree/nvim-web-devicons" },
 
 	keys = {
+		{
+			"<leader>e",
+			function()
+				require("oil").toggle_float(vim.fn.getcwd())
+			end,
+			desc = "Toggle Oil [E]xplorer root directory",
+		},
 		{
 			"<leader>c",
 			function()

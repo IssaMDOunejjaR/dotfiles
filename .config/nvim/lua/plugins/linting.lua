@@ -1,6 +1,17 @@
 return {
 	{
 		"mfussenegger/nvim-lint",
+
+		keys = {
+			{
+				"<leader>ll",
+				function()
+					require("lint").try_lint()
+				end,
+				desc = "[L]sp [L]int",
+			},
+		},
+
 		config = function()
 			local lint = require("lint")
 
@@ -26,10 +37,6 @@ return {
 			-- 		-- require("lint").try_lint("cspell")
 			-- 	end,
 			-- })
-
-			vim.keymap.set("n", "<leader>ll", function()
-				lint.try_lint()
-			end, { desc = "[L]sp [L]int" })
 		end,
 	},
 }

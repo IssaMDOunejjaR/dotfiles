@@ -93,7 +93,21 @@ return {
 			},
 		},
 		config = function()
-			require("typescript-tools").setup({})
+			require("typescript-tools").setup({
+				settings = {
+					tsserver_file_preferences = {
+						includeInlayParameterNameHints = "all",
+						includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+						includeInlayFunctionParameterTypeHints = true,
+						includeInlayVariableTypeHints = true,
+						includeInlayPropertyDeclarationTypeHints = true,
+						includeInlayFunctionLikeReturnTypeHints = true,
+						includeInlayEnumMemberValueHints = true,
+						importModuleSpecifierPreference = "relative",
+						importModuleSpecifierEnding = "minimal",
+					},
+				},
+			})
 		end,
 	},
 

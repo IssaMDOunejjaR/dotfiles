@@ -5,9 +5,9 @@ return {
 
 	opts = {
 		winopts = {
-			border = { "┌", "─", "┐", "│", "┘", "─", "└", "│" },
+			border = "single",
 			preview = {
-				border = { "┌", "─", "┐", "│", "┘", "─", "└", "│" },
+				border = "single",
 				hidden = true,
 			},
 		},
@@ -16,6 +16,7 @@ return {
 				["<C-]>"] = "toggle-preview",
 				-- ["<C-S-f>"] = "preview-page-down",
 				-- ["<C-S-b>"] = "preview-page-up",
+				-- ["<Tab>"] = "toggle-preview",
 			},
 		},
 	},
