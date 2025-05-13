@@ -31,12 +31,6 @@ return {
 		},
 
 		"folke/lazydev.nvim",
-
-		-- {
-		-- 	"Kaiser-Yang/blink-cmp-git",
-		-- },
-
-		"jdrupal-dev/css-vars.nvim",
 		"mikavilpas/blink-ripgrep.nvim",
 		"bydlw98/blink-cmp-env",
 	},
@@ -72,80 +66,96 @@ return {
 
 			-- By default, you may press `<c-space>` to show the documentation.
 			-- Optionally, set `auto_show = true` to show the documentation after a delay.
-			documentation = { auto_show = true, auto_show_delay_ms = 500 },
+			documentation = { auto_show = true, auto_show_delay_ms = 0 },
 
 			ghost_text = { enabled = true },
 		},
 
 		sources = {
 			default = {
-				-- "git",
 				"lsp",
 				"path",
 				"snippets",
-				"lazydev",
-				"css_vars",
-				"ripgrep",
 				"buffer",
-				"env",
+				"dadbod",
+				"lazydev",
+				-- "env",
 			},
 
 			providers = {
-				-- git = {
-				-- 	module = "blink-cmp-git",
+				-- env = {
+				-- 	module = "blink-cmp-env",
 				-- },
-				ripgrep = {
-					module = "blink-ripgrep",
-					opts = {
-						max_filesize = "1M",
-					},
-				},
-				css_vars = {
-					module = "css-vars.blink",
-				},
-				env = {
-					module = "blink-cmp-env",
-				},
-				lazydev = { module = "lazydev.integrations.blink", score_offset = 100 },
-				lsp = {
+				lazydev = {
+					module = "lazydev.integrations.blink",
 					min_keyword_length = 0,
-					score_offset = 50,
+					score_offset = 100,
+				},
+				lsp = {
+					name = "lsp",
+					enabled = true,
+					module = "blink.cmp.sources.lsp",
+					min_keyword_length = 0,
+					score_offset = 90,
 				},
 				path = {
-					min_keyword_length = 0,
-					score_offset = 2,
+					name = "Path",
+					module = "blink.cmp.sources.path",
+					score_offset = 25,
+					fallbacks = { "snippets", "buffer" },
+					opts = {
+						trailing_slash = false,
+						label_trailing_slash = true,
+						get_cwd = function(context)
+							return vim.fn.expand(("#%d:p:h"):format(context.bufnr))
+						end,
+						show_hidden_files_by_default = true,
+					},
 				},
 				snippets = {
+					name = "snippets",
+					enabled = true,
+					max_items = 15,
 					min_keyword_length = 2,
-					score_offset = -1,
+					module = "blink.cmp.sources.snippets",
+					score_offset = 85,
 				},
 				buffer = {
-					min_keyword_length = 2,
+					name = "Buffer",
+					enabled = true,
+					max_items = 5,
+					module = "blink.cmp.sources.buffer",
+					min_keyword_length = 1,
+					score_offset = 15,
 					opts = {
 						get_bufnrs = function()
-							return vim.iter(vim.api.nvim_list_wins())
-								:map(function(win)
-									return vim.api.nvim_win_get_buf(win)
-								end)
+							return vim.iter(vim.api.nvim_list_bufs())
 								:filter(function(buf)
 									return vim.bo[buf].buftype ~= "nofile"
 								end)
 								:totable()
 						end,
 					},
-					score_offset = -3,
 				},
-				dadbod = { module = "vim_dadbod_completion.blink" },
+				dadbod = {
+					name = "Dadbod",
+					module = "vim_dadbod_completion.blink",
+					min_keyword_length = 0,
+					score_offset = 85,
+				},
 			},
 		},
 
 		snippets = { preset = "luasnip" },
 
-		fuzzy = { implementation = "prefer_rust", sorts = {
-			"exact",
-			"score",
-			"sort_text",
-		} },
+		fuzzy = {
+			implementation = "prefer_rust",
+			sorts = {
+				"exact",
+				"score",
+				"sort_text",
+			},
+		},
 
 		signature = { enabled = true },
 	},
