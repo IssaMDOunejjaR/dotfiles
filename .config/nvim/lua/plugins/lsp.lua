@@ -1,8 +1,8 @@
 return {
-	"williamboman/mason.nvim",
+	"mason-org/mason.nvim",
 
 	dependencies = {
-		"jay-babu/mason-nvim-dap.nvim",
+		-- "jay-babu/mason-nvim-dap.nvim",
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
 		{
 			-- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
@@ -117,36 +117,25 @@ return {
 			end,
 		})
 
-		local enabled_servers = {
-			cssls = {},
-			jsonls = {},
-			html = {},
-			bashls = {},
-			yamlls = {},
-			lemminx = {},
-			angularls = {},
-			eslint_d = {},
-			prettierd = {},
-			emmet_language_server = {},
-			lua_ls = {},
+		local servers = {
+			"css-lsp",
+			"json-lsp",
+			"html-lsp",
+			"bash-language-server",
+			"yaml-language-server",
+			"lemminx",
+			"angular-language-server",
+			"eslint_d",
+			"prettierd",
+			"emmet-language-server",
+			"lua-language-server",
+			-- "rust-analyzer",
+			"tailwindcss-language-server",
+			"typescript-language-server",
+			"stylua",
 		}
-
-		local excluded_servers = {
-			rust_analyzer = {},
-			tailwindcss = {},
-			ts_ls = {},
-		}
-
-		local servers = {}
-
-		vim.list_extend(servers, enabled_servers)
-		vim.list_extend(servers, excluded_servers)
 
 		require("mason").setup()
-
-		vim.list_extend(servers, {
-			stylua = {},
-		})
 
 		-- require("mason-nvim-dap").setup({
 		-- 	ensure_installed = { "java-test" },
