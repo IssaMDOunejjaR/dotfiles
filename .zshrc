@@ -80,6 +80,8 @@ alias la='ls -la'
 alias ll='ls -l'
 alias c='clear'
 alias kc='kubectl'
+alias lgit='lazygit'
+alias ldc='lazydocker'
 
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
