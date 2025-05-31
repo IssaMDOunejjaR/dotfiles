@@ -49,6 +49,8 @@ return { -- Autoformat
 				yaml = { "prettierd", stop_after_first = true },
 				markdown = { "prettierd", stop_after_first = true },
 				["markdown.mdx"] = { "prettierd", stop_after_first = true },
+				bash = { "beautysh", stop_after_first = true },
+				sh = { "shfmt", stop_after_first = true },
 			},
 		},
 	},
