@@ -14,7 +14,7 @@ export NVM_DIR="$HOME/.nvm"
 export PATH="$PATH:$HOME/go/bin"
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
+export PATH="$PATH:$HOME/.rvm/bin:$HOME/Applications"
 
 # bun completions
 [ -s "/home/issamdounejjar/.bun/_bun" ] && source "/home/issamdounejjar/.bun/_bun"
@@ -79,6 +79,7 @@ alias v='nvim'
 alias la='ls -la'
 alias ll='ls -l'
 alias c='clear'
+alias kubectl='kubecolor'
 alias kc='kubectl'
 alias lgit='lazygit'
 alias ldc='lazydocker'
@@ -93,5 +94,14 @@ fi
 if test -f /home/linuxbrew/.linuxbrew/bin/brew; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
+
+# Load Angular CLI autocompletion.
+source <(ng completion script)
+
+# Load Kubectl autocompletion.
+source <(kubectl completion zsh)
+
+# Make "kubecolor" borrow the same completion logic as "kubectl"
+compdef kubecolor=kubectl
 
 if [ "$TMUX" = "" ]; then tmux attach -t home || tmux new -s home; fi
