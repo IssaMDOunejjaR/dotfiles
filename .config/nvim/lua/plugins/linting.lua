@@ -24,6 +24,7 @@ return {
 				css = { "stylelint" },
 				scss = { "stylelint" },
 				sass = { "stylelint" },
+				sh = { "shellcheck" },
 			}
 
 			-- vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
