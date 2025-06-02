@@ -57,13 +57,13 @@ return {
 			end,
 			desc = "[F]ind by grep in current buffer",
 		},
-		-- {
-		-- 	"<leader>fgd",
-		-- 	function()
-		-- 		require("fzf-lua").live_grep({ cwd = vim.fn.input("Search Folder: ", vim.fn.getcwd(), "file") })
-		-- 	end,
-		-- 	desc = "[F]ind by [G]rep in [D]irectory",
-		-- },
+		{
+			"<leader>fid",
+			function()
+				require("fzf-lua").live_grep({ cwd = vim.fn.input("Search Folder: ", vim.fn.getcwd(), "file") })
+			end,
+			desc = "[F]ind by Grep [i]n [D]irectory",
+		},
 		{
 			"<leader>fd",
 			function()
