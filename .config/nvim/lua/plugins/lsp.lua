@@ -160,6 +160,7 @@ return {
 			"eslint_d",
 			"prettierd",
 			"emmet_language_server",
+			"gopls",
 		})
 	end,
 }
