@@ -39,21 +39,8 @@ return {
 
 	{ -- Rust
 		"mrcjkb/rustaceanvim",
-		config = function()
-			vim.g.rustaceanvim = {
-				tools = {
-					hover_actions = {
-						-- replace_builtin_hover = false,
-					},
-					rustfmt = {
-						enable = true, -- Enable rustfmt integration
-					},
-					rust_analyzer = {
-						enable = true, -- Enable rust-analyzer for LSP
-					},
-				},
-			}
-		end,
+		version = "^6",
+		lazy = false,
 	},
 
 	{ -- Tailwind
