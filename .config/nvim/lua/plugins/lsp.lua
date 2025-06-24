@@ -161,6 +161,10 @@ return {
 			"prettierd",
 			"emmet_language_server",
 			"gopls",
+			"templ",
+			"checkmake",
+			"docker-compose-language-service",
+			"dockerfile-language-server",
 		})
 	end,
 }
