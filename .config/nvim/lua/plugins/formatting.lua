@@ -51,6 +51,7 @@ return { -- Autoformat
 				["markdown.mdx"] = { "prettierd", stop_after_first = true },
 				bash = { "beautysh", stop_after_first = true },
 				sh = { "shfmt", stop_after_first = true },
+				templ = { "templ", stop_after_first = true },
 			},
 		},
 	},
