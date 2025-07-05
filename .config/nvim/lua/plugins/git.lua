@@ -1,16 +1,5 @@
 return {
 	{
-		"kdheepak/lazygit.nvim",
-		event = "VeryLazy",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-		},
-		keys = {
-			{ "<leader>gg", "<cmd>LazyGit<cr>", desc = "[G]it Lazy[G]it" },
-		},
-	},
-
-	{
 		"tpope/vim-fugitive",
 		cmd = { "Git", "Gdiffsplit", "Gread" },
 		keys = {

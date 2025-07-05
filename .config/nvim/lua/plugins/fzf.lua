@@ -14,12 +14,13 @@ return {
 		keymap = {
 			builtin = {
 				["<C-]>"] = "toggle-preview",
-				-- ["<C-S-f>"] = "preview-page-down",
-				-- ["<C-S-b>"] = "preview-page-up",
-				-- ["<Tab>"] = "toggle-preview",
 			},
 		},
 	},
+
+	init = function()
+		require("fzf-lua").register_ui_select()
+	end,
 
 	keys = {
 		{

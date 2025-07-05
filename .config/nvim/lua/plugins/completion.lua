@@ -1,12 +1,18 @@
 return {
-	"saghen/blink.cmp",
-	event = "VimEnter",
-	version = "1.*",
-	dependencies = {
-		-- Snippet Engine
-		{
+	{
+		"saghen/blink.cmp",
+		event = "InsertEnter",
+		-- use a release tag to download pre-built binaries
+		version = "1.*",
+		-- branch = "main", -- NOTE: use main branch for latest features and fixes, use version tag for stable releases
+		-- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
+		-- build = "cargo build --release",
+		-- If you use nix, you can build from source using latest nightly rust with:
+		-- build = 'nix run .#build-plugin',
+		dependencies = {
+			-- optional: provides snippets for the snippet source
 			"L3MON4D3/LuaSnip",
-			version = "2.*",
+			version = "v2.*",
 			build = (function()
 				-- Build Step is needed for regex support in snippets.
 				-- This step is not supported in many windows environments.
@@ -18,145 +24,123 @@ return {
 			end)(),
 			dependencies = {
 				-- `friendly-snippets` contains a variety of premade snippets.
-				--    See the README about individual language/framework/plugin snippets:
-				--    https://github.com/rafamadriz/friendly-snippets
 				{
 					"rafamadriz/friendly-snippets",
 					config = function()
 						require("luasnip.loaders.from_vscode").lazy_load()
+						require("luasnip.loaders.from_vscode").lazy_load({
+							paths = { vim.fn.stdpath("config") .. "/snippets" },
+						})
 					end,
 				},
 			},
-			opts = {},
 		},
-
-		"folke/lazydev.nvim",
-		"mikavilpas/blink-ripgrep.nvim",
-		"bydlw98/blink-cmp-env",
+		---@module 'blink.cmp'
+		-- Refer https://cmp.saghen.dev/installation.html
+		opts = {
+			-- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
+			-- 'super-tab' for mappings similar to vscode (tab to accept)
+			-- 'enter' for enter to accept
+			-- 'none' for no mappings
+			--
+			-- All presets have the following mappings:
+			-- C-space: Open menu or open docs if already open
+			-- C-n/C-p or Up/Down: Select next/previous item
+			-- C-e: Hide menu
+			-- C-k: Toggle signature help (if signature.enabled = true)
+			--
+			-- See :h blink-cmp-config-keymap for defining your own keymap
+			keymap = { preset = "enter" },
+			completion = {
+				-- Controls whether the documentation window will automatically show when selecting a completion item
+				documentation = {
+					auto_show = true,
+				},
+			},
+			-- Experimental signature help support
+			signature = {
+				enabled = true,
+			},
+			appearance = {
+				-- Sets the fallback highlight groups to nvim-cmp's highlight groups
+				-- Useful for when your theme doesn't support blink.cmp
+				-- Will be removed in a future release
+				use_nvim_cmp_as_default = true,
+				-- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+				nerd_font_variant = "mono",
+			},
+			snippets = { preset = "luasnip" },
+			sources = {
+				default = {
+					"lsp",
+					"path",
+					"snippets",
+					"buffer",
+				},
+			},
+			fuzzy = { implementation = "prefer_rust_with_warning" },
+			-- Disable cmdline completions
+			cmdline = {
+				enabled = false,
+			},
+		},
+		-- without having to redefine it
+		opts_extend = {
+			"sources.completion.enabled_providers",
+			"sources.compat", -- Support nvim-cmp source
+			"sources.default",
+		},
 	},
-	--- @module 'blink.cmp'
-	--- @type blink.cmp.Config
-	opts = {
-		keymap = {
-			preset = "enter",
 
-			["<C-space>"] = {
-				"show",
+	-- Lazydev
+	{
+		"folke/lazydev.nvim",
+		opts = {
+			library = {
+				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+				{ path = "snacks.nvim", words = { "Snacks" } },
+				{ path = "lazy.nvim", words = { "LazyVim" } },
 			},
-
-			["<Tab>"] = { "select_next", "fallback" },
-			["<S-Tab>"] = { "select_prev", "fallback" },
-
-			["<C-h>"] = { "snippet_backward", "fallback" },
-			["<C-l>"] = { "snippet_forward", "fallback" },
 		},
+	},
 
-		appearance = {
-			-- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-			-- Adjusts spacing to ensure icons are aligned
-			nerd_font_variant = "normal",
-		},
-
-		completion = {
-			list = {
-				selection = {
-					preselect = false,
-				},
-			},
-
-			-- By default, you may press `<c-space>` to show the documentation.
-			-- Optionally, set `auto_show = true` to show the documentation after a delay.
-			documentation = { auto_show = true, auto_show_delay_ms = 0 },
-
-			ghost_text = { enabled = true },
-		},
-
-		sources = {
-			default = {
-				"lsp",
-				"path",
-				"snippets",
-				"buffer",
-				"dadbod",
-				"lazydev",
-				-- "env",
-			},
-
-			providers = {
-				-- env = {
-				-- 	module = "blink-cmp-env",
-				-- },
-				lazydev = {
-					module = "lazydev.integrations.blink",
-					min_keyword_length = 0,
-					score_offset = 100,
-				},
-				lsp = {
-					name = "lsp",
-					enabled = true,
-					module = "blink.cmp.sources.lsp",
-					min_keyword_length = 0,
-					score_offset = 90,
-				},
-				path = {
-					name = "Path",
-					module = "blink.cmp.sources.path",
-					score_offset = 25,
-					fallbacks = { "snippets", "buffer" },
-					opts = {
-						trailing_slash = false,
-						label_trailing_slash = true,
-						get_cwd = function(context)
-							return vim.fn.expand(("#%d:p:h"):format(context.bufnr))
-						end,
-						show_hidden_files_by_default = true,
+	{
+		"saghen/blink.cmp",
+		opts = {
+			sources = {
+				-- add lazydev to your completion providers
+				default = { "lazydev" },
+				providers = {
+					lazydev = {
+						name = "LazyDev",
+						module = "lazydev.integrations.blink",
+						score_offset = 100, -- show at a higher priority than lsp
 					},
 				},
-				snippets = {
-					name = "snippets",
-					enabled = true,
-					max_items = 15,
-					min_keyword_length = 2,
-					module = "blink.cmp.sources.snippets",
-					score_offset = 85,
-				},
-				buffer = {
-					name = "Buffer",
-					enabled = true,
-					max_items = 5,
-					module = "blink.cmp.sources.buffer",
-					min_keyword_length = 1,
-					score_offset = 15,
-					opts = {
-						get_bufnrs = function()
-							return vim.iter(vim.api.nvim_list_bufs())
-								:filter(function(buf)
-									return vim.bo[buf].buftype ~= "nofile"
-								end)
-								:totable()
-						end,
+			},
+		},
+	},
+
+	-- Markdown
+	{
+		"MeanderingProgrammer/render-markdown.nvim",
+		dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.icons" },
+		opts = {},
+	},
+
+	{
+		"saghen/blink.cmp",
+		opts = {
+			sources = {
+				default = { "markdown" },
+				providers = {
+					markdown = {
+						name = "RenderMarkdown",
+						module = "render-markdown.integ.blink",
+						fallbacks = { "lsp" },
 					},
 				},
-				dadbod = {
-					name = "Dadbod",
-					module = "vim_dadbod_completion.blink",
-					min_keyword_length = 0,
-					score_offset = 85,
-				},
 			},
 		},
-
-		snippets = { preset = "luasnip" },
-
-		fuzzy = {
-			implementation = "prefer_rust",
-			sorts = {
-				"exact",
-				"score",
-				"sort_text",
-			},
-		},
-
-		signature = { enabled = true },
 	},
 }
