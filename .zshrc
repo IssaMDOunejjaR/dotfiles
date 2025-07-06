@@ -5,6 +5,10 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+if [ -f ~/.config/hypr/wayland-env ]; then
+  export $(grep -E '^(WAYLAND_DISPLAY|XDG_SESSION_TYPE|XDG_RUNTIME_DIR)=' ~/.config/hypr/wayland-env)
+fi
+
 export EDITOR=nvim
 
 export NVM_DIR="$HOME/.nvm"
@@ -42,6 +46,7 @@ zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
 zinit light zsh-users/zsh-syntax-highlighting
+zinit snippet OMZP::colored-man-pages
 
 autoload -U compinit && compinit
 
