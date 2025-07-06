@@ -1,0 +1,22 @@
+#!/bin/bash
+
+waybar_pid=$(pidof waybar)
+
+echo "pid: $waybar_pid"
+
+if [ -z "$waybar_pid" ]; then
+    echo "not found"
+    waybar &
+    exit
+else
+    echo "found"
+    killall waybar
+fi
+
+# Use hyprctl to get all visible waybar windows
+# if hyprctl clients -j | grep -q '"class": "waybar"'; then
+#     # hide waybar
+#     hyprctl dispatch exec '[float;class:waybar] kill'
+# else
+#     waybar &
+# fi
