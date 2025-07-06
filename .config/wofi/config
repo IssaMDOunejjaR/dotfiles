@@ -1,0 +1,7 @@
+width=600
+allow_images=true
+allow_markup=true
+no_actions=true
+gtk_dark=true
+key_up=Ctrl-p
+key_down=Ctrl-n
