@@ -49,60 +49,10 @@
       "app-name": "Spotify"
     }
   },
-  "widgets": [
-    "title",
-    "buttons-grid#System",
-    "volume",
-    "buttons-grid",
-    "notification"
-  ],
+  "widgets": ["title", "notification"],
   "widget-config": {
     "title": {
       "button-text": ""
-    },
-    "buttons-grid#System": {
-      "position": "right",
-      "actions": [
-        {
-          "label": "",
-          "command": "hyprlock",
-          "type": "normal"
-        },
-        {
-          "label": "Two",
-          "command": "",
-          "type": "normal"
-        }
-      ]
-    },
-    "volume": {
-      "show-per-app": true,
-      "show-per-app-icon": true,
-      "show-per-app-label": true
-    },
-    "buttons-grid": {
-      "actions": [
-        {
-          "label": "One",
-          "command": "",
-          "type": "normal"
-        },
-        {
-          "label": "Two",
-          "command": "",
-          "type": "normal"
-        },
-        {
-          "label": "Three",
-          "command": "",
-          "type": "normal"
-        },
-        {
-          "label": "Four",
-          "command": "",
-          "type": "normal"
-        }
-      ]
     }
   }
 }
