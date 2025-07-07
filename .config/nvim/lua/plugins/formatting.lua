@@ -53,6 +53,7 @@ return { -- Autoformat
 				sh = { "shfmt", stop_after_first = true },
 				templ = { "templ", stop_after_first = true },
 				rust = { "rustfmt", stop_after_first = true },
+				python = { "black", stop_after_first = true },
 			},
 		},
 	},
