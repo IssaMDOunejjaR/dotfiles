@@ -1,0 +1,61 @@
+#!/bin/bash
+
+HISTORY_FILE="$HOME/.local/share/ai-history.md"
+
+mkdir -p "$(dirname "$HISTORY_FILE")"
+
+# 🧠 Check for 'history' mode
+if [[ "$1" == "history" ]]; then
+  glow -p "$HISTORY_FILE"
+  exit 0
+fi
+
+# Get list of available models
+models=$(curl -s http://localhost:1234/v1/models | jq -r '.data[].id')
+
+# Choose model via gum
+model=$(echo "$models" | gum choose --limit=1 --header="🧠 Choose a model")
+
+[ -z "$model" ] && echo "❌ No model selected" && exit 1
+
+# Prompt the user
+prompt=$(gum write --placeholder "Type your prompt..." --width 0)
+
+[ -z "$prompt" ] && echo "❌ No prompt entered" && exit 1
+
+# Save markdown response to temp file
+tmpfile=$(mktemp /tmp/ai-response.XXXX.md)
+
+# Prepare JSON payload
+payload=$(jq -n \
+  --arg model "$model" \
+  --arg prompt "$prompt" \
+  '{
+    model: $model,
+    messages: [ { role: "user", content: $prompt } ],
+    temperature: 0.7
+  }')
+
+response=$(
+  gum spin --title "Thinking..." -- curl -s http://localhost:1234/v1/chat/completions \
+    -H "Content-Type: application/json" \
+    -d "$payload" | jq -r ".choices[0].message.content"
+)
+
+# 📝 Save history
+timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+
+{
+  echo "## 🕒 [$timestamp] - Model: \`$model\`"
+  echo "**Prompt:**"
+  echo "\`\`\`"
+  echo "$prompt"
+  echo "\`\`\`"
+  echo "**Response:**"
+  echo "$response"
+} >>"$HISTORY_FILE"
+
+echo "$response" >"$tmpfile"
+
+# 📟 Show nicely in a new tmux pane using glow
+tmux split-window -h "glow -p \"$tmpfile\" || bat \"$tmpfile\" || cat \"$tmpfile\"; rm \"$tmpfile\""
