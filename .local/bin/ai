@@ -46,16 +46,17 @@ response=$(
 timestamp=$(date '+%Y-%m-%d %H:%M:%S')
 
 {
-  echo "## 🕒 [$timestamp] - Model: \`$model\`"
+  echo "# 🕒 [$timestamp] - Model: \`$model\`"
   echo "**Prompt:**"
   echo "\`\`\`"
   echo "$prompt"
   echo "\`\`\`"
   echo "**Response:**"
+  echo ""
   echo "$response"
 } >>"$HISTORY_FILE"
 
 echo "$response" >"$tmpfile"
 
 # 📟 Show nicely in a new tmux pane using glow
-tmux split-window -h "glow -p \"$tmpfile\" || bat \"$tmpfile\" || cat \"$tmpfile\"; rm \"$tmpfile\""
+tmux new-window "glow -p \"$tmpfile\" || bat \"$tmpfile\" || cat \"$tmpfile\"; rm \"$tmpfile\""
