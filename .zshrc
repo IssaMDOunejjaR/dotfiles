@@ -80,6 +80,7 @@ zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh/cache
 
 alias ls='ls --color'
+alias grep='grep --color=always'
 alias v='nvim'
 alias la='ls -la'
 alias ll='ls -l'
