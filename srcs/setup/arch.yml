@@ -14,24 +14,33 @@
           - neovim
           - stow
           - zsh
-          - kitty
+          - alacritty
           - tmux
           - rust
           - go
           - zoxide
           - fzf
-          - i3
-          - i3blocks
-          - dmenu
-          - feh
-          - xorg-xrandr
-          - picom
-          - autotiling
+          # - i3
+          # - i3blocks
+          # - dmenu
+          # - feh
+          # - xorg-xrandr
+          # - picom
+          # - autotiling
+          - hyprland
+          - hyprpaper
+          - hypridle
+          - hyprlock
+          - hyprshot
+          - hyprpicker
+          - waybar
+          - wofi
+          - swaync
           - xclip
-          - xdotool
+          # - xdotool
           - python-pip
           - luarocks
-          - maim
+          # - maim
           - docker
           - docker-compose
           - discord
@@ -48,10 +57,10 @@
       changed_when: false
       failed_when: which_res.rc > 1
       register: which_res
-      
+
     - name: Clone the YAY repo
       ansible.builtin.git:
-        repo: 'https://aur.archlinux.org/yay.git'
+        repo: "https://aur.archlinux.org/yay.git"
         dest: "{{ tmp_dir }}/yay"
       when: which_res.rc != 0
 
@@ -61,7 +70,7 @@
         chdir: "{{ tmp_dir }}/yay"
         cmd: makepkg -si --noconfirm
       when: which_res.rc != 0
-        
+
     - name: Install Packages From AUR
       command: yay -Sy --noconfirm {{ item }}
       with_items:
