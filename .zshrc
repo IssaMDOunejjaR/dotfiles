@@ -90,8 +90,13 @@ alias kc='kubectl'
 alias lgit='lazygit'
 alias ldc='lazydocker'
 
-eval "$(fzf --zsh)"
-eval "$(zoxide init --cmd cd zsh)"
+if command -v fzf &>/dev/null; then
+  eval "$(fzf --zsh)"
+fi
+
+if command -v zoxide &>/dev/null; then
+  eval "$(zoxide init --cmd cd zsh)"
+fi
 
 if command -v fnm &>/dev/null; then
   eval "$(fnm env --use-on-cd --shell zsh)"
@@ -102,12 +107,16 @@ if test -f /home/linuxbrew/.linuxbrew/bin/brew; then
 fi
 
 # Load Angular CLI autocompletion.
-source <(ng completion script)
+if command -v ng &>/dev/null; then
+  source <(ng completion script)
+fi
 
 # Load Kubectl autocompletion.
-source <(kubectl completion zsh)
-
-# Make "kubecolor" borrow the same completion logic as "kubectl"
-compdef kubecolor=kubectl
+if command -v kubectl &>/dev/null; then
+  source <(kubectl completion zsh)
+  
+  # Make "kubecolor" borrow the same completion logic as "kubectl"
+  compdef kubecolor=kubectl
+fi
 
 if [ "$TMUX" = "" ]; then tmux attach -t home || tmux new -s home; fi
