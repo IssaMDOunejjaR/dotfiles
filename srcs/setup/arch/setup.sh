@@ -3,7 +3,7 @@
 export time_type="kitchen"
 export tmp_dir="/tmp"
 export dotfiles="$HOME/dotfiles"
-export scripts="$HOME/arch"
+export scripts="$dotfiles/srcs/setup/arch"
 
 "$scripts/deps.sh"
 
