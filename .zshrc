@@ -10,6 +10,7 @@ if [ -f ~/.config/hypr/wayland-env ]; then
 fi
 
 export EDITOR=nvim
+export MANPAGER='nvim +Man!'
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
