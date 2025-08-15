@@ -112,7 +112,7 @@ if command -v ng &>/dev/null; then
 fi
 
 # Load Kubectl autocompletion.
-if command -v kubectl &>/dev/null; then
+if command -v kubecolor &>/dev/null && command -v kubectl &>/dev/null; then
   source <(kubectl completion zsh)
   
   # Make "kubecolor" borrow the same completion logic as "kubectl"
