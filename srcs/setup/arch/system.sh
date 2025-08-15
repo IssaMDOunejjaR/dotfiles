@@ -36,14 +36,14 @@ else
   exit 1
 fi
 
-if gum spin --show-error --title "install avatar icon..." -- sudo cp "$dotfiles/srcs/wallpapers/wallpaper.png" "/var/lib/accountsservice/users/$user"; then
+if gum spin --show-error --title "install avatar icon..." -- sudo cp "$dotfiles/srcs/wallpapers/wallpaper.png" "/var/lib/AccountsService/users/$user"; then
   gum log --time "$time_type" -l info ":" Avatar icon installed.
 else
   gum log --time "$time_type" -l error ":" Failed to install avatar icon.
   exit 1
 fi
 
-if gum spin --show-error --title "install avatar user icon..." -- sudo cp "$dotfiles/srcs/wallpapers/wallpaper.png" "/var/lib/accountsservice/icons/$user"; then
+if gum spin --show-error --title "install avatar user icon..." -- sudo cp "$dotfiles/srcs/wallpapers/wallpaper.png" "/var/lib/AccountsService/icons/$user"; then
   gum log --time "$time_type" -l info ":" User avatar icon installed.
 else
   gum log --time "$time_type" -l error ":" Failed to install user avatar icon.
