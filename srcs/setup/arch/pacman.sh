@@ -23,6 +23,7 @@ if gum spin --show-error --title "Installing main packages using Pacman..." -- s
   swaync \
   xclip \
   sddm \
+  timeshift \
   python-pip \
   luarocks \
   docker \
