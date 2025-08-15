@@ -35,3 +35,10 @@ else
   gum log --time "$time_type" -l error ":" Failed to enable SDDM service.
   exit 1
 fi
+
+if gum spin --show-error --title "Install avatar icon..." -- sudo cp "$dotfiles/srcs/wallpapers/wallpaper.png" "/var/lib/AccountsService/users/$user"; then
+  gum log --time "$time_type" -l info ":" Avatar icon installed.
+else
+  gum log --time "$time_type" -l error ":" Failed to install avatar icon.
+  exit 1
+fi

@@ -1,5 +1,6 @@
 #!/bin/bash
 
+export user="$USER"
 export time_type="kitchen"
 export tmp_dir="/tmp"
 export dotfiles="$HOME/dotfiles"
