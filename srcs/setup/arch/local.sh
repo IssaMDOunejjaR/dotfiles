@@ -31,7 +31,6 @@ cd "$dotfiles" || exit 1
 
 if gum spin --show-error --title "Install config files..." -- stow --adopt .; then
   git restore .
-  source "$HOME/.zshrc"
   gum log --time "$time_type" -l info ":" Config files installed.
 else
   gum log --time "$time_type" -l error ":" Failed to install config files.
@@ -40,7 +39,7 @@ fi
 
 cd - &>/dev/null || exit 1
 
-if gum spin --show-error --title "Install Node LTS using fnm ..." -- fnm install --lts; then
+if gum spin --show-error --title "Install Node LTS using fnm ..." -- "$(which fnm)" install --lts; then
   git restore .
   gum log --time "$time_type" -l info ":" Node installed.
 else
