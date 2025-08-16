@@ -23,6 +23,11 @@ if gum spin --show-error --title "Installing main packages using Pacman..." -- s
   swaync \
   xclip \
   sddm \
+  qt5-base \
+  qt5-declarative \
+  qt5-quickcontrols \
+  qt5-quickcontrols2 \
+  qt5-graphicaleffects \
   timeshift \
   python-pip \
   luarocks \
