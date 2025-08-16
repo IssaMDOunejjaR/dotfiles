@@ -24,6 +24,7 @@ if gum spin --show-error --title "Installing main packages using Pacman..." -- s
   xclip \
   sddm \
   qt5-base \
+  qt5-svg \
   qt5-declarative \
   qt5-quickcontrols \
   qt5-quickcontrols2 \
