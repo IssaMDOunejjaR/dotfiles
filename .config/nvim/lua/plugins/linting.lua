@@ -21,7 +21,7 @@ return {
 			scss = { "stylelint" },
 			sass = { "stylelint" },
 			sh = { "shellcheck" },
-			go = { "golangci-lint" },
+			-- go = { "golangci-lint" },
 		},
 		linters = {
 			eslint_d = {
