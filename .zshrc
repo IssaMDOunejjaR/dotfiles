@@ -91,6 +91,13 @@ alias kc='kubectl'
 alias lgit='lazygit'
 alias ldc='lazydocker'
 
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+
+if command -v pyenv &>/dev/null; then
+  eval "$(pyenv init - zsh)"
+fi
+
 if command -v fzf &>/dev/null; then
   eval "$(fzf --zsh)"
 fi
