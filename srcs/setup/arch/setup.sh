@@ -6,6 +6,14 @@ export tmp_dir="/tmp"
 export dotfiles="$HOME/dotfiles"
 export scripts="$dotfiles/srcs/setup/arch"
 
+# Print out environment variables and their values to help users understand the script's functionality
+echo "Script Variables:"
+echo "User: $user"
+echo "Time Type: $time_type"
+echo "Temporary Directory: $tmp_dir"
+echo "Dotfiles Directory: $dotfiles"
+echo "Scripts Directory: $scripts"
+
 "$scripts/deps.sh"
 
 options=(
