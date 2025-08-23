@@ -39,7 +39,7 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
 
-exec_always --no-startup-id /usr/bin/feh --bg-scale "/home/$USER/dotfiles/srcs/wallpapers/tanjiro-kamado.png"
+exec_always --no-startup-id /usr/bin/feh --bg-scale "/home/$USER/dotfiles/srcs/wallpapers/wallpaper.png"
 exec --no-startup-id picom
 exec --no-startup-id autotiling
 exec --no-startup-id xrandr --output DP-0 --mode 2560x1080 --rate 200
@@ -70,10 +70,12 @@ bindsym $mod+Return exec alacritty
 bindsym $mod+b exec brave
 
 # kill focused window
-bindsym $mod+Shift+q kill
+bindsym $mod+q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec --no-startup-id dmenu_run
+bindsym $mod+d exec --no-startup-id "rofi -show drun -i"
+bindsym $mod+Shift+p exec --no-startup-id "~/.config/hypr/scripts/power"
+
 # A more modern dmenu replacement is rofi:
 # bindcode $mod+40 exec "rofi -modi drun,run -show drun"
 # There also is i3-dmenu-desktop which only displays applications shipping a
