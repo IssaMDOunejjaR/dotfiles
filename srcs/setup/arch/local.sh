@@ -46,3 +46,11 @@ else
   gum log --time "$time_type" -l error ":" Failed to install Node.
   exit 1
 fi
+
+if gum spin --show-error --title "Create the 'Projects' and 'Learning' folders..." -- mkdir -p "$HOME/Documents/{Learning,Projects}" ; then
+  git restore .
+  gum log --time "$time_type" -l info ":" Node installed.
+else
+  gum log --time "$time_type" -l error ":" Failed to install Node.
+  exit 1
+fi

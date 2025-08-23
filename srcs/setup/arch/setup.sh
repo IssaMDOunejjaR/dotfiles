@@ -23,6 +23,7 @@ options=(
   "Install packages from AUR"
   "System config"
   "Local config"
+  "Install Virtualbox and its dependencies"
 )
 
 echo "What you want to setup?"
@@ -50,4 +51,8 @@ fi
 
 if echo "${selected[@]}" | grep -qw "Local config"; then
   "$scripts/local.sh"
+fi
+
+if echo "${selected[@]}" | grep -qw "Install Virtualbox and its dependencies"; then
+  "$scripts/virtualbox.sh"
 fi
