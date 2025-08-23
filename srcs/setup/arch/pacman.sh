@@ -17,6 +17,7 @@ if gum spin --show-error --title "Installing main packages using Pacman..." -- s
   rofi \
   feh \
   xorg-xrandr \
+  autorandr \
   picom \
   autotiling \
   xdotool \
