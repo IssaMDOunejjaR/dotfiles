@@ -1,0 +1,10 @@
+configuration {
+  modes: "drun,run";
+  show-icons: true;
+  terminal: "alacritty";
+  font: "JetBrainsMono Nerd Font 12";
+  kb-row-up: "Control+p";
+  kb-row-down: "Control+n";
+}
+
+@theme "style"
