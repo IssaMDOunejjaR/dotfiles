@@ -13,7 +13,7 @@ if gum spin --show-error --title "Installing main packages using Pacman..." -- s
   zoxide \
   fzf \
   i3-wm \
-  i3-status \
+  i3status \
   i3blocks \
   rofi \
   feh \
