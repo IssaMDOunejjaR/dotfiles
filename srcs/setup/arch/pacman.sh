@@ -14,6 +14,7 @@ if gum spin --show-error --title "Installing main packages using Pacman..." -- s
   fzf \
   i3 \
   i3blocks \
+  betterlockscreen \
   rofi \
   feh \
   xorg-xrandr \
