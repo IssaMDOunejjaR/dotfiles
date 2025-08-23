@@ -28,6 +28,7 @@ if gum spin --show-error --title "Installing main packages using YAY..." -- yay 
   vscodium \
   bun \
   fnm \
+  i3-auto-layout \
   lazydocker; then
   gum log --time "$time_type" -l info ":" Main packages installed using YAY.
 else

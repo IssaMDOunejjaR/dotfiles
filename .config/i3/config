@@ -41,6 +41,8 @@ exec_always --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec_always --no-startup-id nm-applet
 
+exec_always --no-startup-id i3-auto-layout
+exec_always --no-startup-id ~/.config/i3/scripts/auto_fullscreen.py
 exec_always --no-startup-id autorandr --change
 exec_always --no-startup-id /usr/bin/feh --bg-scale "/home/$USER/dotfiles/srcs/wallpapers/wallpaper.png"
 exec_always --no-startup-id picom --experimental-backends --vsync
