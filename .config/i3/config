@@ -16,7 +16,9 @@ set $alt Mod1
 # is used in the bar {} block below.
 font pango:JetBrainsMono Nerd Font 11
 
-for_window [class="^.*"] border pixel 0
+for_window [class="^.*"] border pixel 2
+# client.focused #ffffff #000000 #ffffff #ffffff
+# client.unfocused #444444 #000000 #ffffff #444444
 gaps inner 2px
 smart_gaps on
 
@@ -26,23 +28,24 @@ smart_gaps on
 
 # Start XDG autostart .desktop files using dex. See also
 # https://wiki.archlinux.org/index.php/XDG_Autostart
-exec --no-startup-id dex --autostart --environment i3
+exec_always --no-startup-id dex --autostart --environment i3
 
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
 # they are included here as an example. Modify as you see fit.
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+exec_always --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
-exec --no-startup-id nm-applet
+exec_always --no-startup-id nm-applet
 
+exec_always --no-startup-id autorandr --change
 exec_always --no-startup-id /usr/bin/feh --bg-scale "/home/$USER/dotfiles/srcs/wallpapers/wallpaper.png"
-exec --no-startup-id picom
-exec --no-startup-id autotiling
-exec --no-startup-id xrandr --output DP-0 --mode 2560x1080 --rate 200
+exec_always --no-startup-id picom --experimental-backends --vsync
+exec_always --no-startup-id autotiling
+# exec_always --no-startup-id xrandr --output DP-0 --mode 2560x1080 --rate 200
 
 # Toggle i3bar
 bindsym Shift+$mod+b bar mode toggle
@@ -126,7 +129,7 @@ bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
-bindsym $mod+Shift+space floating toggle
+bindsym $mod+v floating toggle
 
 # change focus between tiling / floating windows
 bindsym $mod+space focus mode_toggle
