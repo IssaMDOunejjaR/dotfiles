@@ -12,15 +12,15 @@ if gum spin --show-error --title "Installing main packages using Pacman..." -- s
   go \
   zoxide \
   fzf \
-  hyprland \
-  hyprpaper \
-  hypridle \
-  hyprlock \
-  hyprshot \
-  hyprpicker \
-  waybar \
-  wofi \
-  swaync \
+  i3 \
+  i3blocks \
+  rofi \
+  feh \
+  xorg-xrandr \
+  picom \
+  autotiling \
+  xdotool \
+  maim \
   xclip \
   sddm \
   qt5-base \
@@ -29,7 +29,6 @@ if gum spin --show-error --title "Installing main packages using Pacman..." -- s
   qt5-quickcontrols \
   qt5-quickcontrols2 \
   qt5-graphicaleffects \
-  timeshift \
   python-pip \
   luarocks \
   docker \
@@ -38,6 +37,7 @@ if gum spin --show-error --title "Installing main packages using Pacman..." -- s
   lazygit \
   spotify-launcher \
   appimagelauncher \
+  nautilus \
   ttf-jetbrains-mono-nerd \
   ttf-meslo-nerd; then
   gum log --time "$time_type" -l info ":" Main packages installed using Pacman.
