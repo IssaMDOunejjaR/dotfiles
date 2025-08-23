@@ -12,9 +12,9 @@ if gum spin --show-error --title "Installing main packages using Pacman..." -- s
   go \
   zoxide \
   fzf \
-  i3 \
+  i3-wm \
+  i3-status \
   i3blocks \
-  betterlockscreen \
   rofi \
   feh \
   xorg-xrandr \
