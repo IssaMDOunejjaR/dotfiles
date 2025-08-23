@@ -1,0 +1,15 @@
+#!/bin/bash
+
+CMD=$(printf "suspend\nreboot\nshutdown" | rofi -dmenu --prompt "Select action")
+
+case "$CMD" in
+  suspend)
+    systemctl suspend
+    ;;
+  reboot)
+    systemctl reboot
+    ;;
+  shutdown)
+    systemctl poweroff
+    ;;
+esac
