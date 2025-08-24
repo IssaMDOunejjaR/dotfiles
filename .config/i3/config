@@ -17,10 +17,10 @@ set $alt Mod1
 font pango:JetBrainsMono Nerd Font 11
 
 for_window [class="^.*"] border pixel 2
-# client.focused #ffffff #000000 #ffffff #ffffff
-# client.unfocused #444444 #000000 #ffffff #444444
+client.focused #ff0000 #ff0000 #ff0000 #ff0000
 gaps inner 2px
 smart_gaps on
+hide_edge_borders smart_no_gaps
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -42,10 +42,9 @@ exec_always --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 exec_always --no-startup-id nm-applet
 
 exec_always --no-startup-id i3-auto-layout
-exec_always --no-startup-id ~/.config/i3/scripts/auto_fullscreen.py
 exec_always --no-startup-id autorandr --change
 exec_always --no-startup-id /usr/bin/feh --bg-scale "/home/$USER/dotfiles/srcs/wallpapers/wallpaper.png"
-exec_always --no-startup-id picom --experimental-backends --vsync
+exec_always --no-startup-id picom --vsync
 exec_always --no-startup-id autotiling
 # exec_always --no-startup-id xrandr --output DP-0 --mode 2560x1080 --rate 200
 
