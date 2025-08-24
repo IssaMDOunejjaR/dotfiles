@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CMD=$(printf "suspend\nreboot\nshutdown" | rofi -dmenu --prompt "Select action")
+CMD=$(printf "suspend\nreboot\nshutdown" | rofi -dmenu -no-show-icons --prompt "Select action")
 
 case "$CMD" in
   suspend)
