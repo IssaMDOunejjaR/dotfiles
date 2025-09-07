@@ -1,0 +1,12 @@
+#!/bin/bash
+
+echo ""
+# case $BLOCK_BUTTON in
+#   2) bluetui
+# esac
+
+# if bluetoothctl show | grep -q 'Powered: yes'; then
+#   exit 0
+# fi
+#
+# exit 1

@@ -1,5 +1,22 @@
-if [[ $(nmcli device status | grep -i 'ethernet' | grep -i 'connected') ]]; then
-  echo "󰈀";
-elif [[ $(nmcli device status | grep -i 'wifi' | grep -i 'connected') ]]; then
-  echo "󰤨 $(nmcli -t -f active,ssid dev wifi | grep '^yes' | cut -d ':' -f2;)";
+#!/bin/bash
+
+IFACE_WIFI="wlan0"
+IFACE_ETH="eth0"
+
+if nmcli -t -f TYPE,STATE device | grep -q "^wifi:connected"; then
+  nmcli -t -f ACTIVE,SSID dev wifi | grep '^yes' | cut -d: -f2
+else
+  echo "󰈀"
 fi
+
+case "$BLOCK_BUTTON" in
+  4) impala ;;   # scroll up opens impala
+  5) nmcli radio wifi off ;;
+  3) nmcli radio wifi on ;; # right-click (button 3) toggles Wi-Fi on
+esac
+
+# if [[ $(nmcli device status | grep -i 'ethernet' | grep -i 'connected') ]]; then
+#   echo "󰈀";
+# elif [[ $(nmcli device status | grep -i 'wifi' | grep -i 'connected') ]]; then
+#   echo "󰤨 $(nmcli -t -f active,ssid dev wifi | grep '^yes' | cut -d ':' -f2;)";
+# fi
