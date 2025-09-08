@@ -41,18 +41,32 @@ instance=Master
 interval=once
 signal=10
 
+[wifi]
+label=󰤨
+command=scripts/toggle
+interval=once
+COMMAND_ON=nmcli radio wifi on
+COMMAND_OFF=nmcli radio wifi off
+COMMAND_STATUS=nmcli -t -f TYPE,STATE device | grep -q '^wifi:connected'
+COMMAND_OPEN=alacritty -e impala -m station
+COLOR_ON=#00ff00
+COLOR_OFF=#ff0000
+
 # Network interface monitoring
 [network]
 command=scripts/internet
 interval=10
 
 [bluetooth]
-label=
+label=󰂯
 command=scripts/toggle
 interval=once
 COMMAND_ON=bluetoothctl power on
 COMMAND_OFF=bluetoothctl power off
 COMMAND_STATUS=bluetoothctl show | grep -q "Powered: yes"
+COMMAND_OPEN=alacritty -e bluetui
+COLOR_ON=#00ff00
+COLOR_OFF=#ff0000
 
 # [bluetooth]
 # command=scripts/bluetooth

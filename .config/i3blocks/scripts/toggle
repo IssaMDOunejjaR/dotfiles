@@ -8,6 +8,7 @@ fi
 on_cmd=${COMMAND_ON}
 off_cmd=${COMMAND_OFF}
 status_cmd=${COMMAND_STATUS}
+open_cmd=${COMMAND_OPEN}
 
 if (( ${BLOCK_BUTTON:-0} == 1 )); then
   eval $status_cmd 2>&1 >/dev/null
@@ -16,6 +17,10 @@ if (( ${BLOCK_BUTTON:-0} == 1 )); then
   else
     eval $on_cmd 2>&1 >/dev/null
   fi
+fi
+
+if [[ -n ${COMMAND_OPEN} && ${BLOCK_BUTTON:-0} -eq 3 ]]; then
+  eval "$open_cmd" >/dev/null 2>&1 &
 fi
 
 eval $status_cmd 2>&1 >/dev/null
