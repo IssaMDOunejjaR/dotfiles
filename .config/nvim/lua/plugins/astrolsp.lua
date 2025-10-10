@@ -16,6 +16,9 @@ return {
       inlay_hints = false, -- enable/disable inlay hints on start
       semantic_tokens = true, -- enable/disable semantic token highlighting
     },
+    defaults = {
+      hover = { border = "solid" },
+    },
     -- customize lsp formatting options
     formatting = {
       -- control auto formatting on save
