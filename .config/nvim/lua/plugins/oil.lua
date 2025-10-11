@@ -28,7 +28,7 @@ return {
       desc = "Toggle Oil [E]xplorer root directory",
     },
     {
-      "<leader>c",
+      "<leader>E",
       function() require("oil").toggle_float() end,
       desc = "Toggle Oil [C]urrent directory",
     },
