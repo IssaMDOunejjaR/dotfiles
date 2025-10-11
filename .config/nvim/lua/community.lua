@@ -15,6 +15,7 @@ return {
   { import = "astrocommunity.fuzzy-finder.fzf-lua" },
   { import = "astrocommunity.diagnostics.error-lens-nvim" },
   { import = "astrocommunity.editing-support.bigfile-nvim" },
+  { import = "astrocommunity.lsp.nvim-lit" },
   { import = "astrocommunity.git.blame-nvim" },
   { import = "astrocommunity.lsp.garbage-day-nvim" },
   { import = "astrocommunity.lsp.lsp-signature-nvim" },
