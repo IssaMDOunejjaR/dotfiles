@@ -19,7 +19,7 @@ return {
   { import = "astrocommunity.git.blame-nvim" },
   { import = "astrocommunity.lsp.garbage-day-nvim" },
   { import = "astrocommunity.lsp.lsp-signature-nvim" },
-  { import = "astrocommunity.lsp.lsp-lens-nvim" },
+  -- { import = "astrocommunity.lsp.lsp-lens-nvim" },
   { import = "astrocommunity.media.image-nvim" },
   { import = "astrocommunity.motion.mini-ai" },
   { import = "astrocommunity.motion.mini-move" },
