@@ -12,6 +12,7 @@ end
 
 return {
   "nvim-lua/plenary.nvim",
+
   {
     "max397574/better-escape.nvim",
     event = "InsertEnter",

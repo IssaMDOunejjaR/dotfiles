@@ -40,6 +40,7 @@ return {
       keymap("i", "<C-d>", "<Plug>(copilot-dismiss)", opts)
     end,
   },
+
   -- Autocomplete, refer to https://cmp.saghen.dev/#compared-to-built-in-completion for more information
   {
     "saghen/blink.cmp",
@@ -49,7 +50,7 @@ return {
     -- version = "1.*",
     branch = "main", -- NOTE: use main branch for latest features and fixes, use version tag for stable releases
     -- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
-    build = 'cargo build --release',
+    build = "cargo build --release",
     -- If you use nix, you can build from source using latest nightly rust with:
     -- build = 'nix run .#build-plugin',
     dependencies = {
@@ -122,9 +123,9 @@ return {
       -- Disable per file type
       enabled = function()
         return not vim.tbl_contains({ "copilot-chat" }, vim.bo.filetype)
-            and not vim.tbl_contains({ "codecompanion" }, vim.bo.filetype)
-            and vim.bo.buftype ~= "prompt"
-            and vim.b.completion ~= false
+          and not vim.tbl_contains({ "codecompanion" }, vim.bo.filetype)
+          and vim.bo.buftype ~= "prompt"
+          and vim.b.completion ~= false
       end,
     },
     -- without having to redefine it
@@ -134,18 +135,20 @@ return {
       "sources.default",
     },
   },
+
   -- Lazydev
   {
     "folke/lazydev.nvim",
     opts = {
       library = {
         { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-        { path = "snacks.nvim",        words = { "Snacks" } },
-        { path = "lazy.nvim",          words = { "LazyVim" } },
+        { path = "snacks.nvim", words = { "Snacks" } },
+        { path = "lazy.nvim", words = { "LazyVim" } },
       },
     },
     optional = true,
   },
+
   {
     "saghen/blink.cmp",
     opts = {
@@ -162,6 +165,7 @@ return {
       },
     },
   },
+
   -- Markdown
   {
     "MeanderingProgrammer/render-markdown.nvim",
@@ -169,6 +173,7 @@ return {
     opts = {},
     optional = true,
   },
+
   {
     "saghen/blink.cmp",
     opts = {
@@ -184,6 +189,7 @@ return {
       },
     },
   },
+
   -- Support copilot as source
   {
     "saghen/blink.cmp",
@@ -202,156 +208,14 @@ return {
       },
     },
   },
-  -- Refactoring
-  {
-    "folke/which-key.nvim",
-    optional = true,
-    opts = {
-      spec = {
-        { "<leader>d", group = "debug" },
-        { "<leader>r", group = "refactoring", icon = "" },
-      },
-    },
-  },
-  -- The Refactoring library based off the Refactoring book by Martin Fowler
-  -- {
-  --   "ThePrimeagen/refactoring.nvim",
-  --   vscode = true,
-  --   dependencies = {
-  --     { "nvim-lua/plenary.nvim",          vscode = true },
-  --     { "nvim-treesitter/nvim-treesitter" },
-  --   },
-  --   keys = {
-  --     {
-  --       "<leader>rm",
-  --       function()
-  --         require("refactoring").select_refactor {
-  --           show_success_message = true,
-  --         }
-  --       end,
-  --       mode = { "n", "v" },
-  --       desc = "Refactoring Menu",
-  --     },
-  --     {
-  --       "<leader>re",
-  --       function()
-  --         require("refactoring").refactor "Extract Function"
-  --       end,
-  --       desc = "Extract",
-  --       mode = "x",
-  --     },
-  --     {
-  --       "<leader>rf",
-  --       function()
-  --         require("refactoring").refactor "Extract Function To File"
-  --       end,
-  --       desc = "Extract to file",
-  --       mode = "x",
-  --     },
-  --     {
-  --       "<leader>rv",
-  --       function()
-  --         require("refactoring").refactor "Extract Variable"
-  --       end,
-  --       desc = "Extract variable",
-  --       mode = "x",
-  --     },
-  --     {
-  --       "<leader>ri",
-  --       function()
-  --         require("refactoring").refactor "Inline Variable"
-  --       end,
-  --       desc = "Inline variable",
-  --       mode = { "n", "x" },
-  --     },
-  --     {
-  --       "<leader>rI",
-  --       function()
-  --         require("refactoring").refactor "Inline Function"
-  --       end,
-  --       desc = "Inline function",
-  --       mode = { "n" },
-  --     },
-  --     {
-  --       "<leader>rb",
-  --       function()
-  --         require("refactoring").refactor "Extract Block"
-  --       end,
-  --       desc = "Extract block",
-  --     },
-  --     {
-  --       "<leader>rB",
-  --       function()
-  --         require("refactoring").refactor "Extract Block To File"
-  --       end,
-  --       desc = "Extract block to file",
-  --     },
-  --     -- Debug variable
-  --     {
-  --       "<leader>dv",
-  --       function()
-  --         require("refactoring").debug.print_var {
-  --           show_success_message = true,
-  --           below = true,
-  --         }
-  --       end,
-  --       mode = { "n", "x" },
-  --       desc = "Print below variables",
-  --     },
-  --     {
-  --       "<leader>dV",
-  --       function()
-  --         require("refactoring").debug.print_var {
-  --           show_success_message = true,
-  --           below = false,
-  --         }
-  --       end,
-  --       mode = { "n", "x" },
-  --       desc = "Print above variables",
-  --     },
-  --     -- Clean up debugging
-  --     {
-  --       "<leader>dc",
-  --       function()
-  --         require("refactoring").debug.cleanup {
-  --           force = true,
-  --           show_success_message = true,
-  --         }
-  --       end,
-  --       desc = "Clear debugging",
-  --     },
-  --   },
-  --   opts = {
-  --     prompt_func_return_type = {
-  --       go = false,
-  --       java = false,
-  --
-  --       cpp = false,
-  --       c = false,
-  --       h = false,
-  --       hpp = false,
-  --       cxx = false,
-  --     },
-  --     prompt_func_param_type = {
-  --       go = false,
-  --       java = false,
-  --
-  --       cpp = false,
-  --       c = false,
-  --       h = false,
-  --       hpp = false,
-  --       cxx = false,
-  --     },
-  --     printf_statements = {},
-  --     print_var_statements = {},
-  --   },
-  -- },
+
   -- Code comment
   {
     "folke/ts-comments.nvim",
     opts = {},
     event = "VeryLazy",
   },
+
   -- Learn those tips from LazyVim
   -- Auto pairs
   {
@@ -359,6 +223,7 @@ return {
     event = "VeryLazy",
     opts = {},
   },
+
   -- Extend and create a/i textobjects
   {
     "echasnovski/mini.ai",
@@ -373,29 +238,17 @@ return {
             i = { "@block.inner", "@conditional.inner", "@loop.inner" },
           },
           f = ai.gen_spec.treesitter { a = "@function.outer", i = "@function.inner" }, -- function
-          c = ai.gen_spec.treesitter { a = "@class.outer", i = "@class.inner" },       -- class
-          t = { "<([%p%w]-)%f[^<%w][^<>]->.-</%1>", "^<.->().*()</[^/]->$" },          -- tags
-          d = { "%f[%d]%d+" },                                                         -- digits
-          e = {                                                                        -- Word with case
+          c = ai.gen_spec.treesitter { a = "@class.outer", i = "@class.inner" }, -- class
+          t = { "<([%p%w]-)%f[^<%w][^<>]->.-</%1>", "^<.->().*()</[^/]->$" }, -- tags
+          d = { "%f[%d]%d+" }, -- digits
+          e = { -- Word with case
             { "%u[%l%d]+%f[^%l%d]", "%f[%S][%l%d]+%f[^%l%d]", "%f[%P][%l%d]+%f[^%l%d]", "^[%l%d]+%f[^%l%d]" },
             "^().*()$",
           },
-          u = ai.gen_spec.function_call(),                          -- u for "Usage"
+          u = ai.gen_spec.function_call(), -- u for "Usage"
           U = ai.gen_spec.function_call { name_pattern = "[%w_]" }, -- without dot in function name
         },
       }
     end,
-  },
-  -- A better annotation generator. Supports multiple languages and annotation conventions.
-  -- <C-n> to jump to next annotation, <C-p> to jump to previous annotation
-  {
-    "danymat/neogen",
-    dependencies = "nvim-treesitter/nvim-treesitter",
-    opts = { enabled = true },
-    cmd = "Neogen",
-    vscode = true,
-    keys = {
-      { "<leader>ci", "<cmd>Neogen<cr>", desc = "Neogen: Annotation generator" },
-    },
   },
 }

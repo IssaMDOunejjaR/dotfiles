@@ -1,28 +1,16 @@
 return {
-  -- {
-  --   "AstroNvim/astrotheme",
-  --   lazy = false,    -- load immediately
-  --   priority = 1000, -- make sure it loads before other plugins
-  --   config = function()
-  --     require("astrotheme").setup({
-  --       palette = "astrodark",
-  --       style = {
-  --         transparent = false, -- set true if you want transparent background
-  --       },
-  --     })
-  --
-  --     vim.cmd.colorscheme("astrodark")
-  --   end,
-  -- },
-
   {
-    "nyoom-engineering/oxocarbon.nvim",
-    lazy = false,    -- load immediately
-    priority = 1000, -- make sure it loads before other plugins
+    "cpea2506/one_monokai.nvim",
+    lazy = false,
+    priority = 1000,
     config = function()
-      vim.opt.background = "dark"
+      require("one_monokai").setup {
+        transparent = true,
+      }
 
-      vim.cmd.colorscheme("oxocarbon")
-    end
-  }
+      vim.cmd.colorscheme "one_monokai"
+
+      vim.api.nvim_set_hl(0, "FloatBorder", { fg = "#444444", bg = "#000000" })
+    end,
+  },
 }

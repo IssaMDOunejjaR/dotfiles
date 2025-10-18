@@ -1,5 +1,6 @@
 -- Lsp for typescript
 local Lsp = require "utils.lsp"
+
 -- Source: https://github.com/yioneko/vtsls
 -- Usage: npm install -g @vtsls/language-server
 -- This config base on https://github.com/neovim/nvim-lspconfig/blob/master/lua/lspconfig/configs/vtsls.lua

@@ -5,11 +5,12 @@ return {
     optional = true,
     opts = {
       spec = {
-        { "<leader>a",  group = "ai" },
+        { "<leader>a", group = "ai" },
         { "<leader>gm", group = "Copilot Chat" },
       },
     },
   },
+
   {
     "MeanderingProgrammer/render-markdown.nvim",
     optional = true,
@@ -18,6 +19,7 @@ return {
     },
     ft = { "markdown", "copilot-chat" },
   },
+
   {
     "CopilotC-Nvim/CopilotChat.nvim",
     branch = "main",
@@ -90,9 +92,9 @@ return {
         desc = "CopilotChat - Generate commit message for all changes",
       },
       -- Fix the issue with diagnostic
-      { "<leader>af", "<cmd>CopilotChatFix<cr>",    desc = "CopilotChat - Fix Diagnostic" },
+      { "<leader>af", "<cmd>CopilotChatFix<cr>", desc = "CopilotChat - Fix Diagnostic" },
       -- Clear buffer and chat history
-      { "<leader>al", "<cmd>CopilotChatReset<cr>",  desc = "CopilotChat - Clear buffer and chat history" },
+      { "<leader>al", "<cmd>CopilotChatReset<cr>", desc = "CopilotChat - Clear buffer and chat history" },
       -- Toggle Copilot Chat Vsplit
       { "<leader>av", "<cmd>CopilotChatToggle<cr>", desc = "CopilotChat - Toggle" },
       -- Copilot Chat Models

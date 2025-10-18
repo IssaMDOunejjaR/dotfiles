@@ -10,14 +10,23 @@ function M.get_default_keymaps()
     { keys = "<leader>cA", func = M.action.source, desc = "Source Actions" },
     { keys = "<leader>cr", func = vim.lsp.buf.rename, desc = "Code Rename" },
     { keys = "<leader>cf", func = vim.lsp.buf.format, desc = "Code Format" },
-    { keys = "<leader>k", func = vim.lsp.buf.hover, desc = "Documentation", has = "hoverProvider" },
-    { keys = "K", func = vim.lsp.buf.hover, desc = "Documentation", has = "hoverProvider" },
+    {
+      keys = "<leader>k",
+      func = function()
+        vim.lsp.buf.hover { max_width = 90 }
+      end,
+      desc = "Documentation",
+      has = "hoverProvider",
+    },
+    {
+      keys = "K",
+      func = function()
+        vim.lsp.buf.hover { max_width = 90, max_height = 20 }
+      end,
+      desc = "Documentation",
+      has = "hoverProvider",
+    },
     { keys = "gd", func = vim.lsp.buf.definition, desc = "Goto Definition", has = "definitionProvider" },
-    -- NOTE: Use snack UI for below keymaps
-    -- { keys = "gD", func = vim.lsp.buf.declaration, desc = "Goto Declaration", has = "declarationProvider" },
-    -- { keys = "gr", func = vim.lsp.buf.references, desc = "Goto References", has = "referencesProvider", nowait = true },
-    -- { keys = "gi", func = vim.lsp.buf.implementation, desc = "Goto Implementation", has = "implementationProvider" },
-    -- { keys = "gy", func = vim.lsp.buf.type_definition, desc = "Goto Type Definition", has = "typeDefinitionProvider" },
   }
 end
 

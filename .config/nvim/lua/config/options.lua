@@ -80,6 +80,7 @@ local diagnostics = {
   Hint = " ",
   Info = " ",
 }
+
 vim.diagnostic.config {
   underline = true,
   update_in_insert = false,
@@ -87,6 +88,11 @@ vim.diagnostic.config {
     spacing = 4,
     source = "if_many",
     prefix = "●",
+  },
+  float = {
+    border = "single",
+    max_width = 80,
+    max_height = 20,
   },
   severity_sort = true,
   signs = {
@@ -98,6 +104,24 @@ vim.diagnostic.config {
     },
   },
 }
+
+vim.o.winborder = "single"
+
+-- Override the hover handler
+-- vim.lsp.handlers["textDocument/hover"] = function(err, result, ctx, config)
+--   print "lsp"
+--   config = config or {}
+--   config.border = "rounded"
+--   config.max_width = 80
+--   config.max_height = 20
+--   return vim.lsp.util.open_floating_preview(result.contents, "markdown", config)
+-- end
+
+-- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+--   border = "rounded",
+--   max_width = 80,
+--   max_height = 20,
+-- })
 
 -- Disable providers
 vim.g.loaded_ruby_provider = 0

@@ -4,6 +4,7 @@ return {
     optional = true,
     opts = { ensure_installed = { "vim", "regex", "lua", "bash" } },
   },
+
   {
     "folke/lazydev.nvim",
     ft = "lua", -- only load on lua files
