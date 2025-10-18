@@ -68,8 +68,9 @@ opt.fillchars = {
   diff = "╱",
   eob = " ",
 }
+
 opt.foldlevel = 99
-opt.smoothscroll = true
+opt.smoothscroll = false
 opt.foldmethod = "expr"
 opt.foldtext = ""
 
