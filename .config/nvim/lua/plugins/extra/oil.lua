@@ -42,7 +42,6 @@ return {
       },
     },
   },
-
   {
     "stevearc/oil.nvim",
     opts = {
@@ -54,21 +53,18 @@ return {
       use_default_keymaps = true,
       view_options = {
         -- Show files and directories that start with "."
-        show_hidden = true,
+        show_hidden = false,
         -- This function defines what is considered a "hidden" file
         is_hidden_file = function(name, _)
           -- dotfiles are always considered hidden
           if vim.startswith(name, ".") then
             return true
           end
-
           local dir = require("oil").get_current_dir()
-
           -- if no local directory (e.g. for ssh connections), always show
           if not dir then
             return false
           end
-
           -- Check if file is gitignored
           return vim.list_contains(git_ignored[dir], name)
         end,
@@ -82,7 +78,7 @@ return {
         padding = 2,
         max_width = 120,
         max_height = max_height(),
-        border = "solid",
+        border = "rounded",
         win_options = {
           winblend = 0,
         },
@@ -93,7 +89,7 @@ return {
         ["<C-s>"] = {
           desc = "Save all changes",
           callback = function()
-            require("oil").save { confirm = false }
+            require("oil").save({ confirm = false })
           end,
         },
         ["q"] = "actions.close",
@@ -107,14 +103,7 @@ return {
         function()
           require("oil").toggle_float()
         end,
-        desc = "Open explorer",
-      },
-      {
-        "<leader>E",
-        function()
-          require("oil").toggle_float(vim.fn.getcwd())
-        end,
-        desc = "Open explorer root directory",
+        desc = "Open file explorer",
       },
     },
   },
