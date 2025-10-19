@@ -11,6 +11,8 @@ return {
       typescript = { "biomejs", "oxlint", "eslint_d" },
       javascriptreact = { "biomejs", "oxlint", "eslint_d" },
       typescriptreact = { "biomejs", "oxlint", "eslint_d" },
+      bash = { "shelcheck" },
+      sh = { "shelcheck" },
     },
     linters = {
       eslint_d = {
