@@ -170,6 +170,28 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
   end,
 })
 
+-- Set filetype for docker-compose files
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = "docker-compose*.yml",
+  callback = function()
+    vim.bo.filetype = "yaml.docker-compose"
+  end,
+})
+
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = {
+    "playbook*.yml",
+    "site*.yml",
+    "roles/*/tasks/*.yml",
+    "roles/*/handlers/*.yml",
+    "group_vars/*.yml",
+    "host_vars/*.yml",
+  },
+  callback = function()
+    vim.bo.filetype = "yaml.ansible"
+  end,
+})
+
 -- LSP
 local completion = vim.g.completion_mode or "blink" -- or 'native'
 
