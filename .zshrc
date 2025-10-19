@@ -127,6 +127,8 @@ if command -v kubecolor &>/dev/null && command -v kubectl &>/dev/null; then
   compdef kubecolor=kubectl
 fi
 
-eval "$(mise activate)"
+if command -v mise &>/dev/null; then
+  eval "$(mise activate)"
+fi
 
 if [ "$TMUX" = "" ]; then tmux attach -t home || tmux new -s home; fi
