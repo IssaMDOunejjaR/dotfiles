@@ -32,37 +32,37 @@ return {
   -- },
 
   -- Session
-  {
-    "folke/persistence.nvim",
-    lazy = false,
-    -- event = "BufReadPre", -- this will only start session saving when an actual file was opened
-    opts = {
-      dir = vim.fn.stdpath "state" .. "/sessions/", -- where to save
-      branch = false,
-    },
-    config = function(_, opts)
-      local persistence = require "persistence"
-
-      persistence.setup(opts)
-
-      -- auto-save session on exit
-      vim.api.nvim_create_autocmd("VimLeavePre", {
-        callback = function()
-          persistence.save()
-        end,
-      })
-
-      -- Auto-restore last session if no args are passed
-      vim.api.nvim_create_autocmd("VimEnter", {
-        nested = true,
-        callback = function()
-          if vim.fn.argc() == 0 then
-            persistence.load()
-          end
-        end,
-      })
-    end,
-  },
+  -- {
+  --   "folke/persistence.nvim",
+  --   lazy = false,
+  --   -- event = "BufReadPre", -- this will only start session saving when an actual file was opened
+  --   opts = {
+  --     dir = vim.fn.stdpath "state" .. "/sessions/", -- where to save
+  --     branch = false,
+  --   },
+  --   config = function(_, opts)
+  --     local persistence = require "persistence"
+  --
+  --     persistence.setup(opts)
+  --
+  --     -- auto-save session on exit
+  --     vim.api.nvim_create_autocmd("VimLeavePre", {
+  --       callback = function()
+  --         persistence.save()
+  --       end,
+  --     })
+  --
+  --     -- Auto-restore last session if no args are passed
+  --     vim.api.nvim_create_autocmd("VimEnter", {
+  --       nested = true,
+  --       callback = function()
+  --         if vim.fn.argc() == 0 then
+  --           persistence.load()
+  --         end
+  --       end,
+  --     })
+  --   end,
+  -- },
 
   {
     "folke/snacks.nvim",
