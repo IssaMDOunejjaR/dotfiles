@@ -29,12 +29,17 @@ else
   -- Enable LSP servers for Neovim 0.11+
   vim.lsp.enable {
     ts_server,
-    "lua_ls", -- Lua
-    "biome", -- Biome = Eslint + Prettier
-    "json", -- JSON
-    "pyright", -- Python
-    "gopls", -- Go
-    "tailwindcss", -- Tailwind CSS
+    "lua_ls",
+    "biome",
+    "pyright",
+    "gopls",
+    "tailwindcss",
+    "angularls",
+    "html",
+    "cssls",
+    "emmet_language_server",
+    "jsonls",
+    "bashls",
   }
 
   -- Load Lsp on-demand, e.g: eslint is disable by default
