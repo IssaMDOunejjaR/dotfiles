@@ -17,6 +17,7 @@ require "config.autocmds"
 require "config.lazy"
 require "config.keymaps"
 require "config.project"
+require "config.lsp"
 
 -- Only load the theme if not in VSCode
 if vim.g.vscode then
@@ -27,24 +28,24 @@ else
   local ts_server = vim.g.lsp_typescript_server or "vtsls" -- "ts_ls" or "vtsls" for TypeScript
 
   -- Enable LSP servers for Neovim 0.11+
-  vim.lsp.enable {
-    ts_server,
-    "lua_ls",
-    "biome",
-    "pyright",
-    "gopls",
-    "tailwindcss",
-    "angularls",
-    "html",
-    "cssls",
-    "emmet_language_server",
-    "jsonls",
-    "bashls",
-  }
+  -- vim.lsp.enable {
+  --   ts_server,
+  --   "lua_ls",
+  --   "biome",
+  --   "pyright",
+  --   "gopls",
+  --   "tailwindcss",
+  --   "angularls",
+  --   "html",
+  --   "cssls",
+  --   "emmet_language_server",
+  --   "jsonls",
+  --   "bashls",
+  -- }
 
   -- Load Lsp on-demand, e.g: eslint is disable by default
   -- e.g: We could enable eslint by set vim.g.lsp_on_demands = {"eslint"}
-  if vim.g.lsp_on_demands then
-    vim.lsp.enable(vim.g.lsp_on_demands)
-  end
+  -- if vim.g.lsp_on_demands then
+  --   vim.lsp.enable(vim.g.lsp_on_demands)
+  -- end
 end
