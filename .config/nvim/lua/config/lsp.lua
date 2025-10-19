@@ -8,6 +8,13 @@ local function ensure_installed(tool_name)
   end
 end
 
+local html_tools = { "html-lsp", "emmet-language-server", "prettierd" }
+
+if vim.fs.find("angular.json", { upward = true })[1] ~= nil then
+  table.insert(html_tools, "angular-language-server")
+  table.insert(html_tools, "vtsls")
+end
+
 local filetype_tools = {
   lua = { tools = { "lua-language-server", "stylua" } },
   c = { tools = { "clangd", "clang-format", "cpplint" } },
@@ -16,17 +23,9 @@ local filetype_tools = {
   javascriptreact = { toosl = { "vtsls", "biome" } },
   typescript = { tools = { "vtsls", "biome" } },
   typescriptreact = { tools = { "vtsls", "biome" } },
-  html = {
-    tools = { "html-lsp", "emmet-language-server", "angular-language-server", "prettierd" },
-    condition = function()
-      return vim.fs.find("angular.json", { upward = true })[1] ~= nil
-    end,
-  },
+  html = { tools = html_tools },
   htmlangular = {
-    tools = { "html-lsp", "emmet-language-server", "angular-language-server", "prettierd" },
-    condition = function()
-      return vim.fs.find("angular.json", { upward = true })[1] ~= nil
-    end,
+    tools = { "html-lsp", "emmet-language-server", "angular-language-server", "prettierd", "vtsls" },
   },
   css = { tools = { "css-lsp", "tailwindcss-language-server", "prettierd" } },
   scss = { tools = { "css-lsp", "tailwindcss-language-server", "prettierd" } },
