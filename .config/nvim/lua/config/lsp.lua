@@ -3,6 +3,10 @@ local mason_registry = require "mason-registry"
 local function ensure_installed(tool_name)
   local ok, pkg = pcall(mason_registry.get_package, tool_name)
 
+  if not ok then
+    return
+  end
+
   if ok and not pkg:is_installed() then
     pkg:install()
   end
