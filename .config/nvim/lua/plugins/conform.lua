@@ -40,11 +40,13 @@ return {
           return { "isort", "black" }
         end
       end,
-      bash = { "shfmt" },
-      sh = { "shfmt" },
+      bash = { "shfmt", "shellcheck" },
+      sh = { "shfmt", "shellcheck" },
       -- Install prettier globally.
       -- npm install -g prettier@latest
       -- Install dprint globally.
+      ["html"] = { "prettierd", "prettier", stop_after_first = true },
+      ["htmlangular"] = { "prettierd", "prettier", stop_after_first = true },
       ["json"] = { "biome", "dprint", stop_after_first = true },
       ["markdown"] = { "prettierd", "prettier", "dprint", stop_after_first = true },
       ["markdown.mdx"] = { "prettierd", "prettier", "dprint", stop_after_first = true },
