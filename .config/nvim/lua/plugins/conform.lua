@@ -28,9 +28,12 @@ return {
     -- Define your formatters
     formatters_by_ft = {
       lua = { "stylua" },
+      c = { "clang-format" },
+      cpp = { "clang-format" },
       hurl = { "hurlfmt" },
       -- Conform will run multiple formatters sequentially
-      go = { "goimports", "gofmt" },
+      go = { "goimports", "gomodifytags", "gofmt" },
+      templ = { "goimports", "gomodifytags", "templ" },
       -- Install Ruff globally.
       -- uv tool install ruff@latest
       python = function(bufnr)
@@ -42,12 +45,10 @@ return {
       end,
       bash = { "shfmt", "shellcheck" },
       sh = { "shfmt", "shellcheck" },
-      -- Install prettier globally.
-      -- npm install -g prettier@latest
-      -- Install dprint globally.
+      java = { "shfmt", "shellcheck" },
       ["html"] = { "prettierd", "prettier", stop_after_first = true },
       ["htmlangular"] = { "prettierd", "prettier", stop_after_first = true },
-      ["json"] = { "biome", "dprint", stop_after_first = true },
+      ["json"] = { "biome", "prettierd", "dprint", stop_after_first = true },
       ["markdown"] = { "prettierd", "prettier", "dprint", stop_after_first = true },
       ["markdown.mdx"] = { "prettierd", "prettier", "dprint", stop_after_first = true },
       ["javascript"] = { "biome", "deno_fmt", "prettierd", "prettier", "dprint", stop_after_first = true },
@@ -61,6 +62,8 @@ return {
       ["svelte"] = function(bufnr)
         return { "rustywind", first(bufnr, "biome", "deno_fmt", "prettierd", "prettier", "dprint") }
       end,
+      css = { "prettierd", "prettier", stop_after_first = true },
+      scss = { "prettierd", "prettier", stop_after_first = true },
     },
     formatters = {
       biome = {
