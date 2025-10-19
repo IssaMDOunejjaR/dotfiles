@@ -67,6 +67,20 @@ return {
         desc = "Grep",
       },
       {
+        "<leader>s/",
+        function()
+          require("fzf-lua").live_grep { cwd = vim.fn.input("Search Folder: ", vim.fn.getcwd(), "file") }
+        end,
+        desc = "Grep in folder",
+      },
+      {
+        "<leader>f/",
+        function()
+          require("fzf-lua").files { cwd = vim.fn.input("Search Folder: ", vim.fn.getcwd(), "file") }
+        end,
+        desc = "Find in folder",
+      },
+      {
         "<leader>:",
         function()
           require("fzf-lua").command_history()
