@@ -10,6 +10,8 @@ end
 
 local filetype_tools = {
   lua = { tools = { "lua-language-server", "stylua" } },
+  c = { tools = { "clangd", "clang-format", "cpplint" } },
+  cpp = { tools = { "clangd", "clang-format", "cpplint" } },
   javascript = { tools = { "vtsls", "biome" } },
   javascriptreact = { toosl = { "vtsls", "biome" } },
   typescript = { tools = { "vtsls", "biome" } },
