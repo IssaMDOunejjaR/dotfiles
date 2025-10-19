@@ -1,6 +1,8 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
+vim.o.sessionoptions = "localoptions,winsize,winpos,folds"
+
 local opt = vim.opt
 
 -- Borrow those settings from LazyVim
