@@ -11,6 +11,7 @@ function _G.biome_fix_unsafe()
   vim.cmd("silent !biome lint --write --unsafe " .. file)
 end
 
+---@type vim.lsp.Config
 return {
   cmd = { "biome", "lsp-proxy" },
   on_attach = function(client, bufnr)
