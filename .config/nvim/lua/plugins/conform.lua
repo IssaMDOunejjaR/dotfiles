@@ -40,6 +40,8 @@ return {
           return { "isort", "black" }
         end
       end,
+      bash = { "shfmt" },
+      sh = { "shfmt" },
       -- Install prettier globally.
       -- npm install -g prettier@latest
       -- Install dprint globally.
