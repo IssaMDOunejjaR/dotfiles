@@ -12,6 +12,11 @@ return {
 
       vim.api.nvim_set_hl(0, "FloatBorder", { fg = "#444444", bg = "#000000" })
       vim.api.nvim_set_hl(0, "CursorLine", { bg = "#222222" })
+
+      vim.api.nvim_set_hl(0, "BlinkCmpMenuBorder", { fg = "#444444", bg = "NONE" })
+      vim.api.nvim_set_hl(0, "BlinkCmpDocBorder", { fg = "#444444", bg = "NONE" })
+      vim.api.nvim_set_hl(0, "BlinkCmpScrollBarThumb", { bg = "#444444" })
+      vim.api.nvim_set_hl(0, "BlinkCmpMenuSelection", { bg = "#333333" })
     end,
   },
 }
