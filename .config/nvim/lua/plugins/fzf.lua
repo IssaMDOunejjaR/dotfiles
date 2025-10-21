@@ -62,14 +62,14 @@ return {
       {
         "<leader>/",
         function()
-          require("fzf-lua").live_grep()
+          require("fzf-lua").live_grep_native()
         end,
         desc = "Grep",
       },
       {
         "<leader>s/",
         function()
-          require("fzf-lua").live_grep { cwd = vim.fn.input("Search Folder: ", vim.fn.getcwd(), "file") }
+          require("fzf-lua").live_grep_native { cwd = vim.fn.input("Search Folder: ", vim.fn.getcwd(), "file") }
         end,
         desc = "Grep in folder",
       },
@@ -181,7 +181,7 @@ return {
       {
         "<leader>sg",
         function()
-          require("fzf-lua").live_grep()
+          require("fzf-lua").live_grep_native()
         end,
         desc = "Grep",
       },
