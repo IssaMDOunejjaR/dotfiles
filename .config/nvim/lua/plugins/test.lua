@@ -51,6 +51,7 @@ return {
   --     },
   --   },
   -- },
+
   -- {
   --   "vim-test/vim-test",
   --   vscode = true,
@@ -91,6 +92,7 @@ return {
   --     vim.g["test#javascript#denotest#options"] = "-A"
   --   end,
   -- },
+
   -- {
   --   "nvim-neotest/neotest",
   --   dependencies = { "nvim-neotest/nvim-nio", { "nvim-neotest/neotest-plenary" } },

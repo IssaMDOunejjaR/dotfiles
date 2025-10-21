@@ -9,6 +9,7 @@ return {
   --     },
   --   },
   -- },
+
   -- {
   --   "stevearc/overseer.nvim",
   --   dependencies = {
@@ -64,7 +65,8 @@ return {
   --     },
   --   },
   -- },
-  -- -- Code runner
+
+  -- Code runner
   -- {
   --   "jellydn/quick-code-runner.nvim",
   --   dependencies = { "MunifTanjim/nui.nvim" },
@@ -91,7 +93,8 @@ return {
   --     },
   --   },
   -- },
-  -- -- Hurl runner
+
+  -- Hurl runner
   -- {
   --   "folke/which-key.nvim",
   --   optional = true,
