@@ -4,9 +4,11 @@ local M = {}
 
 -- Get default LSP keymaps without any plugin dependencies
 function M.get_default_keymaps()
+  local fzf = require "fzf-lua"
+
   return {
-    { keys = "<leader>ca", func = vim.lsp.buf.code_action, desc = "Code Actions" },
-    { keys = "<leader>.", func = vim.lsp.buf.code_action, desc = "Code Actions" },
+    { keys = "<leader>ca", func = fzf.lsp_code_actions, desc = "Code Actions" },
+    { keys = "<leader>.", func = fzf.lsp_code_actions, desc = "Code Actions" },
     { keys = "<leader>cA", func = M.action.source, desc = "Source Actions" },
     { keys = "<leader>cr", func = vim.lsp.buf.rename, desc = "Code Rename" },
     { keys = "<leader>cf", func = vim.lsp.buf.format, desc = "Code Format" },
@@ -26,7 +28,7 @@ function M.get_default_keymaps()
       desc = "Documentation",
       has = "hoverProvider",
     },
-    { keys = "gd", func = vim.lsp.buf.definition, desc = "Goto Definition", has = "definitionProvider" },
+    { keys = "gd", func = require("fzf-lua").lsp_definitions, desc = "Goto Definition", has = "definitionProvider" },
   }
 end
 
