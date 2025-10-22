@@ -16,7 +16,6 @@ end
 require "config.autocmds"
 require "config.lazy"
 require "config.keymaps"
-require "config.project"
 require "config.lsp"
 
 -- Only load the theme if not in VSCode

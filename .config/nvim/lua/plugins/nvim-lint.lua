@@ -3,12 +3,9 @@ return {
   event = "VeryLazy",
   opts = {
     linters_by_ft = {
-      -- cspell: npm install -g cspell@latest
-      -- codespell: ux tool install codespell
-      ["*"] = { "cspell", "codespell" },
-      -- oxlint: npm install -g oxlint@latest
       c = { "cpplint" },
       cpp = { "cpplint" },
+      lua = { "luacheck" },
       javascript = { "biomejs", "oxlint", "eslint_d" },
       typescript = { "biomejs", "oxlint", "eslint_d" },
       javascriptreact = { "biomejs", "oxlint", "eslint_d" },

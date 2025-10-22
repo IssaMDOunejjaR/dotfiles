@@ -20,30 +20,42 @@ if vim.fs.find("angular.json", { upward = true })[1] ~= nil then
 end
 
 local filetype_tools = {
-  lua = { tools = { "lua-language-server", "stylua" } },
+  lua = { tools = { "lua-language-server", "stylua", "luacheck" } },
+
   c = { tools = { "clangd", "clang-format", "cpplint" } },
   cpp = { tools = { "clangd", "clang-format", "cpplint" } },
+
   javascript = { tools = { "vtsls", "biome" } },
   javascriptreact = { toosl = { "vtsls", "biome" } },
   typescript = { tools = { "vtsls", "biome" } },
   typescriptreact = { tools = { "vtsls", "biome" } },
+
   html = { tools = html_tools },
   htmlangular = {
     tools = { "html-lsp", "emmet-language-server", "angular-language-server", "prettierd", "vtsls" },
   },
+
   css = { tools = { "css-lsp", "tailwindcss-language-server", "prettierd" } },
   scss = { tools = { "css-lsp", "tailwindcss-language-server", "prettierd" } },
+
   json = { tools = { "json-lsp", "prettierd", "jsonlint" } },
-  python = { tools = { "basedpyright", "black", "isort" } },
+
+  python = { tools = { "basedpyright", "ruff" } },
+
   bash = { tools = { "bash-language-server", "shfmt", "shellcheck" } },
   sh = { tools = { "bash-language-server", "shfmt", "shellcheck" } },
   zsh = { tools = { "bash-language-server", "shfmt", "shellcheck" } },
+
   go = { tools = { "gopls", "goimports", "gomodifytags" } },
   templ = { tools = { "gopls", "goimports", "gomodifytags", "templ" } },
+
   dockerfile = { tools = { "docker-language-server", "dockerfile-language-server", "hadolint" } },
   ["yaml.docker-compose"] = { tools = { "docker-language-server", "docker-compose-language-service" } },
+
   java = { tools = { "jdtls", "lemminx", "google-java-format", "checkstyle " } },
+
   sql = { tools = { "sqls", "sqlfmt", "sqlfluff " } },
+
   yaml = { tools = { "yaml-language-server", "yamllint", "yamlfmt" } },
   ["yaml.ansible"] = { tools = { "ansible-language-server", "ansible-lint" } },
 }

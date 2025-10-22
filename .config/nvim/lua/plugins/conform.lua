@@ -21,47 +21,44 @@ return {
   "stevearc/conform.nvim",
   event = { "BufWritePre" },
   cmd = { "ConformInfo" },
-  keys = {
-    { "<leader>cn", "<cmd>ConformInfo<cr>", desc = "Conform Info" },
-  },
   opts = {
     -- Define your formatters
     formatters_by_ft = {
       lua = { "stylua" },
+
       c = { "clang-format" },
       cpp = { "clang-format" },
-      hurl = { "hurlfmt" },
-      -- Conform will run multiple formatters sequentially
+
       go = { "goimports", "gomodifytags", "gofmt" },
       templ = { "goimports", "gomodifytags", "templ" },
-      -- Install Ruff globally.
-      -- uv tool install ruff@latest
-      python = function(bufnr)
-        if require("conform").get_formatter_info("ruff_format", bufnr).available then
-          return { "ruff_format" }
-        else
-          return { "isort", "black" }
-        end
-      end,
+
+      python = { "ruff_format" },
+
       bash = { "shfmt", "shellcheck" },
       sh = { "shfmt", "shellcheck" },
+
       java = { "shfmt", "shellcheck" },
+
       ["html"] = { "prettierd", "prettier", stop_after_first = true },
       ["htmlangular"] = { "prettierd", "prettier", stop_after_first = true },
+
       ["json"] = { "biome", "prettierd", "dprint", stop_after_first = true },
+
       ["markdown"] = { "prettierd", "prettier", "dprint", stop_after_first = true },
       ["markdown.mdx"] = { "prettierd", "prettier", "dprint", stop_after_first = true },
-      ["javascript"] = { "biome", "deno_fmt", "prettierd", "prettier", "dprint", stop_after_first = true },
+
+      ["javascript"] = { "prettierd", "prettier", stop_after_first = true },
       ["javascriptreact"] = function(bufnr)
-        return { "rustywind", first(bufnr, "biome", "deno_fmt", "prettierd", "prettier", "dprint") }
+        return { "rustywind", first(bufnr, "prettierd", "prettier") }
       end,
-      ["typescript"] = { "biome", "deno_fmt", "prettierd", "prettier", "dprint", stop_after_first = true },
+      ["typescript"] = { "prettierd", "prettier", stop_after_first = true },
       ["typescriptreact"] = function(bufnr)
-        return { "rustywind", first(bufnr, "biome", "deno_fmt", "prettierd", "prettier", "dprint") }
+        return { "rustywind", first(bufnr, "prettierd", "prettier") }
       end,
       ["svelte"] = function(bufnr)
-        return { "rustywind", first(bufnr, "biome", "deno_fmt", "prettierd", "prettier", "dprint") }
+        return { "rustywind", first(bufnr, "prettierd", "prettier") }
       end,
+
       css = { "prettierd", "prettier", stop_after_first = true },
       scss = { "prettierd", "prettier", stop_after_first = true },
     },

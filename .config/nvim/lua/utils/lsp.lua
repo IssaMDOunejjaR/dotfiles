@@ -8,18 +8,9 @@ function M.get_default_keymaps()
 
   return {
     { keys = "<leader>ca", func = fzf.lsp_code_actions, desc = "Code Actions" },
-    { keys = "<leader>.", func = fzf.lsp_code_actions, desc = "Code Actions" },
     { keys = "<leader>cA", func = M.action.source, desc = "Source Actions" },
     { keys = "<leader>cr", func = vim.lsp.buf.rename, desc = "Code Rename" },
     { keys = "<leader>cf", func = vim.lsp.buf.format, desc = "Code Format" },
-    {
-      keys = "<leader>k",
-      func = function()
-        vim.lsp.buf.hover { max_width = 90 }
-      end,
-      desc = "Documentation",
-      has = "hoverProvider",
-    },
     {
       keys = "K",
       func = function()

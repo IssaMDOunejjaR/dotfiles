@@ -134,8 +134,9 @@ return {
 
   {
     "nvim-treesitter/nvim-treesitter",
+    lazy = false,
     build = ":TSUpdate",
-    cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
+    branch = "master",
     keys = {
       { "<c-space>", desc = "Increment Selection" },
       { "<bs>", desc = "Decrement Selection", mode = "x" },
@@ -148,7 +149,6 @@ return {
       require("nvim-treesitter.configs").setup(opts)
     end,
     opts = {
-      highlight = { enable = true },
       indent = { enable = true },
       ensure_installed = {
         "bash",
@@ -205,33 +205,28 @@ return {
       spec = {
         {
           mode = { "n", "v" },
-          { "<leader><tab>", group = "tabs" },
-          { "<leader>b", group = "buffer" },
-          { "<leader>c", group = "code" },
-          { "<leader>f", group = "file/find" },
-          { "<leader>g", group = "git" },
-          { "<leader>gh", group = "hunks" },
-          { "<leader>q", group = "quit/session" },
-          { "<leader>s", group = "search" },
-          { "<leader>t", group = "toggle" },
-          { "<leader>u", group = "ui", icon = { icon = "󰙵 ", color = "cyan" } },
-          { "<leader>w", group = "windows" },
-          { "<leader>x", group = "diagnostics/quickfix", icon = { icon = "󱖫 ", color = "green" } },
-          { "[", group = "prev" },
-          { "]", group = "next" },
-          { "g", group = "goto" },
-          { "gs", group = "surround" },
-          { "z", group = "fold" },
+          { "<leader><tab>", group = "Tabs" },
+          { "<leader>a", group = "AI" },
+          { "<leader>b", group = "Buffer" },
+          { "<leader>c", group = "Code" },
+          { "<leader>f", group = "File/Find" },
+          { "<leader>g", group = "Git" },
+          { "<leader>gh", group = "Hunks" },
+          { "<leader>q", group = "Quit/Session" },
+          { "<leader>s", group = "Search" },
+          { "<leader>t", group = "Toggle" },
+          { "<leader>u", group = "UI", icon = { icon = "󰙵 ", color = "cyan" } },
+          { "<leader>w", group = "Windows" },
+          { "<leader>x", group = "Diagnostics/Quickfix", icon = { icon = "󱖫 ", color = "green" } },
+          { "[", group = "Prev" },
+          { "]", group = "Next" },
+          { "g", group = "Goto" },
+          { "gs", group = "Surround" },
+          { "z", group = "Fold" },
         },
       },
-    },
-    keys = {
-      {
-        "<leader>?",
-        function()
-          require("which-key").show { global = false }
-        end,
-        desc = "Buffer Keymaps (which-key)",
+      icons = {
+        mappings = false,
       },
     },
     config = function(_, opts)

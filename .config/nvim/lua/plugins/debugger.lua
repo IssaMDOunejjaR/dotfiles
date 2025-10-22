@@ -4,6 +4,7 @@ return {
     optional = true,
     opts = {
       spec = {
+        { "<leader>d", group = "Debugging" },
         {
           "<leader>dt",
           function()
@@ -50,6 +51,15 @@ return {
           remap = false,
         },
         {
+          "<leader>db",
+          function()
+            require("dap").step_back()
+          end,
+          desc = "Step Back",
+          nowait = true,
+          remap = false,
+        },
+        {
           "<leader>dr",
           function()
             require("dap").repl.open()
@@ -78,21 +88,39 @@ return {
           nowait = true,
           remap = false,
         },
+        -- {
+        --   "<leader>db",
+        --   function()
+        --     require("dap").list_breakpoints()
+        --   end,
+        --   desc = "List Breakpoints",
+        --   nowait = true,
+        --   remap = false,
+        -- },
         {
-          "<leader>db",
+          "<leader>de",
           function()
-            require("dap").list_breakpoints()
+            require("dapui").eval()
           end,
-          desc = "List Breakpoints",
+          desc = "Eval",
           nowait = true,
           remap = false,
         },
         {
-          "<leader>de",
+          "<leader>dk",
           function()
-            require("dap").set_exception_breakpoints { "all" }
+            require("dap.ui.widgets").hover()
           end,
-          desc = "Set Exception Breakpoints",
+          desc = "Hover",
+          nowait = true,
+          remap = false,
+        },
+        {
+          "<leader>da",
+          function()
+            require("dap").restart()
+          end,
+          desc = "Restart",
           nowait = true,
           remap = false,
         },
@@ -113,13 +141,10 @@ return {
     config = function()
       local dap = require "dap"
       local dapui = require "dapui"
-      local nio = require "nio"
 
       require("nvim-dap-virtual-text").setup {
         highlight_new_as_changed = true,
       }
-
-      require("mason").setup()
 
       require("mason-nvim-dap").setup {
         ensure_installed = {},
@@ -131,24 +156,101 @@ return {
         },
       }
 
+      dap.adapters = {
+        gdb = {
+          type = "executable",
+          command = "gdb",
+          name = "gdb",
+          args = { "--interpreter=dap", "--eval-command", "set print pretty on" },
+        },
+        cppdbg = {
+          id = "cppdbg",
+          type = "executable",
+          command = vim.fn.stdpath "data" .. "/mason/bin/OpenDebugAD7",
+        },
+      }
+
       dap.configurations = {
         c = {
           {
-            name = "Launch",
-            type = "codelldb",
+            name = "Launch with GDB + reverse",
+            type = "cppdbg",
             request = "launch",
             program = function()
-              return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/a.out", "file")
+              return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
             end,
             cwd = "${workspaceFolder}",
-            stopOnEntry = true,
+            stopAtEntry = true,
+            setupCommands = {
+              {
+                text = "-enable-pretty-printing",
+                description = "Enable pretty printing",
+              },
+              -- { text = '-interpreter-exec console "target record-full"', description = "Enable reverse debugging" },
+            },
+            MIMode = "gdb",
+            miDebuggerPath = "gdb",
+          },
+          {
+            name = "Launch",
+            type = "gdb",
+            request = "launch",
+            program = function()
+              return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+            end,
+            args = {},
+            cwd = "${workspaceFolder}",
+            stopAtBeginningOfMainSubprogram = false,
+            setupCommands = {
+              {
+                -- text = '-interpreter-exec console "record"',
+                text = "target record-full",
+                description = "Enable reverse debugging",
+              },
+            },
+          },
+          {
+            name = "Select and attach to process",
+            type = "gdb",
+            request = "attach",
+            program = function()
+              return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+            end,
+            pid = function()
+              local name = vim.fn.input "Executable name (filter): "
+              return require("dap.utils").pick_process { filter = name }
+            end,
+            cwd = "${workspaceFolder}",
+          },
+          {
+            name = "Attach to gdbserver :1234",
+            type = "gdb",
+            request = "attach",
+            target = "localhost:1234",
+            program = function()
+              return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+            end,
+            cwd = "${workspaceFolder}",
           },
         },
       }
 
-      dapui.setup()
-
-      vim.fn.sign_define("DapBreakpoint", { text = "🐞" })
+      dapui.setup {
+        controls = { enabled = false },
+        floating = { border = "single" },
+        layouts = {
+          {
+            elements = {
+              {
+                id = "scopes",
+                size = 1.0,
+              },
+            },
+            position = "bottom",
+            size = 15,
+          },
+        },
+      }
 
       dap.listeners.before.attach.dapui_config = function()
         dapui.open()
@@ -165,17 +267,6 @@ return {
       dap.listeners.before.event_exited.dapui_config = function()
         dapui.close()
       end
-
-      -- nio.autocmd.attach("dap_repl", {
-      --   on_buf_write_post = function(args)
-      --     local repl_buf = args.buf
-      --     local repl_lines = vim.api.nvim_buf_get_lines(repl_buf, 0, -1, false)
-      --     local last_line = repl_lines[#repl_lines]
-      --     if last_line and last_line:match "^%s*$" == nil then
-      --       dap.repl.run_command(last_line)
-      --     end
-      --   end,
-      -- })
     end,
   },
 }

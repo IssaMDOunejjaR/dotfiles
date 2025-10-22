@@ -51,21 +51,13 @@ return {
       },
     },
 
+    config = function(_, opts)
+      require("fzf-lua").setup(opts)
+
+      require("fzf-lua").register_ui_select()
+    end,
+
     keys = {
-      {
-        "<leader>,",
-        function()
-          require("fzf-lua").buffers()
-        end,
-        desc = "Buffers",
-      },
-      {
-        "<leader>/",
-        function()
-          require("fzf-lua").live_grep_native()
-        end,
-        desc = "Grep",
-      },
       {
         "<leader>s/",
         function()
@@ -86,13 +78,6 @@ return {
           require("fzf-lua").command_history()
         end,
         desc = "Command History",
-      },
-      {
-        "<leader><space>",
-        function()
-          require("fzf-lua").files()
-        end,
-        desc = "Find Files",
       },
       {
         "<leader>fb",
