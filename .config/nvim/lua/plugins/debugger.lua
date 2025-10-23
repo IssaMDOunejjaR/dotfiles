@@ -156,84 +156,119 @@ return {
         },
       }
 
-      dap.adapters = {
-        gdb = {
-          type = "executable",
-          command = "gdb",
-          name = "gdb",
-          args = { "--interpreter=dap", "--eval-command", "set print pretty on" },
-        },
-        cppdbg = {
-          id = "cppdbg",
-          type = "executable",
-          command = vim.fn.stdpath "data" .. "/mason/bin/OpenDebugAD7",
+      dap.adapters.gdb = {
+        type = "executable",
+        command = "gdb",
+        name = "gdb",
+        args = { "--interpreter=dap", "--eval-command", "set print pretty on" },
+      }
+
+      dap.adapters.cppdbg = {
+        id = "cppdbg",
+        type = "executable",
+        command = vim.fn.stdpath "data" .. "/mason/bin/OpenDebugAD7",
+      }
+
+      dap.adapters["pwa-chrome"] = {
+        type = "server",
+        host = "localhost",
+        port = "${port}",
+        executable = {
+          command = "node",
+          args = {
+            vim.fn.stdpath "data" .. "/mason/packages/js-debug-adapter/js-debug/src/dapDebugServer.js",
+            "${port}",
+          },
         },
       }
 
-      dap.configurations = {
-        c = {
-          {
-            name = "Launch with GDB + reverse",
-            type = "cppdbg",
-            request = "launch",
-            program = function()
-              return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-            end,
-            cwd = "${workspaceFolder}",
-            stopAtEntry = true,
-            setupCommands = {
-              {
-                text = "-enable-pretty-printing",
-                description = "Enable pretty printing",
-              },
-              -- { text = '-interpreter-exec console "target record-full"', description = "Enable reverse debugging" },
+      dap.configurations.c = {
+        {
+          name = "Launch with GDB + reverse",
+          type = "cppdbg",
+          request = "launch",
+          program = function()
+            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+          end,
+          cwd = "${workspaceFolder}",
+          stopAtEntry = true,
+          setupCommands = {
+            {
+              text = "-enable-pretty-printing",
+              description = "Enable pretty printing",
             },
-            MIMode = "gdb",
-            miDebuggerPath = "gdb",
+            -- { text = '-interpreter-exec console "target record-full"', description = "Enable reverse debugging" },
           },
-          {
-            name = "Launch",
-            type = "gdb",
-            request = "launch",
-            program = function()
-              return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-            end,
-            args = {},
-            cwd = "${workspaceFolder}",
-            stopAtBeginningOfMainSubprogram = false,
-            setupCommands = {
-              {
-                -- text = '-interpreter-exec console "record"',
-                text = "target record-full",
-                description = "Enable reverse debugging",
-              },
+          MIMode = "gdb",
+          miDebuggerPath = "gdb",
+        },
+        {
+          name = "Launch",
+          type = "gdb",
+          request = "launch",
+          program = function()
+            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+          end,
+          args = {},
+          cwd = "${workspaceFolder}",
+          stopAtBeginningOfMainSubprogram = false,
+          setupCommands = {
+            {
+              -- text = '-interpreter-exec console "record"',
+              text = "target record-full",
+              description = "Enable reverse debugging",
             },
-          },
-          {
-            name = "Select and attach to process",
-            type = "gdb",
-            request = "attach",
-            program = function()
-              return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-            end,
-            pid = function()
-              local name = vim.fn.input "Executable name (filter): "
-              return require("dap.utils").pick_process { filter = name }
-            end,
-            cwd = "${workspaceFolder}",
-          },
-          {
-            name = "Attach to gdbserver :1234",
-            type = "gdb",
-            request = "attach",
-            target = "localhost:1234",
-            program = function()
-              return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-            end,
-            cwd = "${workspaceFolder}",
           },
         },
+        {
+          name = "Select and attach to process",
+          type = "gdb",
+          request = "attach",
+          program = function()
+            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+          end,
+          pid = function()
+            local name = vim.fn.input "Executable name (filter): "
+            return require("dap.utils").pick_process { filter = name }
+          end,
+          cwd = "${workspaceFolder}",
+        },
+        {
+          name = "Attach to gdbserver :1234",
+          type = "gdb",
+          request = "attach",
+          target = "localhost:1234",
+          program = function()
+            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+          end,
+          cwd = "${workspaceFolder}",
+        },
       }
+
+      for _, language in ipairs { "typescript", "javascript", "typescriptreact", "javascriptreact" } do
+        dap.configurations[language] = {
+          {
+            name = "Launch",
+            type = "pwa-chrome",
+            request = "launch",
+            url = function()
+              return vim.fn.input("Enter app url: ", "http://localhost:4200")
+            end,
+            webRoot = "${workspaceFolder}",
+            runtimeExecutable = "/usr/bin/brave",
+          },
+          {
+            name = "Attach",
+            type = "pwa-chrome",
+            request = "attach",
+            port = 9222,
+            webRoot = "${workspaceFolder}",
+            urlFilter = function()
+              return vim.fn.input("Enter app url: ", "http://localhost:4200")
+            end,
+          },
+        }
+      end
 
       dapui.setup {
         controls = { enabled = false },
