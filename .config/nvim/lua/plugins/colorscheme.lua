@@ -1,16 +1,18 @@
 return {
   {
-    "cpea2506/one_monokai.nvim",
+    -- "cpea2506/one_monokai.nvim",
+    "Shatur/neovim-ayu",
     lazy = false,
     priority = 1000,
     config = function()
-      require("one_monokai").setup {
-        transparent = true,
-      }
+      -- require("one_monokai").setup {
+      --   transparent = true,
+      -- }
 
-      vim.cmd.colorscheme "one_monokai"
+      -- vim.cmd.colorscheme "one_monokai"
+      vim.cmd.colorscheme "ayu"
 
-      vim.api.nvim_set_hl(0, "FloatBorder", { fg = "#444444", bg = "#000000" })
+      vim.api.nvim_set_hl(0, "FloatBorder", { fg = "#444444" })
       vim.api.nvim_set_hl(0, "CursorLine", { bg = "#222222" })
 
       vim.api.nvim_set_hl(0, "BlinkCmpMenuBorder", { fg = "#444444", bg = "NONE" })
