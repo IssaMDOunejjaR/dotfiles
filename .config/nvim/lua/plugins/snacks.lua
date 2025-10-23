@@ -72,7 +72,7 @@ return {
       image = {
         -- NOTE: brew install imagemagick to install on Mac, refer https://imagemagick.org/script/download.php for more detail
         -- For mermaidjs: npm install -g @mermaid-js/mermaid-cli
-        enabled = true,
+        enabled = false,
         doc = {
           -- enable image viewer for documents
           -- a treesitter parser must be available for the enabled languages.
