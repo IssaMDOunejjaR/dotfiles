@@ -25,14 +25,14 @@ local filetype_tools = {
   c = { tools = { "clangd", "clang-format", "cpplint" } },
   cpp = { tools = { "clangd", "clang-format", "cpplint" } },
 
-  javascript = { tools = { "vtsls", "biome" } },
-  javascriptreact = { toosl = { "vtsls", "biome" } },
-  typescript = { tools = { "vtsls", "biome" } },
-  typescriptreact = { tools = { "vtsls", "biome" } },
+  javascript = { tools = { "vtsls", "js-debug-adapter" } },
+  javascriptreact = { toosl = { "vtsls", "js-debug-adapter" } },
+  typescript = { tools = { "vtsls", "js-debug-adapter" } },
+  typescriptreact = { tools = { "vtsls", "js-debug-adapter" } },
 
   html = { tools = html_tools },
   htmlangular = {
-    tools = { "html-lsp", "emmet-language-server", "angular-language-server", "prettierd", "vtsls" },
+    tools = { "html-lsp", "emmet-language-server", "angular-language-server", "prettierd", "vtsls", "js-debug-adapter" },
   },
 
   css = { tools = { "css-lsp", "tailwindcss-language-server", "prettierd" } },
