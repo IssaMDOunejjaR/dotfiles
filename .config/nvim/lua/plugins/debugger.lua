@@ -143,7 +143,9 @@ return {
       local dapui = require "dapui"
 
       require("nvim-dap-virtual-text").setup {
-        highlight_new_as_changed = true,
+        enabled = true,
+        highlight_changed_variables = true,
+        show_stop_reason = true,
       }
 
       require("mason-nvim-dap").setup {
@@ -181,6 +183,8 @@ return {
           },
         },
       }
+
+      dap.adapters["pwa-node"] = dap.adapters["pwa-chrome"]
 
       dap.configurations.c = {
         {
@@ -248,7 +252,7 @@ return {
       for _, language in ipairs { "typescript", "javascript", "typescriptreact", "javascriptreact" } do
         dap.configurations[language] = {
           {
-            name = "Launch",
+            name = "Launch Brave",
             type = "pwa-chrome",
             request = "launch",
             url = function()
@@ -258,7 +262,7 @@ return {
             runtimeExecutable = "/usr/bin/brave",
           },
           {
-            name = "Attach",
+            name = "Attach to Brave",
             type = "pwa-chrome",
             request = "attach",
             port = 9222,
@@ -266,6 +270,38 @@ return {
             urlFilter = function()
               return vim.fn.input("Enter app url: ", "http://localhost:4200")
             end,
+          },
+          {
+            name = "Launch Node",
+            type = "pwa-node",
+            request = "launch",
+            program = "${file}",
+            cwd = "${workspaceFolder}",
+            runtimeExecutable = "node",
+            console = "integratedTerminal",
+          },
+          {
+            name = "Launch Bun",
+            type = "pwa-node",
+            request = "launch",
+            program = "${file}",
+            cwd = "${workspaceFolder}",
+            runtimeExecutable = "bun",
+            runtimeArgs = { "run", "--inspect" },
+            console = "integratedTerminal",
+          },
+          {
+            name = "Attach to Node Process",
+            type = "pwa-node",
+            request = "attach",
+            processId = require("dap.utils").pick_process,
+          },
+          {
+            name = "Attach to Bun inspector",
+            type = "pwa-node",
+            request = "attach",
+            port = 6499,
+            cwd = "${workspaceFolder}",
           },
         }
       end
@@ -278,11 +314,15 @@ return {
             elements = {
               {
                 id = "scopes",
-                size = 1.0,
+                size = 0.5,
+              },
+              {
+                id = "repl",
+                size = 0.5,
               },
             },
-            position = "bottom",
-            size = 15,
+            position = "right",
+            size = 0.33,
           },
         },
       }
