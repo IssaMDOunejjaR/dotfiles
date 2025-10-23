@@ -20,52 +20,57 @@ if vim.fs.find("angular.json", { upward = true })[1] ~= nil then
 end
 
 local filetype_tools = {
-  lua = { tools = { "lua-language-server", "stylua", "luacheck" } },
+  lua = { "lua-language-server", "stylua", "luacheck" },
 
-  c = { tools = { "clangd", "clang-format", "cpplint" } },
-  cpp = { tools = { "clangd", "clang-format", "cpplint" } },
+  c = { "clangd", "clang-format", "cpplint" },
+  cpp = { "clangd", "clang-format", "cpplint" },
 
-  javascript = { tools = { "vtsls", "js-debug-adapter" } },
-  javascriptreact = { toosl = { "vtsls", "js-debug-adapter" } },
-  typescript = { tools = { "vtsls", "js-debug-adapter" } },
-  typescriptreact = { tools = { "vtsls", "js-debug-adapter" } },
+  javascript = { "vtsls", "js-debug-adapter" },
+  javascriptreact = { "vtsls", "js-debug-adapter" },
+  typescript = { "vtsls", "js-debug-adapter" },
+  typescriptreact = { "vtsls", "js-debug-adapter" },
 
-  html = { tools = html_tools },
+  html = html_tools,
   htmlangular = {
-    tools = { "html-lsp", "emmet-language-server", "angular-language-server", "prettierd", "vtsls", "js-debug-adapter" },
+    "html-lsp",
+    "emmet-language-server",
+    "angular-language-server",
+    "prettierd",
+    "vtsls",
+    "js-debug-adapter",
   },
 
-  css = { tools = { "css-lsp", "tailwindcss-language-server", "prettierd" } },
-  scss = { tools = { "css-lsp", "tailwindcss-language-server", "prettierd" } },
+  css = { "css-lsp", "prettierd" },
+  scss = { "css-lsp", "prettierd" },
 
-  json = { tools = { "json-lsp", "prettierd", "jsonlint" } },
+  json = { "json-lsp", "prettierd", "jsonlint" },
 
-  python = { tools = { "basedpyright", "ruff" } },
+  python = { "basedpyright", "ruff" },
 
-  bash = { tools = { "bash-language-server", "shfmt", "shellcheck" } },
-  sh = { tools = { "bash-language-server", "shfmt", "shellcheck" } },
-  zsh = { tools = { "bash-language-server", "shfmt", "shellcheck" } },
+  bash = { "bash-language-server", "shfmt", "shellcheck" },
+  sh = { "bash-language-server", "shfmt", "shellcheck" },
+  zsh = { "bash-language-server", "shfmt", "shellcheck" },
 
-  go = { tools = { "gopls", "goimports", "gomodifytags" } },
-  templ = { tools = { "gopls", "goimports", "gomodifytags", "templ" } },
+  go = { "gopls", "goimports", "gomodifytags" },
+  templ = { "gopls", "goimports", "gomodifytags", "templ" },
 
-  dockerfile = { tools = { "docker-language-server", "dockerfile-language-server", "hadolint" } },
-  ["yaml.docker-compose"] = { tools = { "docker-language-server", "docker-compose-language-service" } },
+  dockerfile = { "docker-language-server", "dockerfile-language-server", "hadolint" },
+  ["yaml.docker-compose"] = { "docker-language-server", "docker-compose-language-service" },
 
-  java = { tools = { "jdtls", "lemminx", "google-java-format", "checkstyle " } },
+  java = { "jdtls", "lemminx", "google-java-format", "checkstyle " },
 
-  sql = { tools = { "sqls", "sqlfmt", "sqlfluff " } },
+  sql = { "sqls", "sqlfmt", "sqlfluff " },
 
-  yaml = { tools = { "yaml-language-server", "yamllint", "yamlfmt" } },
-  ["yaml.ansible"] = { tools = { "ansible-language-server", "ansible-lint" } },
+  yaml = { "yaml-language-server", "yamllint", "yamlfmt" },
+  ["yaml.ansible"] = { "ansible-language-server", "ansible-lint" },
 }
 
 vim.api.nvim_create_autocmd("FileType", {
   callback = function(args)
-    local entry = filetype_tools[args.match]
+    local tools = filetype_tools[args.match]
 
-    if (entry and entry.condition == nil) or (entry and entry.condition ~= nil and entry.condition()) then
-      for _, tool in ipairs(entry.tools) do
+    if tools then
+      for _, tool in ipairs(tools) do
         ensure_installed(tool)
       end
     end
