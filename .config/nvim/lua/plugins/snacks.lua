@@ -69,9 +69,6 @@ return {
     priority = 1000,
     lazy = false,
     config = function()
-      vim.api.nvim_set_hl(0, "CustomSnacksIndent", { fg = "#222222" })
-      vim.api.nvim_set_hl(0, "CustomSnacksIndentScope", { fg = "#ff4d4d" })
-
       require("snacks").setup {
         image = {
           -- NOTE: brew install imagemagick to install on Mac, refer https://imagemagick.org/script/download.php for more detail
