@@ -188,7 +188,7 @@ return {
 
       dap.configurations.c = {
         {
-          name = "Launch with GDB + reverse",
+          name = "Launch with GDB",
           type = "cppdbg",
           request = "launch",
           program = function()
@@ -201,28 +201,9 @@ return {
               text = "-enable-pretty-printing",
               description = "Enable pretty printing",
             },
-            -- { text = '-interpreter-exec console "target record-full"', description = "Enable reverse debugging" },
           },
           MIMode = "gdb",
           miDebuggerPath = "gdb",
-        },
-        {
-          name = "Launch",
-          type = "gdb",
-          request = "launch",
-          program = function()
-            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-          end,
-          args = {},
-          cwd = "${workspaceFolder}",
-          stopAtBeginningOfMainSubprogram = false,
-          setupCommands = {
-            {
-              -- text = '-interpreter-exec console "record"',
-              text = "target record-full",
-              description = "Enable reverse debugging",
-            },
-          },
         },
         {
           name = "Select and attach to process",
@@ -314,18 +295,26 @@ return {
             elements = {
               {
                 id = "scopes",
-                size = 0.5,
+                size = 1.0,
               },
-              {
-                id = "repl",
-                size = 0.5,
-              },
+              -- {
+              --   id = "repl",
+              --   size = 0.5,
+              -- },
             },
-            position = "right",
-            size = 0.33,
+            position = "bottom",
+            size = 15,
           },
         },
       }
+
+      vim.fn.sign_define("DapBreakpoint", { text = "●", texthl = "DiagnosticError", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapBreakpointCondition", { text = "◆", texthl = "DiagnosticHint", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapBreakpointRejected", { text = "✗", texthl = "DiagnosticWarn", linehl = "", numhl = "" })
+      vim.fn.sign_define(
+        "DapStopped",
+        { text = "▶", texthl = "DiagnosticInfo", linehl = "Visual", numhl = "DiagnosticInfo" }
+      )
 
       dap.listeners.before.attach.dapui_config = function()
         dapui.open()
