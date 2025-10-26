@@ -71,7 +71,7 @@ popup_during_fullscreen all
 tiling_drag modifier titlebar
 
 # start a terminal
-bindsym $mod+Return exec alacritty
+bindsym $mod+Return exec kitty
 
 bindsym $mod+b exec brave
 
