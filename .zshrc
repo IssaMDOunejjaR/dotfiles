@@ -132,5 +132,3 @@ fi
 if command -v mise &>/dev/null; then
   eval "$(mise activate)"
 fi
-
-if [ "$TMUX" = "" ]; then tmux attach -t home || tmux new -s home; fi
