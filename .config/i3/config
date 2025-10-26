@@ -48,6 +48,24 @@ exec_always --no-startup-id picom --vsync
 exec_always --no-startup-id autotiling
 # exec_always --no-startup-id xrandr --output DP-0 --mode 2560x1080 --rate 200
 
+set $main eDP-1
+set $second HDMI-1
+
+exec_always --no-startup-id xrandr --output $main --auto --primary
+exec_always --no-startup-id xrandr --output $second --auto --right-of $main
+
+workspace 1 output $main
+# workspace 4 output $main
+# workspace 5 output $main
+# workspace 6 output $main
+# workspace 7 output $main
+# workspace 8 output $main
+# workspace 9 output $main
+# workspace 0 output $main
+#
+workspace 2 output $main $second
+# workspace 3 output $second
+
 # Toggle i3bar
 bindsym Shift+$mod+b bar mode toggle
 
