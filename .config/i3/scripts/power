@@ -4,7 +4,7 @@ CMD=$(printf "logout\nsuspend\nreboot\nshutdown" | rofi -dmenu -no-show-icons --
 
 case "$CMD" in
 logout)
-  systemctl logout
+  i3-msg exit
   ;;
 suspend)
   systemctl suspend
