@@ -56,13 +56,13 @@ exec_always --no-startup-id autorandr --change
 exec_always --no-startup-id /usr/bin/feh --bg-fill "/home/$USER/dotfiles/srcs/wallpapers/wallpaper.png"
 exec_always --no-startup-id picom --vsync
 exec_always --no-startup-id autotiling
-# exec_always --no-startup-id xrandr --output DP-0 --mode 2560x1080 --rate 200
 
 set $main eDP-1
 set $second HDMI-1
 
 exec_always --no-startup-id xrandr --output $main --auto --primary
 exec_always --no-startup-id xrandr --output $second --auto --right-of $main
+exec_always --no-startup-id dunst
 
 workspace 1 output $main
 # workspace 4 output $main
