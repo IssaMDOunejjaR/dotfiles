@@ -1,0 +1,11 @@
+#!/bin/bash
+
+current=$(brightnessctl get)
+max=$(brightnessctl max)
+current_pct=$((current * 100 / max))
+
+for i in $(seq $current_pct -10 10); do
+  brightnessctl set "${i}%"
+
+  sleep 0.05
+done

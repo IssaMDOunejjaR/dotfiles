@@ -37,6 +37,16 @@ exec_always --no-startup-id dex --autostart --environment i3
 # screen before suspend. Use loginctl lock-session to lock your screen.
 exec_always --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
+exec_always --no-startup-id xidlehook \
+  --not-when-fullscreen \
+  --not-when-audio \
+  --timer 300 \
+    "$HOME/.config/i3/scripts/dim" \
+    "$HOME/.config/i3/scripts/undim" \
+  --timer 600 \
+    'betterlockscreen -l blur; systemctl suspend' \
+    ''
+
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec_always --no-startup-id nm-applet
