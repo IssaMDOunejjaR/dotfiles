@@ -73,7 +73,7 @@ return {
         image = {
           -- NOTE: brew install imagemagick to install on Mac, refer https://imagemagick.org/script/download.php for more detail
           -- For mermaidjs: npm install -g @mermaid-js/mermaid-cli
-          enabled = false,
+          enabled = true,
           doc = {
             -- enable image viewer for documents
             -- a treesitter parser must be available for the enabled languages.
@@ -84,7 +84,7 @@ return {
             inline = false,
             -- render the image in a floating window
             -- only used if `opts.inline` is disabled
-            float = true,
+            float = false,
           },
         },
         explorer = {
