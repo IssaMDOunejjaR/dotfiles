@@ -150,6 +150,9 @@ return {
     end,
     opts = {
       indent = { enable = true },
+      highlight = {
+        enable = true,
+      },
       ensure_installed = {
         "bash",
         "c",
