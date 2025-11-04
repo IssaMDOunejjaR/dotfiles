@@ -126,7 +126,7 @@
     "format-disabled": "󰂲",
     "format-connected": "",
     "tooltip-format": "Devices connected: {num_connections}",
-    "on-click": "blueberry"
+    "on-click": "$TERMINAL --class waybar-kitty -e bluetui"
   },
   "pulseaudio": {
     "format": "{icon}",
