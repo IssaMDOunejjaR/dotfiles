@@ -25,10 +25,10 @@ local filetype_tools = {
   c = { "clangd", "clang-format", "cpplint" },
   cpp = { "clangd", "clang-format", "cpplint" },
 
-  javascript = { "vtsls", "js-debug-adapter" },
-  javascriptreact = { "vtsls", "js-debug-adapter" },
-  typescript = { "vtsls", "js-debug-adapter" },
-  typescriptreact = { "vtsls", "js-debug-adapter" },
+  javascript = { "vtsls", "rustywind", "prettierd", "js-debug-adapter" },
+  javascriptreact = { "vtsls", "rustywind", "prettierd", "js-debug-adapter", "html-lsp", "emmet-language-server" },
+  typescript = { "vtsls", "rustywind", "prettierd", "js-debug-adapter" },
+  typescriptreact = { "vtsls", "rustywind", "prettierd", "js-debug-adapter", "html-lsp", "emmet-language-server" },
 
   html = html_tools,
   htmlangular = {
