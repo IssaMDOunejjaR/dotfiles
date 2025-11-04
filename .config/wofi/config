@@ -1,7 +1,11 @@
-width=600
+prompt=Search
+width=640
 allow_images=true
 allow_markup=true
 no_actions=true
 gtk_dark=true
+term=kitty
+font=JetBrains Mono 12
+
 key_up=Ctrl-p
 key_down=Ctrl-n
