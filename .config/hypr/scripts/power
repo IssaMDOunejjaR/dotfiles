@@ -1,15 +1,5 @@
 #!/bin/bash
 
-CMD=$(printf "suspend\nreboot\nshutdown" | wofi --dmenu --prompt "Select action")
-
-case "$CMD" in
-  suspend)
-    systemctl suspend
-    ;;
-  reboot)
-    systemctl reboot
-    ;;
-  shutdown)
-    systemctl poweroff
-    ;;
-esac
+powerprofilesctl list |
+  awk '/^\s*[* ]\s*[a-zA-Z0-9\-]+:$/ { gsub(/^[*[:space:]]+|:$/,""); print }' |
+  wofi --dmenu -j --prompt "Select Power Profile"
