@@ -2,7 +2,7 @@ window {
   margin: 0px;
   border: none;
   box-shadow: none;
-  background-color: rgba(36, 36, 36, 0.9);
+  background-color: rgba(36, 36, 36, 1);
 }
 
 #outer-box {
@@ -23,7 +23,6 @@ window {
 }
 
 #input {
-  font-family: "JetBrainsMono Nerd Font";
   font-size: 16px;
   color: #dedede;
   background-color: rgba(36, 36, 36, 0.9);
@@ -42,15 +41,15 @@ window {
 }
 
 #entry:selected {
-  background-color: rgba(8, 96, 242, 0.9); /* bg2 */
+  background-color: rgba(8, 96, 242, 0.7);
   color: #ffffff;
 }
 
 #text {
   color: inherit;
+  padding: 10px 0;
 }
 
 #img {
-  margin-right: 8px;
-  vertical-align: middle;
+  margin-right: 18px;
 }
