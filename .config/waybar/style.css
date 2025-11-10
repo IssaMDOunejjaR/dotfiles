@@ -40,7 +40,7 @@ window#waybar {
 #custom-update,
 #custom-power {
   min-width: 12px;
-  margin: 0 7.5px;
+  margin: 0 6px;
 }
 
 #tray {
