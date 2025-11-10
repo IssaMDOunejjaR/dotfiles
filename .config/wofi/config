@@ -6,6 +6,7 @@ no_actions=true
 gtk_dark=true
 term=kitty
 font=JetBrains Mono 12
+ignore_metadata=true
 
 key_up=Ctrl-p
 key_down=Ctrl-n
