@@ -60,7 +60,7 @@ window#waybar {
 }
 
 tooltip {
-  padding: 1px;
+  padding: 0;
   background-color: black;
   border: 1px solid white;
 }
