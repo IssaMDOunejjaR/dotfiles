@@ -124,9 +124,13 @@
   "bluetooth": {
     "format": "",
     "format-disabled": "󰂲",
+    "format-off": "󰂲",
     "format-connected": "",
-    "tooltip-format": "Devices connected: {num_connections}",
-    "on-click": "$TERMINAL --class waybar-kitty -e bluetui"
+    "tooltip-format": "{status}",
+    "tooltip-format-connected": "Connected to {num_connections} devices",
+    "tooltip-format-disabled": "Disabled",
+    "on-click": "~/.config/hypr/scripts/bluethooth-toggle",
+    "on-click-right": "$TERMINAL --class waybar-kitty -e bluetui"
   },
   "pulseaudio": {
     "format": "{icon}",
