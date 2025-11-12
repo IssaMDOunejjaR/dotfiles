@@ -1,10 +1,16 @@
 configuration {
-  modes: "drun,run";
+  modes: "drun,run,filebrowser";
   show-icons: true;
-  terminal: "alacritty";
+  terminal: "kitty";
   font: "JetBrains Mono 12";
   kb-row-up: "Control+p";
   kb-row-down: "Control+n";
+
+  filebrowser {
+    directory: "~";
+    show-hidden: true;
+    command: "kitty -e nvim";
+  }
 }
 
 @theme "style"

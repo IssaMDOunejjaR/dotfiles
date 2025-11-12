@@ -1,39 +1,39 @@
 * {
-  font: "JetBrainsMono Nerd Font 12";
+  font: "JetBrains Mono 12";
 
-  bg0:    #242424E6;
-  bg1:    #7E7E7E80;
-  bg2:    #0860f2E6;
+  bg0: #242424;
+  bg1: #7E7E7E80;
+  bg2: #0860f2E6;
 
-  fg0:    #DEDEDE;
-  fg1:    #FFFFFF;
-  fg2:    #DEDEDE80;
+  fg0: #DEDEDE;
+  fg1: #FFFFFF;
+  fg2: #DEDEDE80;
 
-  background-color:   transparent;
-  text-color:         @fg0;
+  background-color: transparent;
+  text-color: @fg0;
 
-  margin:     0;
-  padding:    0;
-  spacing:    0;
+  margin: 0;
+  padding: 0;
+  spacing: 0;
 }
 
 window {
-  background-color:   @bg0;
+  background-color: @bg0;
 
-  location:       center;
-  width:          640;
+  location: center;
+  width: 640;
 }
 
 inputbar {
-  font: "JetBrainsMono Nerd Font 16";
-  padding:    12px 20px;
-  spacing:    12px;
-  children:   [ entry ];
+  font: "JetBrains Mono 12";
+  padding: 12px 20px;
+  spacing: 12px;
+  children: [ entry ];
 }
 
 icon-search {
-  expand:     false;
-  filename:   "search";
+  expand: false;
+  filename: "search";
   size: 28px;
 }
 
@@ -42,35 +42,36 @@ icon-search, entry, element-icon, element-text {
 }
 
 entry {
-  font:   inherit;
+  font: inherit;
 
-  placeholder         : "Search";
-  placeholder-color   : @fg2;
+  padding: 10px;
+  placeholder: "Search";
+  placeholder-color: @fg2;
 }
 
 message {
-  border:             2px 0 0;
-  border-color:       @bg1;
-  background-color:   @bg1;
+  border: 2px 0 0;
+  border-color: @bg1;
+  background-color: @bg1;
 }
 
 textbox {
-  padding:    8px 24px;
+  padding: 8px 24px;
 }
 
 listview {
-  lines:      10;
-  columns:    1;
+  lines: 10;
+  columns: 1;
 
-  fixed-height:   false;
-  border:         1px 0 0;
-  border-color:   @bg1;
+  fixed-height: false;
+  border: 1px 0 0;
+  border-color: @bg1;
 }
 
 element {
-  padding:            8px 16px;
-  spacing:            16px;
-  background-color:   transparent;
+  padding: 12px 16px;
+  spacing: 16px;
+  background-color: transparent;
 }
 
 element normal active {
@@ -82,12 +83,12 @@ element alternate active {
 }
 
 element selected normal, element selected active {
-  background-color:   @bg2;
-  text-color:         @fg1;
+  background-color: @bg2;
+  text-color: @fg1;
 }
 
 element-icon {
-  size:   1em;
+  size: 1em;
 }
 
 element-text {
