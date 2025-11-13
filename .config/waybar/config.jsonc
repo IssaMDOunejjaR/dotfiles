@@ -129,12 +129,12 @@
     "on-click-right": "$TERMINAL --class=waybar-kitty -e wiremix",
     "tooltip-format": "Volume: {volume}%",
     "scroll-step": 5,
-    "format-muted": "",
+    "format-muted": "󰝟",
     "format-icons": {
       "default": [
-        "",
-        "",
-        ""
+        "󰕿",
+        "󰖀",
+        "󰕾"
       ]
     }
   },
