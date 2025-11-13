@@ -19,16 +19,20 @@
 
 window {
   background-color: @bg0;
-
   location: center;
   width: 640;
 }
 
-inputbar {
-  font: "JetBrains Mono 12";
+mainbox {
+  enabled: true;
   padding: 1px;
-  // spacing: 12px;
-  children: [ icon-search, entry ];
+  children: [inputbar, listview];
+}
+  
+inputbar {
+  enabled: true;
+  border: 0 0 1px;
+  children: [ entry ];
 }
 
 icon-search {
@@ -44,7 +48,6 @@ icon-search, entry, element-icon, element-text {
 
 entry {
   font: inherit;
-
   padding: 16px;
   placeholder: "Search";
   placeholder-color: @fg2;
@@ -61,11 +64,10 @@ textbox {
 }
 
 listview {
+  enabled: true;
   lines: 10;
   columns: 1;
-
   fixed-height: false;
-  border: 1px 0 0;
   border-color: @bg1;
 }
 
