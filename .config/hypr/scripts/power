@@ -2,4 +2,4 @@
 
 powerprofilesctl list |
   awk '/^\s*[* ]\s*[a-zA-Z0-9\-]+:$/ { gsub(/^[*[:space:]]+|:$/,""); print }' |
-  wofi --dmenu -j --prompt "Select Power Profile"
+  rofi -dmenu -no-show-icons -theme-str 'entry { enabled: false;}'
