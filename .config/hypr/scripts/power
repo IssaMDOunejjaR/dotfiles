@@ -1,5 +1,23 @@
 #!/bin/bash
 
-powerprofilesctl list |
-  awk '/^\s*[* ]\s*[a-zA-Z0-9\-]+:$/ { gsub(/^[*[:space:]]+|:$/,""); print }' |
-  rofi -dmenu -no-show-icons -theme-str 'entry { enabled: false;}'
+list=$(powerprofilesctl list | awk '
+  BEGIN { selected = -1; i = 0 }
+  /^\s*[* ]\s*[A-Za-z0-9_-]+:$/ {
+    line = $0
+    if ($1 ~ /\*/) selected = i
+    gsub(/^[*[:space:]]+|:$/, "", line)
+    print line
+    i++
+  }
+  END {print selected}
+')
+selected=$(echo "$list" | tail -n1)
+
+choosed=$(echo "$list" | head -n -1 |
+  rofi -theme-str 'mainbox { children: [message, listview]; }' \
+    -theme-str 'window { width: 350px; }' \
+    -dmenu -no-show-icons -mesg "Select Power Profile" -selected-row "$selected")
+
+if [ -n "$choosed" ]; then
+  powerprofilesctl set "$choosed"
+fi
