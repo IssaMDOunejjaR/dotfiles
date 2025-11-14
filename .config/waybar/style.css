@@ -47,6 +47,11 @@ window#waybar {
   margin-right: 16px;
 }
 
+#tray menu {
+  background-color: black;
+  border: 1px solid white;
+}
+
 #bluetooth {
   margin-right: 17px;
 }
