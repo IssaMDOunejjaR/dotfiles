@@ -22,6 +22,9 @@ end
 local filetype_tools = {
   lua = { "lua-language-server", "stylua", "luacheck" },
 
+  asm = { "asm-lsp", "asmfmt" },
+  nasm = { "asm-lsp", "asmfmt" },
+
   c = { "clangd", "clang-format", "cpplint" },
   cpp = { "clangd", "clang-format", "cpplint" },
 
