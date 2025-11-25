@@ -19,6 +19,7 @@
     "pulseaudio",
     "cpu",
     "battery",
+    "custom/notification",
     "custom/power"
   ],
   "hyprland/workspaces": {
@@ -153,5 +154,10 @@
     "format": "⏻",
     "on-click": "wlogout",
     "tooltip-format": "Power"
+  },
+  "custom/notification": {
+    "format": "󰂚",
+    "on-click": "swaync-client -t -sw",
+    "tooltip-format": "Notifications"
   }
 }
