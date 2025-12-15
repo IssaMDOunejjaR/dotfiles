@@ -40,24 +40,18 @@ return {
       java = { "shfmt", "shellcheck" },
 
       ["html"] = { "prettierd", "prettier", stop_after_first = true },
-      ["htmlangular"] = { "prettierd", "prettier", stop_after_first = true },
+      ["htmlangular"] = { "prettierd", "eslint" },
 
       ["json"] = { "biome", "prettierd", "dprint", stop_after_first = true },
 
       ["markdown"] = { "prettierd", "prettier", "dprint", stop_after_first = true },
       ["markdown.mdx"] = { "prettierd", "prettier", "dprint", stop_after_first = true },
 
-      ["javascript"] = { "prettierd", "prettier", stop_after_first = true },
-      ["javascriptreact"] = function(bufnr)
-        return { "rustywind", first(bufnr, "prettierd", "prettier") }
-      end,
-      ["typescript"] = { "prettierd", "prettier", stop_after_first = true },
-      ["typescriptreact"] = function(bufnr)
-        return { "rustywind", first(bufnr, "prettierd", "prettier") }
-      end,
-      ["svelte"] = function(bufnr)
-        return { "rustywind", first(bufnr, "prettierd", "prettier") }
-      end,
+      ["javascript"] = { "prettierd", "eslint" },
+      ["javascriptreact"] = { "rustywind", "prettierd", "eslint" },
+      ["typescript"] = { "prettierd", "eslint" },
+      ["typescriptreact"] = { "rustywind", "prettierd", "eslint" },
+      ["svelte"] = { "rustywind", "prettierd", "eslint" },
 
       css = { "prettierd", "prettier", stop_after_first = true },
       scss = { "prettierd", "prettier", stop_after_first = true },
