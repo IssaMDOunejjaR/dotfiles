@@ -29,5 +29,13 @@ return {
     vim.lsp.config("bashls", {
       filetypes = { "bash", "sh", "zsh" },
     })
+
+    vim.lsp.config("vtsls", {
+      on_attach = function()
+        vim.keymap.set("n", "gS", function()
+          require("vtsls").commands.goto_source_definition(0)
+        end, { desc = "Go to Source Definition" })
+      end,
+    })
   end,
 }
