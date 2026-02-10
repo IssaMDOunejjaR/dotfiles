@@ -16,7 +16,7 @@ local html_tools = { "html-lsp", "emmet-language-server", "prettierd" }
 
 if vim.fs.find("angular.json", { upward = true })[1] ~= nil then
 	table.insert(html_tools, "angular-language-server")
-	table.insert(html_tools, "tsgo")
+	table.insert(html_tools, "vtsls")
 end
 
 local filetype_tools = {
@@ -28,22 +28,24 @@ local filetype_tools = {
 	c = { "clangd", "clang-format", "cpplint" },
 	cpp = { "clangd", "clang-format", "cpplint" },
 
-	javascript = { "tsgo", "prettierd", "eslint", "js-debug-adapter" },
+	javascript = { "vtsls", "prettierd", "eslint-lsp", "eslint_d", "js-debug-adapter" },
 	javascriptreact = {
-		"tsgo",
+		"vtsls",
 		"rustywind",
 		"prettierd",
-		"eslint",
+		"eslint-lsp",
+		"eslint_d",
 		"js-debug-adapter",
 		"html-lsp",
 		"emmet-language-server",
 	},
-	typescript = { "tsgo", "prettierd", "eslint", "js-debug-adapter" },
+	typescript = { "vtsls", "prettierd", "eslint-lsp", "eslint_d", "js-debug-adapter" },
 	typescriptreact = {
-		"tsgo",
+		"vtsls",
 		"rustywind",
 		"prettierd",
-		"eslint",
+		"eslint-lsp",
+		"eslint_d",
 		"js-debug-adapter",
 		"html-lsp",
 		"emmet-language-server",
@@ -55,7 +57,9 @@ local filetype_tools = {
 		"emmet-language-server",
 		"angular-language-server",
 		"prettierd",
-		"tsgo",
+		"eslint-lsp",
+		"eslint_d",
+		"vtsls",
 		"js-debug-adapter",
 	},
 
