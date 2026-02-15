@@ -1,91 +1,97 @@
 return {
-  {
-    'saghen/blink.cmp',
-    dependencies = {
-      'rafamadriz/friendly-snippets',
-      {
-        "xzbdmw/colorful-menu.nvim",
-        config = function()
-          -- You don't need to set these options.
-          require("colorful-menu").setup({})
-        end,
-      }
-    },
+	"hrsh7th/nvim-cmp",
+	dependencies = {
+		"onsails/lspkind.nvim", -- Adds VS Code-like pictograms/icons to the completion menu
+		"saadparwaiz1/cmp_luasnip", -- Enables LuaSnip as a source for nvim-cmp autocompletion
+		{
+			"L3MON4D3/LuaSnip", -- Snippet engine for Neovim (write and expand code snippets)
+			version = "v2.*",
+			build = "make install_jsregexp",
+		},
+		"rafamadriz/friendly-snippets", -- Large collection of pre-made snippets for various languages
+		"hrsh7th/cmp-nvim-lsp", -- nvim-cmp source for LSP-based autocompletion
+		"hrsh7th/cmp-buffer", -- nvim-cmp source for words from the current buffer
+		"hrsh7th/cmp-path", -- nvim-cmp source for filesystem paths
+		"hrsh7th/cmp-nvim-lsp-signature-help", -- function signatures
+		{
+			"xzbdmw/colorful-menu.nvim",
+			config = function()
+				-- You don't need to set these options.
+				require("colorful-menu").setup({})
+			end,
+		},
+	},
+	config = function()
+		local lspkind = require("lspkind")
+		local cmp = require("cmp")
+		local luasnip = require("luasnip")
 
-    -- use a release tag to download pre-built binaries
-    version = '1.*',
-    -- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
-    -- build = 'cargo build --release',
-    -- If you use nix, you can build from source using latest nightly rust with:
-    -- build = 'nix run .#build-plugin',
+		require("luasnip.loaders.from_vscode").lazy_load()
 
-    ---@module 'blink.cmp'
-    ---@type blink.cmp.Config
-    opts = {
-      -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
-      -- 'super-tab' for mappings similar to vscode (tab to accept)
-      -- 'enter' for enter to accept
-      -- 'none' for no mappings
-      --
-      -- All presets have the following mappings:
-      -- C-space: Open menu or open docs if already open
-      -- C-n/C-p or Up/Down: Select next/previous item
-      -- C-e: Hide menu
-      -- C-k: Toggle signature help (if signature.enabled = true)
-      --
-      -- See :h blink-cmp-config-keymap for defining your own keymap
-      keymap = { preset = 'enter' },
+		cmp.setup({
+			snippet = {
+				expand = function(args)
+					luasnip.lsp_expand(args.body)
+				end,
+			},
 
-      appearance = {
-        -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-        -- Adjusts spacing to ensure icons are aligned
-        nerd_font_variant = 'mono'
-      },
+			window = {
+				completion = cmp.config.window.bordered({
+					winhighlight = "Normal:NormalFloat,FloatBorder:CmpBorder,CursorLine:CmpSel,Search:None",
+				}),
+				documentation = cmp.config.window.bordered({
+					winhighlight = "Normal:NormalFloat,FloatBorder:CmpDocBorder,Search:None",
+				}),
+			},
 
-      -- (Default) Only show the documentation popup when manually triggered
-      completion = {
-        documentation = { auto_show = false },
-        list = {
-          selection = {
-            preselect = false
-          }
-        },
-        menu = {
-          draw = {
-            -- We don't need label_description now because label and label_description are already
-            -- combined together in label by colorful-menu.nvim.
-            columns = { { "kind_icon" }, { "label", gap = 1 } },
-            components = {
-              label = {
-                text = function(ctx)
-                  return require("colorful-menu").blink_components_text(ctx)
-                end,
-                highlight = function(ctx)
-                  return require("colorful-menu").blink_components_highlight(ctx)
-                end,
-              },
-            },
-          },
-        },
-      },
+			formatting = {
+				fields = { "icon", "abbr", "menu" },
 
-      -- Default list of enabled providers defined so that you can extend it
-      -- elsewhere in your config, without redefining it, due to `opts_extend`
-      sources = {
-        default = { 'lsp', 'path', 'snippets', 'buffer' },
-      },
+				format = function(entry, vim_item)
+					local kind = lspkind.cmp_format({
+						mode = "symbol",
+					})(entry, vim.deepcopy(vim_item))
+					local highlights_info = require("colorful-menu").cmp_highlights(entry)
 
-      -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
-      -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
-      -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
-      --
-      -- See the fuzzy documentation for more information
-      fuzzy = { implementation = "prefer_rust_with_warning" },
+					-- highlight_info is nil means we are missing the ts parser, it's
+					-- better to fallback to use default `vim_item.abbr`. What this plugin
+					-- offers is two fields: `vim_item.abbr_hl_group` and `vim_item.abbr`.
+					if highlights_info ~= nil then
+						vim_item.abbr_hl_group = highlights_info.highlights
+						vim_item.abbr = highlights_info.text
+					end
 
-      cmdline = {
-        enabled = false,
-      },
-    },
-    opts_extend = { "sources.default" }
-  }
+					local strings = vim.split(kind.kind, "%s", { trimempty = true })
+					vim_item.kind = " " .. (strings[1] or "") .. " "
+					vim_item.menu = ""
+
+					return vim_item
+				end,
+			},
+
+			mapping = cmp.mapping.preset.insert({
+				["<C-k>"] = cmp.mapping.select_prev_item(),
+				["<C-j>"] = cmp.mapping.select_next_item(),
+				["<C-b>"] = cmp.mapping.scroll_docs(-4),
+				["<C-f>"] = cmp.mapping.scroll_docs(4),
+				["<C-Space>"] = cmp.mapping.complete(),
+				["<C-e>"] = cmp.mapping.abort(),
+				["<CR>"] = cmp.mapping.confirm({ select = false }),
+			}),
+
+			sources = {
+				{ name = "luasnip" },
+				{ name = "nvim_lsp" },
+				{ name = "buffer" },
+				{ name = "path" },
+				{ name = "nvim_lsp_signature_help" },
+			},
+		})
+
+		vim.api.nvim_set_hl(0, "CmpBorder", { fg = "#444444", bg = "NONE" })
+		vim.api.nvim_set_hl(0, "CmpDocBorder", { fg = "#444444", bg = "NONE" })
+		vim.api.nvim_set_hl(0, "CmpSel", { bg = "#333333" })
+		vim.api.nvim_set_hl(0, "PmenuThumb", { bg = "#444444" })
+		vim.api.nvim_set_hl(0, "PmenuSbar", { bg = "NONE" })
+	end,
 }
