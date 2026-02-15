@@ -51,7 +51,7 @@ return {
 				return
 			end
 
-			return { timeout_ms = 500, lsp_format = "fallback" }
+			return { timeout_ms = 8000, lsp_format = "fallback" }
 		end,
 	},
 	init = function()
