@@ -1,0 +1,15 @@
+editor: nvim
+pager: less
+pager_json: fx
+spacing: compact
+theme: hacker
+animation: full
+heading:
+  visible: false
+keymap:
+  save-request: alt+s
+  focus-url: alt+l
+  toggle-collection: alt+h
+  expand-section: alt+m
+  open-in-editor: alt+e
+  open-in-pager: alt+p
