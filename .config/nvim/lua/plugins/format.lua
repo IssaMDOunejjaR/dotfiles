@@ -3,44 +3,49 @@ return {
 	event = { "BufWritePre" },
 	cmd = { "ConformInfo" },
 	opts = {
-		-- Define your formatters
 		formatters_by_ft = {
 			lua = { "stylua" },
 
-			c = { "clang-format" },
-			cpp = { "clang-format" },
+			c = { "clang_format" },
+			cpp = { "clang_format" },
 
-			go = { "goimports", "gomodifytags", "gofmt" },
-			templ = { "goimports", "gomodifytags", "templ" },
+			go = { "goimports", "gofmt" },
+			templ = { "goimports", "templ" },
 
 			python = { "ruff_format" },
 
-			bash = { "shfmt", "shellcheck" },
-			sh = { "shfmt", "shellcheck" },
+			bash = { "shfmt" },
+			sh = { "shfmt" },
 
-			java = { "shfmt", "shellcheck" },
+			java = { "google-java-format" },
 
-			["html"] = { "prettierd" },
-			["htmlangular"] = { "prettierd", "eslint_d" },
+			html = { "prettierd" },
+			htmlangular = { "prettierd" },
 
-			["json"] = { "prettierd" },
+			json = { "prettierd" },
+			jsonc = { "prettierd" },
 
-			["markdown"] = { "prettierd" },
+			markdown = { "prettierd" },
 			["markdown.mdx"] = { "prettierd" },
 
-			["javascript"] = { "prettierd", "eslint_d" },
-			["javascriptreact"] = { "rustywind", "prettierd", "eslint_d" },
-			["typescript"] = { "prettierd", "eslint_d" },
-			["typescriptreact"] = { "rustywind", "prettierd", "eslint_d" },
-			["svelte"] = { "rustywind", "prettierd", "eslint_d" },
+			javascript = { "prettierd" },
+			javascriptreact = { "rustywind", "prettierd" },
+			typescript = { "prettierd" },
+			typescriptreact = { "rustywind", "prettierd" },
+			svelte = { "rustywind", "prettierd" },
 
 			css = { "prettierd" },
 			scss = { "prettierd" },
+
+			sql = { "sqlfmt" },
 		},
 
 		-- Set default options
 		default_format_opts = {
-			lsp_format = "fallback",
+			-- "first": use LSP formatting first, then conform
+			-- "fallback": use LSP only if no conform formatter found
+			-- "never": never use LSP formatting
+			lsp_format = "first",
 		},
 
 		-- Set up format-on-save
@@ -51,7 +56,7 @@ return {
 				return
 			end
 
-			return { timeout_ms = 8000, lsp_format = "fallback" }
+			return { timeout_ms = 3000, lsp_format = "first" }
 		end,
 	},
 	init = function()

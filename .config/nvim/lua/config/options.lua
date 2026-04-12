@@ -1,4 +1,4 @@
-vim.opt.sessionoptions = "localoptions,winsize,winpos,folds,buffers"
+vim.opt.sessionoptions = "localoptions,winsize,winpos,folds,buffers,tabpages,globals,curdir"
 
 -- Basic Settings
 vim.opt.number = true -- Line numbers
@@ -60,7 +60,7 @@ vim.opt.diffopt:append("algorithm:patience") -- Better diff algorithm
 vim.opt.diffopt:append("linematch:60") -- Better diff highlighting (smart line matching)
 
 -- Set undo directory and ensure it exists
-local undodir = "~/.local/share/nvim/undodir" -- Undo directory path
+local undodir = vim.fn.stdpath("data") .. "/undodir"
 vim.opt.undodir = vim.fn.expand(undodir) -- Expand to full path
 local undodir_path = vim.fn.expand(undodir)
 if vim.fn.isdirectory(undodir_path) == 0 then
@@ -81,21 +81,11 @@ vim.opt.encoding = "UTF-8" -- Use UTF-8 encoding
 vim.opt.wildmenu = true -- Enable command-line completion menu
 vim.opt.wildmode = "longest:full,full" -- Completion mode for command-line
 vim.opt.wildignorecase = true -- Case-insensitive tab completion in commands
-
--- Cursor Settings
--- vim.opt.guicursor = {
--- 	"n-v-c:block", -- Normal, Visual, Command-line
--- 	"i-ci-ve:block", -- Insert, Command-line Insert, Visual-exclusive
--- 	"r-cr:hor20", -- Replace, Command-line Replace
--- 	"o:hor50", -- Operator-pending
--- 	"a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor", -- All modes: blinking & highlight groups
--- 	"sm:block-blinkwait175-blinkoff150-blinkon175", -- Showmatch mode
--- }
+vim.opt.wildoptions = "pum" -- Use popup menu for wildmenu (nicer UI)
 
 -- Folding Settings
 vim.opt.foldmethod = "expr" -- Use expression for folding
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()" -- Use treesitter for folding
-vim.opt.foldlevel = 99 -- Keep all folds open by default
 vim.opt.foldcolumn = "0" -- '0' is not bad
 vim.opt.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
 vim.opt.foldlevelstart = 99

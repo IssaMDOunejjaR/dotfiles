@@ -12,32 +12,12 @@ end
 
 return {
 	"stevearc/oil.nvim",
+	lazy = false,
 	opts = {
 		default_file_explorer = true,
 		skip_confirm_for_simple_edits = true,
-		use_default_keymaps = true,
 		view_options = {
 			show_hidden = true,
-			-- is_hidden_file = function(name, _)
-			-- 	-- dotfiles are always considered hidden
-			-- 	if vim.startswith(name, ".") then
-			-- 		return true
-			-- 	end
-			--
-			-- 	local dir = require("oil").get_current_dir()
-			--
-			-- 	-- if no local directory (e.g. for ssh connections), always show
-			-- 	if not dir then
-			-- 		return false
-			-- 	end
-			--
-			-- 	-- Check if file is gitignored
-			-- 	return vim.list_contains(git_ignored[dir], name)
-			-- end,
-			-- is_hidden_file = function(name)
-			--   local ignore_folders = { "node_modules", "dist", "build", "coverage", "__pycache__" }
-			--   return vim.startswith(name, ".") or vim.tbl_contains(ignore_folders, name)
-			-- end,
 		},
 		-- Configuration for the floating window in oil.open_float
 		float = {
@@ -49,9 +29,12 @@ return {
 				winblend = 0,
 			},
 		},
+		-- Preview window config (oil 2.x+)
+		preview_split = {
+			border = "single",
+		},
 		-- Custom Keymap
 		keymaps = {
-			["<C-c>"] = false,
 			["<C-s>"] = {
 				desc = "Save all changes",
 				callback = function()
@@ -60,6 +43,8 @@ return {
 			},
 			["q"] = "actions.close",
 			["<C-y>"] = "actions.copy_entry_path",
+			["<C-p>"] = "actions.preview",
+			["<C-r>"] = "actions.refresh",
 		},
 	},
 	-- Use g? to see default key mappings

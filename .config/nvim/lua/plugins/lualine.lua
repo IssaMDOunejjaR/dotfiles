@@ -3,10 +3,7 @@ return {
 	config = function()
 		require("lualine").setup({
 			options = {
-				-- theme = "melange",
-				-- theme = "default",
 				icons_enabled = true,
-				-- section_separators = { left = "", right = "" },
 				component_separators = "|",
 			},
 		})
