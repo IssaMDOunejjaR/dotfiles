@@ -81,7 +81,7 @@ M.on_attach = function(client, bufnr)
 	-- ============================================================
 	if client:supports_method("textDocument/inlayHint") then
 		-- Enable inlay hints by default
-		vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+		vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
 
 		keymap("n", "<leader>th", function()
 			vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
@@ -128,7 +128,11 @@ M.on_attach = function(client, bufnr)
 			local file = vim.fn.expand("%:p")
 			local line = vim.fn.line(".")
 			local out = vim.fn.system(
-				string.format("gomodifytags -file '%s' -line %d -add-tags json -add-options json=omitempty -transform camelcase -w", file, line)
+				string.format(
+					"gomodifytags -file '%s' -line %d -add-tags json -add-options json=omitempty -transform camelcase -w",
+					file,
+					line
+				)
 			)
 			if vim.v.shell_error ~= 0 then
 				vim.notify("gomodifytags: " .. out, vim.log.levels.ERROR)
@@ -141,9 +145,8 @@ M.on_attach = function(client, bufnr)
 		keymap("n", "<leader>gtJ", function()
 			local file = vim.fn.expand("%:p")
 			local line = vim.fn.line(".")
-			local out = vim.fn.system(
-				string.format("gomodifytags -file '%s' -line %d -remove-tags json -w", file, line)
-			)
+			local out =
+				vim.fn.system(string.format("gomodifytags -file '%s' -line %d -remove-tags json -w", file, line))
 			if vim.v.shell_error ~= 0 then
 				vim.notify("gomodifytags: " .. out, vim.log.levels.ERROR)
 			else
