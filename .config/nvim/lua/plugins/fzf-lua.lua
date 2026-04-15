@@ -5,7 +5,7 @@ return {
 	keys = {
 		-- Resume
 		{
-			"<leader>fr",
+			"<leader>fR",
 			function()
 				require("fzf-lua").resume()
 			end,
@@ -152,13 +152,6 @@ return {
 				require("fzf-lua").lsp_references()
 			end,
 			desc = "LSP: References",
-		},
-		{
-			"gd",
-			function()
-				require("fzf-lua").lsp_definitions()
-			end,
-			desc = "LSP: Definitions",
 		},
 		{
 			"gi",
