@@ -23,7 +23,7 @@ return {
 		float = {
 			padding = 2,
 			max_width = 120,
-			max_height = max_height, -- function ref: evaluated each time the float opens
+			max_height = max_height(), -- function ref: evaluated each time the float opens
 			border = "single",
 			win_options = {
 				winblend = 0,
