@@ -14,13 +14,16 @@ vim.filetype.add({
 		templ = "templ",
 	},
 	pattern = {
-		["docker-compose*.yml"] = "yaml.docker-compose",
-		["playbook*.yml"] = "yaml.ansible",
-		["site*.yml"] = "yaml.ansible",
-		["roles/*/tasks/*.yml"] = "yaml.ansible",
-		["roles/*/handlers/*.yml"] = "yaml.ansible",
-		["group_vars/*.yml"] = "yaml.ansible",
-		["host_vars/*.yml"] = "yaml.ansible",
+		-- Lua patterns (anchored to full path). Use %-  to escape literal hyphens.
+		-- `.*` matches any leading directory components.
+		[".*/docker%-compose[^/]*%.yml"] = "yaml.docker-compose",
+		[".*/docker%-compose[^/]*%.yaml"] = "yaml.docker-compose",
+		[".*/playbook[^/]*%.yml"] = "yaml.ansible",
+		[".*/site[^/]*%.yml"] = "yaml.ansible",
+		[".*/roles/[^/]+/tasks/[^/]+%.yml"] = "yaml.ansible",
+		[".*/roles/[^/]+/handlers/[^/]+%.yml"] = "yaml.ansible",
+		[".*/group_vars/[^/]+%.yml"] = "yaml.ansible",
+		[".*/host_vars/[^/]+%.yml"] = "yaml.ansible",
 	},
 })
 
@@ -82,23 +85,22 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
 -- Close special buffers with 'q'
 vim.api.nvim_create_autocmd("FileType", {
 	group = augroup("CloseWithQ"),
-	pattern = {
-		"help",
-		"lspinfo",
-		"man",
-		"notify",
-		"qf",
-		"loclist",
-		"startuptime",
-		"plug",
-		"tsplayground",
-		"checkhealth",
-		"aerial",
-		"git",
-		"query", -- treesitter query editor
-		"neotest-output",
-		"neotest-summary",
-	},
+		pattern = {
+			"help",
+			"lspinfo",
+			"man",
+			"notify",
+			"qf", -- covers both quickfix and location list (filetype is always "qf")
+			"startuptime",
+			"plug",
+			"tsplayground",
+			"checkhealth",
+			"aerial",
+			"git",
+			"query", -- treesitter query editor
+			"neotest-output",
+			"neotest-summary",
+		},
 	callback = function(event)
 		vim.bo[event.buf].buflisted = false
 		vim.keymap.set("n", "q", "<Cmd>close<CR>", {
