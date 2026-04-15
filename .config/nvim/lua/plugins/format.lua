@@ -9,8 +9,8 @@ return {
 			c = { "clang_format" },
 			cpp = { "clang_format" },
 
-			go = { "goimports", "gofmt" },
-			templ = { "goimports", "templ" },
+			go = { "goimports", "gofumpt" },
+			templ = { "goimports", "templ", "rustywind" },
 
 			python = { "ruff_format" },
 
@@ -19,8 +19,8 @@ return {
 
 			java = { "google-java-format" },
 
-			html = { "prettierd" },
-			htmlangular = { "prettierd" },
+			html = { "rustywind", "prettierd" },
+			htmlangular = { "rustywind", "prettierd" },
 
 			json = { "prettierd" },
 			jsonc = { "prettierd" },
@@ -38,6 +38,10 @@ return {
 			scss = { "prettierd" },
 
 			sql = { "sqlfmt" },
+
+			yaml = { "yamlfmt" },
+			["yaml.docker-compose"] = { "yamlfmt" },
+			["yaml.ansible"] = { "yamlfmt" },
 		},
 
 		-- Set default options
@@ -45,7 +49,7 @@ return {
 			-- "first": use LSP formatting first, then conform
 			-- "fallback": use LSP only if no conform formatter found
 			-- "never": never use LSP formatting
-			lsp_format = "first",
+			lsp_format = "fallback",
 		},
 
 		-- Set up format-on-save
@@ -56,7 +60,7 @@ return {
 				return
 			end
 
-			return { timeout_ms = 3000, lsp_format = "first" }
+			return { timeout_ms = 1500, lsp_format = "fallback" }
 		end,
 	},
 	init = function()
