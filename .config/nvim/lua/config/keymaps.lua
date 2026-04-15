@@ -96,3 +96,30 @@ vim.keymap.set("n", "<leader>lc", "<Cmd>lclose<CR>", { desc = "Location: Close l
 -- MISC
 -- ============================================================
 vim.keymap.set("n", "<leader>rc", "<Cmd>e ~/.config/nvim/init.lua<CR>", { desc = "Config: Edit init.lua" })
+
+-- ============================================================
+-- TERMINAL
+-- ============================================================
+vim.keymap.set("n", "<leader>tv", "<Cmd>vsplit | terminal<CR>", { desc = "Terminal: Vertical split" })
+vim.keymap.set("n", "<leader>ts", "<Cmd>split | terminal<CR>", { desc = "Terminal: Horizontal split" })
+-- Double-Escape to exit terminal insert mode (single Esc is sent to the running program)
+vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Terminal: Exit to normal mode" })
+
+-- ============================================================
+-- SESSION  (<leader>q group)
+-- ============================================================
+vim.keymap.set("n", "<leader>qs", "<Cmd>SessionSave<CR>", { desc = "Session: Save" })
+vim.keymap.set("n", "<leader>qr", "<Cmd>SessionRestore<CR>", { desc = "Session: Restore" })
+vim.keymap.set("n", "<leader>qd", "<Cmd>SessionDelete<CR>", { desc = "Session: Delete" })
+vim.keymap.set("n", "<leader>qq", "<Cmd>qa<CR>", { desc = "Quit: All" })
+vim.keymap.set("n", "<leader>qQ", "<Cmd>qa!<CR>", { desc = "Quit: All (force)" })
+
+-- ============================================================
+-- UI TOGGLES  (<leader>u group)
+-- ============================================================
+vim.keymap.set("n", "<leader>uw", "<Cmd>set wrap!<CR>", { desc = "UI: Toggle wrap" })
+vim.keymap.set("n", "<leader>un", "<Cmd>set relativenumber!<CR>", { desc = "UI: Toggle relative numbers" })
+vim.keymap.set("n", "<leader>us", "<Cmd>set spell!<CR>", { desc = "UI: Toggle spell" })
+vim.keymap.set("n", "<leader>ud", function()
+	require("tiny-inline-diagnostic").toggle()
+end, { desc = "UI: Toggle inline diagnostics" })
