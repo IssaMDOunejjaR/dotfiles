@@ -7,6 +7,8 @@ vim.opt.cursorline = true -- Highlight current line
 vim.opt.scrolloff = 10 -- Keep 10 lines above/below cursor
 vim.opt.sidescrolloff = 8 -- Keep 8 columns left/right of cursor
 vim.opt.wrap = false -- Don't wrap lines
+vim.opt.linebreak = true -- When wrap is on per-buffer, break at word boundaries
+vim.opt.breakindent = true -- Preserve indentation in wrapped lines
 vim.opt.cmdheight = 1 -- Command line height
 vim.opt.spelllang = { "en", "fr" } -- Set language for spellchecking
 
@@ -30,19 +32,17 @@ vim.opt.incsearch = true -- Show matches as you type
 vim.opt.termguicolors = true -- Enable 24-bit colors
 vim.opt.signcolumn = "yes" -- Always show sign column
 -- vim.opt.colorcolumn = "100" -- Show column at 100 characters
-vim.opt.showmatch = true -- Highlight matching brackets
-vim.opt.matchtime = 2 -- How long to show matching bracket
-vim.opt.completeopt = "menuone,noinsert,noselect" -- Completion options
+vim.opt.showmatch = false -- Don't jump cursor to matching bracket (mini.pairs handles this)
+vim.opt.completeopt = "menuone,noinsert,noselect" -- Completion options (blink.cmp overrides this)
 vim.opt.showmode = false -- Don't show mode in command line
 vim.opt.pumheight = 10 -- Popup menu height
 vim.opt.pumblend = 10 -- Popup menu transparency
 vim.opt.winblend = 0 -- Floating window transparency
 vim.opt.conceallevel = 0 -- Don't hide markup
 vim.opt.concealcursor = "" -- Show markup even on cursor line
-vim.opt.lazyredraw = false -- redraw while executing macros (butter UX)
-vim.opt.redrawtime = 10000 -- Timeout for syntax highlighting redraw
+vim.opt.redrawtime = 4000 -- Timeout for syntax highlighting redraw (default 2000; treesitter large-file guard handles the rest)
 vim.opt.maxmempattern = 20000 -- Max memory for pattern matching
-vim.opt.synmaxcol = 300 -- Syntax highlighting column limit
+vim.opt.synmaxcol = 500 -- Syntax highlighting column limit (raised from 300; treesitter guards large files)
 vim.opt.winborder = "single"
 
 -- File Handling
@@ -54,7 +54,7 @@ vim.opt.updatetime = 300 -- Time in ms to trigger CursorHold
 vim.opt.timeoutlen = 500 -- Time in ms to wait for mapped sequence
 vim.opt.ttimeoutlen = 0 -- No wait for key code sequences
 vim.opt.autoread = true -- Auto-reload file if changed outside
-vim.opt.autowrite = false -- Don't auto-save on some events
+vim.opt.confirm = true -- Ask to save instead of failing :q with unsaved changes
 vim.opt.diffopt:append("vertical") -- Vertical diff splits
 vim.opt.diffopt:append("algorithm:patience") -- Better diff algorithm
 vim.opt.diffopt:append("linematch:60") -- Better diff highlighting (smart line matching)
@@ -68,20 +68,19 @@ if vim.fn.isdirectory(undodir_path) == 0 then
 end
 
 -- Behavior Settings
-vim.opt.errorbells = false -- Disable error sounds
 vim.opt.backspace = "indent,eol,start" -- Make backspace behave naturally
 vim.opt.autochdir = false -- Don't change directory automatically
 vim.opt.iskeyword:append("-") -- Treat dash as part of a word
 vim.opt.path:append("**") -- Search into subfolders with `gf`
-vim.opt.selection = "inclusive" -- Use inclusive selection
 vim.opt.mouse = "a" -- Enable mouse support
 vim.opt.clipboard:append("unnamedplus") -- Use system clipboard
-vim.opt.modifiable = true -- Allow editing buffers
-vim.opt.encoding = "UTF-8" -- Use UTF-8 encoding
 vim.opt.wildmenu = true -- Enable command-line completion menu
 vim.opt.wildmode = "longest:full,full" -- Completion mode for command-line
 vim.opt.wildignorecase = true -- Case-insensitive tab completion in commands
 vim.opt.wildoptions = "pum" -- Use popup menu for wildmenu (nicer UI)
+vim.opt.virtualedit = "block" -- Allow cursor past end of line in Visual Block mode
+vim.opt.splitkeep = "screen" -- Keep text stable when opening/closing splits (0.9+)
+vim.opt.shortmess:append("WIcC") -- Suppress: file-written msg, intro screen, ins-completion noise
 
 -- Folding Settings
 vim.opt.foldmethod = "expr" -- Use expression for folding
