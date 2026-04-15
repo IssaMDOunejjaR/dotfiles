@@ -18,6 +18,18 @@ return {
 
 			bash = { "shellcheck" },
 			sh = { "shellcheck" },
+
+			yaml = { "yamllint" },
+			["yaml.docker-compose"] = { "yamllint" },
+			["yaml.ansible"] = { "yamllint" },
+			dockerfile = { "hadolint" },
+			json = { "jsonlint" },
+			python = { "ruff" },
+
+			go = { "golangci-lint" },
+
+			css = { "stylelint" },
+			scss = { "stylelint" },
 		}
 
 		local lint_augroup = vim.api.nvim_create_augroup("nvim_lint", { clear = true })
@@ -25,21 +37,20 @@ return {
 		-- Simple debounce helper
 		local timer = vim.uv.new_timer()
 		local function debounced_lint()
+			local bufnr = vim.api.nvim_get_current_buf()
+			-- Skip non-file buffers immediately — before touching the timer
+			if vim.bo[bufnr].buftype ~= "" then
+				return
+			end
 			timer:stop()
 			timer:start(
 				300,
 				0,
 				vim.schedule_wrap(function()
-					-- Only lint if buffer is modifiable and has a real file
-					local bufnr = vim.api.nvim_get_current_buf()
 					if not vim.api.nvim_buf_is_valid(bufnr) then
 						return
 					end
-					if vim.bo[bufnr].buftype ~= "" then
-						return -- skip non-file buffers (terminal, quickfix, etc.)
-					end
-
-					lint.try_lint()
+					lint.try_lint(nil, { bufnr = bufnr })
 				end)
 			)
 		end
