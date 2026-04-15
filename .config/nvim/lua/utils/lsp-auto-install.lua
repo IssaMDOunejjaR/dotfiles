@@ -19,7 +19,7 @@ local function ensure_installed(registry, tool_name)
 		return
 	end
 
-	if not pkg:is_installed() then
+	if not pkg:is_installed() and not pkg:is_installing() then
 		vim.notify("Mason: installing " .. tool_name .. "...", vim.log.levels.INFO)
 		pkg:install()
 	end
@@ -58,11 +58,14 @@ local function install_tools(tools)
 		vim.notify("Mason: registry empty, updating...", vim.log.levels.INFO)
 
 		-- update() downloads the registry index from GitHub
-		registry.update(function(success, updated_registries)
+		registry.update(function(success, err_msg)
 			if success then
 				do_install()
 			else
-				vim.notify("Mason: registry update failed — run :MasonUpdate manually", vim.log.levels.ERROR)
+				vim.notify(
+					"Mason: registry update failed: " .. tostring(err_msg) .. " — run :MasonUpdate manually",
+					vim.log.levels.ERROR
+				)
 			end
 		end)
 	else
@@ -82,6 +85,7 @@ local groups = {
 		"vtsls",
 		"prettierd",
 		"eslint-lsp",
+		"eslint_d", -- linter daemon used by nvim-lint (separate from eslint-lsp)
 		"js-debug-adapter",
 	},
 	-- JSX/TSX extras (React)
@@ -96,6 +100,7 @@ local groups = {
 		"html-lsp",
 		"emmet-language-server",
 		"prettierd",
+		"rustywind",
 		"tailwindcss-language-server",
 	},
 	-- Shell base
@@ -109,6 +114,7 @@ local groups = {
 		"clangd",
 		"clang-format",
 		"cpplint",
+		"codelldb", -- DAP adapter (shared with Rust)
 	},
 }
 
@@ -155,8 +161,8 @@ local filetype_tools = {
 		"js-debug-adapter",
 	}),
 
-	css = { "css-lsp", "prettierd" },
-	scss = { "css-lsp", "prettierd" },
+	css = { "css-lsp", "prettierd", "stylelint" },
+	scss = { "css-lsp", "prettierd", "stylelint" },
 
 	json = { "json-lsp", "prettierd", "jsonlint" },
 
@@ -166,18 +172,19 @@ local filetype_tools = {
 	sh = groups.shell_base,
 	zsh = groups.shell_base,
 
-	go = { "gopls", "goimports", "gomodifytags" },
+	go   = { "gopls", "goimports", "gomodifytags", "golangci-lint", "gofumpt", "delve" },
+	rust = { "codelldb" }, -- rust-analyzer is installed via rustup, not Mason
 	templ = { "gopls", "templ", "goimports", "tailwindcss-language-server" },
 
 	dockerfile = { "dockerfile-language-server", "hadolint" },
-	["yaml.docker-compose"] = { "docker-compose-language-service" },
+	["yaml.docker-compose"] = { "docker-compose-language-service", "yamllint", "yamlfmt" },
 
 	java = { "jdtls", "google-java-format", "checkstyle" },
 
 	sql = { "sqls", "sqlfmt", "sqlfluff" },
 
 	yaml = { "yaml-language-server", "yamllint", "yamlfmt" },
-	["yaml.ansible"] = { "ansible-language-server", "ansible-lint" },
+	["yaml.ansible"] = { "ansible-language-server", "ansible-lint", "yamllint", "yamlfmt" },
 }
 
 -- ============================================================

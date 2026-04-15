@@ -15,12 +15,18 @@ M.on_attach = function(client, bufnr)
 
 	local keymap = vim.keymap.set
 
+	-- Neovim 0.12 added grt (type_definition) and grx (codelens.run) as default
+	-- LSP mappings. Unmap them here so they don't silently shadow our bindings.
+	-- Type defs are handled via `gy` (fzf-lua), codelens is not configured.
+	pcall(vim.keymap.del, "n", "grt", { buffer = bufnr })
+	pcall(vim.keymap.del, "n", "grx", { buffer = bufnr })
+
 	-- ============================================================
 	-- LSP NAVIGATION (Lspsaga)
 	-- ============================================================
 	keymap("n", "gd", "<Cmd>Lspsaga goto_definition<CR>", opts("LSP: Go to definition"))
 	keymap("n", "gD", "<Cmd>Lspsaga peek_definition<CR>", opts("LSP: Peek definition"))
-	keymap("n", "gS", "<Cmd>vsplit | Lspsaga goto_definition<CR>", opts("LSP: Go to definition (split)"))
+	keymap("n", "gV", "<Cmd>vsplit | Lspsaga goto_definition<CR>", opts("LSP: Go to definition (vsplit)"))
 	keymap("n", "gcD", vim.lsp.buf.declaration, opts("LSP: Go to declaration"))
 
 	-- Hover
@@ -50,11 +56,9 @@ M.on_attach = function(client, bufnr)
 	-- ============================================================
 	-- FZF-LUA LSP PICKERS
 	-- ============================================================
-	keymap("n", "<leader>fd", "<Cmd>FzfLua lsp_finder<CR>", opts("LSP: Finder (def + refs)"))
+	keymap("n", "<leader>fl", "<Cmd>FzfLua lsp_finder<CR>", opts("LSP: Finder (def + refs)"))
 	keymap("n", "<leader>fr", "<Cmd>FzfLua lsp_references<CR>", opts("LSP: References"))
 	keymap("n", "<leader>ft", "<Cmd>FzfLua lsp_typedefs<CR>", opts("LSP: Type definitions"))
-	keymap("n", "<leader>fs", "<Cmd>FzfLua lsp_document_symbols<CR>", opts("LSP: Document symbols"))
-	keymap("n", "<leader>fw", "<Cmd>FzfLua lsp_workspace_symbols<CR>", opts("LSP: Workspace symbols"))
 	keymap("n", "<leader>fi", "<Cmd>FzfLua lsp_implementations<CR>", opts("LSP: Implementations"))
 
 	-- ============================================================
@@ -115,21 +119,40 @@ M.on_attach = function(client, bufnr)
 	end
 
 	-- ============================================================
-	-- DAP KEYMAPS (Rust only)
+	-- GOMODIFYTAGS (Go only)
+	-- Adds / removes struct field tags via the gomodifytags CLI tool.
 	-- ============================================================
-	if client.name == "rust-analyzer" then
-		local ok, dap = pcall(require, "dap")
-		if ok then
-			keymap("n", "<leader>dc", dap.continue, opts("DAP: Continue / Start"))
-			keymap("n", "<leader>do", dap.step_over, opts("DAP: Step over"))
-			keymap("n", "<leader>di", dap.step_into, opts("DAP: Step into"))
-			keymap("n", "<leader>du", dap.step_out, opts("DAP: Step out"))
-			keymap("n", "<leader>db", dap.toggle_breakpoint, opts("DAP: Toggle breakpoint"))
-			keymap("n", "<leader>dr", dap.repl.open, opts("DAP: Open REPL"))
-		else
-			vim.notify("rust-analyzer attached but nvim-dap not found — DAP keymaps not set", vim.log.levels.WARN)
-		end
+	if client.name == "gopls" then
+		-- Add json tags to the struct under cursor (or visual selection)
+		keymap("n", "<leader>gtj", function()
+			local file = vim.fn.expand("%:p")
+			local line = vim.fn.line(".")
+			local out = vim.fn.system(
+				string.format("gomodifytags -file '%s' -line %d -add-tags json -add-options json=omitempty -transform camelcase -w", file, line)
+			)
+			if vim.v.shell_error ~= 0 then
+				vim.notify("gomodifytags: " .. out, vim.log.levels.ERROR)
+			else
+				vim.cmd("edit") -- reload buffer to pick up on-disk changes
+			end
+		end, opts("Go: Add json struct tags"))
+
+		-- Remove json tags from the struct under cursor
+		keymap("n", "<leader>gtJ", function()
+			local file = vim.fn.expand("%:p")
+			local line = vim.fn.line(".")
+			local out = vim.fn.system(
+				string.format("gomodifytags -file '%s' -line %d -remove-tags json -w", file, line)
+			)
+			if vim.v.shell_error ~= 0 then
+				vim.notify("gomodifytags: " .. out, vim.log.levels.ERROR)
+			else
+				vim.cmd("edit")
+			end
+		end, opts("Go: Remove json struct tags"))
 	end
+
+	-- DAP keymaps are global (not buffer-local) and defined in lua/plugins/dap.lua.
 end
 
 return M

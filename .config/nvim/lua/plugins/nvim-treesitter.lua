@@ -2,7 +2,6 @@ return {
 	"nvim-treesitter/nvim-treesitter",
 	build = ":TSUpdate",
 	event = { "BufReadPost", "BufNewFile" },
-	lazy = false,
 	config = function()
 		require("nvim-treesitter").setup({
 			-- ✅ List of parsers to install
@@ -25,7 +24,7 @@ return {
 				disable = function(lang, buf)
 					-- Optional: Disable for large files
 					local max_filesize = 256 * 1024 -- 256KB
-					local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+					local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
 					if ok and stats and stats.size > max_filesize then
 						return true
 					end
@@ -36,19 +35,20 @@ return {
 				enable = true,
 			},
 
-			incremental_selection = {
-				enable = true,
-				keymaps = {
-					init_selection = "<CR>",
-					node_incremental = "<CR>",
-					scope_incremental = "<TAB>",
-					node_decremental = "<S-TAB>",
-				},
+		incremental_selection = {
+			enable = true,
+			keymaps = {
+				init_selection = "<C-Space>",
+				node_incremental = "<C-Space>",
+				scope_incremental = "<C-S-Space>",
+				node_decremental = "<BS>",
 			},
+		},
 		})
 
 		-- AUTO_INSTALL FEATURE: Install parsers on-demand when opening files
 		vim.api.nvim_create_autocmd("FileType", {
+			group = vim.api.nvim_create_augroup("TreesitterAutoInstall", { clear = true }),
 			callback = function(ev)
 				local lang = vim.treesitter.language.get_lang(ev.match)
 
@@ -70,16 +70,15 @@ return {
 
 				-- Check if this language is available for installation
 				local available = ts.get_available()
-				if not vim.tbl_contains(available, lang) then
+				if not available or not vim.tbl_contains(available, lang) then
 					return -- Language not supported by treesitter
 				end
 
 				-- Install the parser asynchronously (non-blocking)
 				ts.install({ lang })
 
-				-- Notify user (optional - comment out if you don't want notifications)
 				vim.notify(
-					string.format("🌳 Installing treesitter parser for: %s", lang),
+					string.format("Installing treesitter parser for: %s", lang),
 					vim.log.levels.INFO,
 					{ title = "nvim-treesitter" }
 				)
