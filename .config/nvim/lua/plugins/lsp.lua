@@ -29,9 +29,13 @@ return {
 
 		vim.lsp.config("emmet_language_server", {
 			filetypes = {
-				"html", "htmlangular", "templ",
-				"javascriptreact", "typescriptreact",
-				"css", "scss",
+				"html",
+				"htmlangular",
+				"templ",
+				"javascriptreact",
+				"typescriptreact",
+				"css",
+				"scss",
 			},
 		})
 
@@ -39,11 +43,17 @@ return {
 		-- mason-lspconfig defaults do not include templ or htmlangular.
 		vim.lsp.config("tailwindcss", {
 			filetypes = {
-				"html", "htmlangular", "templ",
-				"javascript", "typescript",
-				"javascriptreact", "typescriptreact",
-				"svelte", "vue",
-				"css", "scss",
+				"html",
+				"htmlangular",
+				"templ",
+				"javascript",
+				"typescript",
+				"javascriptreact",
+				"typescriptreact",
+				"svelte",
+				"vue",
+				"css",
+				"scss",
 			},
 		})
 
