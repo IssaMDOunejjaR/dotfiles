@@ -26,7 +26,7 @@ return {
 			json = { "jsonlint" },
 			python = { "ruff" },
 
-			go = { "golangci-lint" },
+			go = { "golangcilint" },
 
 			css = { "stylelint" },
 			scss = { "stylelint" },
