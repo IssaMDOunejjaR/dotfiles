@@ -8,6 +8,10 @@ return {
 			build = "make install_jsregexp",
 			dependencies = { "rafamadriz/friendly-snippets" },
 		},
+		-- Supermaven blink source — shows AI suggestions inside the completion menu
+		{ "supermaven-inc/supermaven-nvim" },
+		-- blink.compat wraps nvim-cmp sources (used for supermaven)
+		{ "saghen/blink.compat", version = "*", opts = {} },
 	},
 	event = { "InsertEnter", "CmdlineEnter" },
 	config = function()
@@ -38,8 +42,6 @@ return {
 					function(cmp)
 						if cmp.is_visible() then
 							return cmp.select_next()
-						elseif require("luasnip").expand_or_jumpable() then
-							return cmp.snippet_forward()
 						end
 						return false
 					end,
@@ -51,8 +53,6 @@ return {
 					function(cmp)
 						if cmp.is_visible() then
 							return cmp.select_prev()
-						elseif require("luasnip").jumpable(-1) then
-							return cmp.snippet_backward()
 						end
 						return false
 					end,
@@ -133,13 +133,27 @@ return {
 				},
 			},
 
-			sources = {
-				default = { "lsp", "path", "snippets", "buffer" },
-				per_filetype = {
-					lua = { inherit_defaults = true },
+		sources = {
+			default = { "lsp", "path", "snippets", "buffer", "supermaven" },
+			per_filetype = {
+				-- lazydev provides accurate vim.* API completions for Neovim config files
+				lua = { "lazydev", "lsp", "path", "snippets", "buffer", "supermaven" },
+			},
+			providers = {
+				lazydev = {
+					name = "LazyDev",
+					module = "lazydev.integrations.blink",
+					score_offset = 10, -- show above LSP suggestions
 				},
-				providers = {
-					lsp = {
+				supermaven = {
+					name = "Supermaven",
+					module = "blink.compat.source",
+					-- supermaven-nvim ships a nvim-cmp source; blink.compat wraps it
+					opts = { name = "supermaven" },
+					score_offset = 5, -- show above LSP but below lazydev
+					async = true,
+				},
+				lsp = {
 						name = "LSP",
 						module = "blink.cmp.sources.lsp",
 						score_offset = 0,
@@ -172,12 +186,12 @@ return {
 				},
 			},
 
-			fuzzy = {
-				prebuilt_binaries = {
-					download = true,
-				},
-				implementation = "prefer_rust_with_warning",
+		fuzzy = {
+			prebuilt_binaries = {
+				download = true,
 			},
+			implementation = "prefer_rust",
+		},
 
 			signature = {
 				enabled = true,
@@ -197,10 +211,5 @@ return {
 			},
 		})
 
-		vim.api.nvim_set_hl(0, "BlinkCmpMenuBorder", { fg = "#444444", bg = "NONE" })
-		vim.api.nvim_set_hl(0, "BlinkCmpDocBorder", { fg = "#444444", bg = "NONE" })
-		vim.api.nvim_set_hl(0, "BlinkCmpMenuSelection", { bg = "#333333" })
-		vim.api.nvim_set_hl(0, "BlinkCmpScrollBarThumb", { bg = "#444444" })
-		vim.api.nvim_set_hl(0, "BlinkCmpScrollBarGutter", { bg = "NONE" })
 	end,
 }
