@@ -134,3 +134,7 @@ if command -v mise &>/dev/null; then
 fi
 
 export PATH="$PATH:$HOME/.spicetify"
+export PATH=/usr/lib/qt6/bin:$PATH
+
+# opencode
+export PATH=/home/issamdounejjar/.opencode/bin:$PATH

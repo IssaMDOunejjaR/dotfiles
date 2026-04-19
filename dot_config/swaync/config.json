@@ -50,7 +50,14 @@
       "app-name": "Spotify"
     }
   },
-  "widgets": ["inhibitors", "title", "dnd", "mpris", "notifications"],
+  "widgets": [
+    "inhibitors",
+    "title",
+    "dnd",
+    "mpris",
+    "buttons-grid",
+    "notifications"
+  ],
   "widget-config": {
     "notifications": {
       "vexpand": true
@@ -79,7 +86,6 @@
       "loop-carousel": false
     },
     "buttons-grid": {
-      "buttons-per-row": 7,
       "actions": [
         {
           "label": "直",

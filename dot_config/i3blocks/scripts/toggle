@@ -11,11 +11,14 @@ status_cmd=${COMMAND_STATUS}
 open_cmd=${COMMAND_OPEN}
 
 if (( ${BLOCK_BUTTON:-0} == 1 )); then
-  eval $status_cmd 2>&1 >/dev/null
-  if (( $? == 0 )); then
-    eval $off_cmd 2>&1 >/dev/null
+  # eval $status_cmd 2>&1 >/dev/null
+  
+  if $status_cmd 2>&1 >/dev/null; then
+    echo "OFF" >> /home/issamdounejjar/.config/i3blocks/out.log
+    $off_cmd 2>&1 >/dev/null
   else
-    eval $on_cmd 2>&1 >/dev/null
+    echo "ON" >> /home/issamdounejjar/.config/i3blocks/out.log
+    $on_cmd 2>&1 >>/home/issamdounejjar/.config/i3blocks/out.log
   fi
 fi
 

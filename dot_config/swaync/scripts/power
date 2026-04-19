@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# get selected profile
+current=$(powerprofilesctl get)
+
+# get full list
+profiles=$(powerprofilesctl list | awk '
+  /^\s*[* ]\s*[A-Za-z0-9_-]+:$/ {
+    line = $0
+    selected = ($1 ~ /\*/)
+    gsub(/^[*[:space:]]+|:$/, "", line)
+    print line, selected
+  }
+')
+
+# build menu entries as JSON items
+items=""
+i=0
+
+while read -r name selected; do
+  icon="battery"
+  mark=""
+
+  if [ "$selected" = "1" ]; then
+    mark=" (current)"
+  fi
+
+  # append entry as JSON click item
+  items="$items{\"label\": \"$name$mark\", \"action\": \"powerprofilesctl set $name\"},"
+  ((i++))
+done <<<"$profiles"
+
+items="[${items%,}]"
+
+# print widget JSON
+cat <<EOF
+{
+  "text": "$current",
+  "tooltip": "Power Profile",
+  "menu": $items
+}
+EOF
