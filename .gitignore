@@ -1,4 +1,5 @@
-.config/tmux/plugins
+dot_config/tmux/plugins
+dot_config/zsh/plugins
+dot_config/hypr/wayland-env
 *.o
 .luarc.json
-.config/hypr/wayland-env
