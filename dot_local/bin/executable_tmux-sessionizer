@@ -3,14 +3,21 @@
 if [[ $# -eq 1 ]]; then
   selected=$1
 else
-  selected=$(find -L ~/ ~/Documents ~/Documents/projects/ ~/Documents/learning/ ~/.config/ -mindepth 1 -maxdepth 1 -type d | fzf)
+  selected=$({
+    zoxide query -l
+    fd . ~/Documents/projects/ ~/Documents/learning/ ~/.config/ ~/ -d 1 -t d
+  } | sort -u | fzf)
 fi
 
 if [[ -z $selected ]]; then
   exit 0
 fi
 
-selected_name=$(basename "$selected" | tr . _)
+# Tell zoxide we visited this directory
+zoxide add "$selected"
+
+# Replace dots and colons with underscores for tmux session naming
+selected_name=$(basename "$selected" | tr . _:)
 tmux_running=$(pgrep tmux)
 
 if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
