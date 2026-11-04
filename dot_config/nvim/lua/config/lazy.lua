@@ -25,11 +25,9 @@ require("config.keymaps")
 require("config.autocmds")
 require("config.cmds")
 
-local plugins_dir = "plugins"
-
 require("lazy").setup({
 	spec = {
-		{ import = plugins_dir },
+		{ import = "plugins" },
 	},
 	ui = {
 		border = "single",
