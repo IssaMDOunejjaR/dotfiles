@@ -429,7 +429,7 @@ hl.config({
 hl.bind(mainMod .. "return", hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. "B", hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. "SHIFT + B", hl.dsp.exec_cmd("~/.config/hypr/scripts/waybar"))
-hl.bind(mainMod .. "Q", hl.dsp.window.kill())
+hl.bind(mainMod .. "Q", hl.dsp.window.close())
 hl.bind(mainMod .. "SHIFT + Q", hl.dsp.exit())
 hl.bind(mainMod .. "E", hl.dsp.exec_cmd(quickfileManager))
 hl.bind(mainMod .. "SHIFT + E", hl.dsp.exec_cmd(fileManager))
