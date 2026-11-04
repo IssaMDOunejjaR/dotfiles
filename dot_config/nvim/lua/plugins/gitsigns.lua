@@ -10,6 +10,7 @@ return {
 			changedelete = { text = "▎" },
 			untracked = { text = "▎" },
 		},
+		current_line_blame = true, -- enable inline blame by default
 		on_attach = function(buffer)
 			local gs = package.loaded.gitsigns
 
