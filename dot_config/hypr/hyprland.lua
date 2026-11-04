@@ -9,7 +9,7 @@ require("autostart")
 require("bindings")
 
 -- ====== Variables ======
-local terminal = "kitty"
+local terminal = "velocitty"
 local browser = "brave-origin"
 local fileManager = "nautilus"
 local quickfileManager = "pidof rofi || rofi -show filebrowser"
