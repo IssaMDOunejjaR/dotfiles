@@ -2,12 +2,8 @@ return {
 	"saghen/blink.cmp",
 	version = "1.*",
 	dependencies = {
-		{
-			"L3MON4D3/LuaSnip",
-			version = "v2.*",
-			build = "make install_jsregexp",
-			dependencies = { "rafamadriz/friendly-snippets" },
-		},
+		-- Loaded automatically by blink's native vim.snippet snippet engine
+		{ "rafamadriz/friendly-snippets" },
 		-- Supermaven blink source — shows AI suggestions inside the completion menu
 		{ "supermaven-inc/supermaven-nvim" },
 		-- blink.compat wraps nvim-cmp sources (used for supermaven)
@@ -15,8 +11,6 @@ return {
 	},
 	event = { "InsertEnter", "CmdlineEnter" },
 	config = function()
-		require("luasnip.loaders.from_vscode").lazy_load()
-
 		require("blink.cmp").setup({
 			keymap = {
 				preset = "default",
@@ -62,7 +56,7 @@ return {
 			},
 
 			snippets = {
-				preset = "luasnip",
+				preset = "default", -- native vim.snippet engine
 			},
 
 			appearance = {
