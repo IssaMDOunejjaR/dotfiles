@@ -69,12 +69,12 @@ vim.api.nvim_create_autocmd("VimResized", {
 })
 
 -- Auto-read changed files on focus
+-- checktime acts globally and is a no-op for buffers without a file on disk,
+-- so no buftype guard is needed.
 vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
 	group = augroup("AutoRead"),
 	callback = function()
-		if vim.o.buftype ~= "nofile" then
-			vim.cmd("checktime")
-		end
+		vim.cmd("checktime")
 	end,
 })
 
