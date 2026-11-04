@@ -22,35 +22,56 @@ M.on_attach = function(client, bufnr)
 	pcall(vim.keymap.del, "n", "grx", { buffer = bufnr })
 
 	-- ============================================================
-	-- LSP NAVIGATION (Lspsaga)
+	-- LSP NAVIGATION (native — Neovim 0.12)
 	-- ============================================================
-	keymap("n", "gd", "<Cmd>Lspsaga goto_definition<CR>", opts("LSP: Go to definition"))
-	keymap("n", "gD", "<Cmd>Lspsaga peek_definition<CR>", opts("LSP: Peek definition"))
-	keymap("n", "gV", "<Cmd>vsplit | Lspsaga goto_definition<CR>", opts("LSP: Go to definition (vsplit)"))
+	keymap("n", "gd", vim.lsp.buf.definition, opts("LSP: Go to definition"))
+	keymap("n", "gD", vim.lsp.buf.declaration, opts("LSP: Go to declaration"))
+	keymap("n", "gV", function()
+		vim.cmd("vsplit")
+		vim.lsp.buf.definition()
+	end, opts("LSP: Go to definition (vsplit)"))
+	-- alias kept for muscle memory (same target as gD)
 	keymap("n", "gcD", vim.lsp.buf.declaration, opts("LSP: Go to declaration"))
 
 	-- Hover
-	keymap("n", "K", "<Cmd>Lspsaga hover_doc<CR>", opts("LSP: Hover documentation"))
+	keymap("n", "K", vim.lsp.buf.hover, opts("LSP: Hover documentation"))
 
 	-- ============================================================
 	-- CODE ACTIONS & RENAME
 	-- ============================================================
-	keymap("n", "<leader>ca", "<Cmd>Lspsaga code_action<CR>", opts("LSP: Code action"))
-	keymap("n", "<leader>cr", "<Cmd>Lspsaga rename<CR>", opts("LSP: Rename symbol"))
+	keymap("n", "<leader>ca", vim.lsp.buf.code_action, opts("LSP: Code action"))
+	-- inc-rename: live-preview rename. Expr mapping that pre-fills the cmdline
+	-- with the word under the cursor; triggers the `IncRename` cmd lazy-load.
+	keymap("n", "<leader>cr", function()
+		return ":IncRename " .. vim.fn.expand("<cword>")
+	end, {
+		silent = true,
+		buffer = bufnr,
+		desc = "LSP: Rename symbol (live preview)",
+		expr = true,
+	})
 
 	-- ============================================================
 	-- DIAGNOSTICS
-	keymap("n", "<leader>cd", "<Cmd>Lspsaga show_line_diagnostics<CR>", opts("LSP: Line diagnostics"))
-	keymap("n", "<leader>cD", "<Cmd>Lspsaga show_cursor_diagnostics<CR>", opts("LSP: Cursor diagnostics"))
-	keymap("n", "[d", "<Cmd>Lspsaga diagnostic_jump_prev<CR>", opts("LSP: Previous diagnostic"))
-	keymap("n", "]d", "<Cmd>Lspsaga diagnostic_jump_next<CR>", opts("LSP: Next diagnostic"))
+	keymap("n", "<leader>cd", function()
+		vim.diagnostic.open_float({ scope = "line" })
+	end, opts("LSP: Line diagnostics"))
+	keymap("n", "<leader>cD", function()
+		vim.diagnostic.open_float({ scope = "cursor" })
+	end, opts("LSP: Cursor diagnostics"))
+	keymap("n", "[d", function()
+		vim.diagnostic.jump({ count = -1, float = true })
+	end, opts("LSP: Previous diagnostic"))
+	keymap("n", "]d", function()
+		vim.diagnostic.jump({ count = 1, float = true })
+	end, opts("LSP: Next diagnostic"))
 
 	-- Jump only to errors (skip warnings)
 	keymap("n", "[e", function()
-		require("lspsaga.diagnostic"):goto_prev({ severity = vim.diagnostic.severity.ERROR })
+		vim.diagnostic.jump({ count = -1, severity = vim.diagnostic.severity.ERROR, float = true })
 	end, opts("LSP: Previous error"))
 	keymap("n", "]e", function()
-		require("lspsaga.diagnostic"):goto_next({ severity = vim.diagnostic.severity.ERROR })
+		vim.diagnostic.jump({ count = 1, severity = vim.diagnostic.severity.ERROR, float = true })
 	end, opts("LSP: Next error"))
 
 	-- ============================================================
