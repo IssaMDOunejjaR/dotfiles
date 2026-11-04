@@ -80,7 +80,7 @@ M.on_attach = function(client, bufnr)
 	-- INLAY HINTS (Neovim 0.10+)
 	-- ============================================================
 	if client:supports_method("textDocument/inlayHint") then
-		-- Enable inlay hints by default
+		-- Off by default — toggle with <leader>th
 		vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
 
 		keymap("n", "<leader>th", function()
