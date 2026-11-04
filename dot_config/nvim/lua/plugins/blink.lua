@@ -4,10 +4,9 @@ return {
 	dependencies = {
 		-- Loaded automatically by blink's native vim.snippet snippet engine
 		{ "rafamadriz/friendly-snippets" },
-		-- Supermaven blink source — shows AI suggestions inside the completion menu
-		{ "supermaven-inc/supermaven-nvim" },
-		-- blink.compat wraps nvim-cmp sources (used for supermaven)
-		{ "saghen/blink.compat", version = "*", opts = {} },
+		-- Copilot blink source — shows AI suggestions inside the completion menu
+		-- (needs zbirenbaum/copilot.lua, defined in plugins/copilot.lua)
+		{ "fang2hou/blink-copilot" },
 	},
 	event = { "InsertEnter", "CmdlineEnter" },
 	config = function()
@@ -128,10 +127,10 @@ return {
 			},
 
 		sources = {
-			default = { "lsp", "path", "snippets", "buffer", "supermaven" },
+			default = { "lsp", "path", "snippets", "buffer", "copilot" },
 			per_filetype = {
 				-- lazydev provides accurate vim.* API completions for Neovim config files
-				lua = { "lazydev", "lsp", "path", "snippets", "buffer", "supermaven" },
+				lua = { "lazydev", "lsp", "path", "snippets", "buffer", "copilot" },
 			},
 			providers = {
 				lazydev = {
@@ -139,13 +138,15 @@ return {
 					module = "lazydev.integrations.blink",
 					score_offset = 10, -- show above LSP suggestions
 				},
-				supermaven = {
-					name = "Supermaven",
-					module = "blink.compat.source",
-					-- supermaven-nvim ships a nvim-cmp source; blink.compat wraps it
-					opts = { name = "supermaven" },
-					score_offset = 5, -- show above LSP but below lazydev
+				copilot = {
+					name = "Copilot",
+					module = "blink-copilot",
+					score_offset = 100, -- Copilot suggestions first (per blink-copilot recipe)
 					async = true,
+					opts = {
+						kind_name = "Copilot",
+						kind_icon = "󰚩",
+					},
 				},
 				lsp = {
 						name = "LSP",
