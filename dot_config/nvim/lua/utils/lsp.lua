@@ -127,17 +127,23 @@ M.on_attach = function(client, bufnr)
 		keymap("n", "<leader>gtj", function()
 			local file = vim.fn.expand("%:p")
 			local line = vim.fn.line(".")
-			local out = vim.fn.system(
-				string.format(
-					"gomodifytags -file '%s' -line %d -add-tags json -add-options json=omitempty -transform camelcase -w",
-					file,
-					line
-				)
+			-- List form: no shell quoting issues with special characters in paths
+			local out = table.concat(
+				vim.fn.system({
+					"gomodifytags",
+					"-file", file,
+					"-line", line,
+					"-add-tags", "json",
+					"-add-options", "json=omitempty",
+					"-transform", "camelcase",
+					"-w",
+				}),
+				"\n"
 			)
 			if vim.v.shell_error ~= 0 then
 				vim.notify("gomodifytags: " .. out, vim.log.levels.ERROR)
 			else
-				vim.cmd("edit") -- reload buffer to pick up on-disk changes
+				vim.cmd("checktime") -- reload buffer to pick up on-disk changes
 			end
 		end, opts("Go: Add json struct tags"))
 
@@ -145,12 +151,14 @@ M.on_attach = function(client, bufnr)
 		keymap("n", "<leader>gtJ", function()
 			local file = vim.fn.expand("%:p")
 			local line = vim.fn.line(".")
-			local out =
-				vim.fn.system(string.format("gomodifytags -file '%s' -line %d -remove-tags json -w", file, line))
+			local out = table.concat(
+				vim.fn.system({ "gomodifytags", "-file", file, "-line", line, "-remove-tags", "json", "-w" }),
+				"\n"
+			)
 			if vim.v.shell_error ~= 0 then
 				vim.notify("gomodifytags: " .. out, vim.log.levels.ERROR)
 			else
-				vim.cmd("edit")
+				vim.cmd("checktime")
 			end
 		end, opts("Go: Remove json struct tags"))
 	end
