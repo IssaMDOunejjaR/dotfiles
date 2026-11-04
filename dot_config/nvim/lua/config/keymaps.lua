@@ -97,6 +97,17 @@ vim.keymap.set("n", "<leader>lc", "<Cmd>lclose<CR>", { desc = "Location: Close l
 -- ============================================================
 vim.keymap.set("n", "<leader>rc", "<Cmd>e ~/.config/nvim/init.lua<CR>", { desc = "Config: Edit init.lua" })
 
+-- Neotest (test runner)
+vim.keymap.set("n", "<leader>tt", ":Neotest run<CR>", { desc = "Test: Run nearest" })
+vim.keymap.set("n", "<leader>tT", ":Neotest run file<CR>", { desc = "Test: Run file" })
+vim.keymap.set("n", "<leader>ts", ":Neotest summary<CR>", { desc = "Test: Summary" })
+vim.keymap.set("n", "<leader>to", ":Neotest output<CR>", { desc = "Test: Output" })
+
+-- Harpoon (hot files)
+vim.keymap.set("n", "<leader>m", "<Cmd>HarpoonMark<CR>", { desc = "Harpoon: Mark file" })
+vim.keymap.set("n", "<leader>c", "<Cmd>HarpoonNext<CR>", { desc = "Harpoon: Next file" })
+vim.keymap.set("n", "<leader>C", "<Cmd>HarpoonPrev<CR>", { desc = "Harpoon: Previous file" })
+
 -- ============================================================
 -- TERMINAL
 -- ============================================================
@@ -113,6 +124,9 @@ vim.keymap.set("n", "<leader>qr", "<Cmd>SessionRestore<CR>", { desc = "Session: 
 vim.keymap.set("n", "<leader>qd", "<Cmd>SessionDelete<CR>", { desc = "Session: Delete" })
 vim.keymap.set("n", "<leader>qq", "<Cmd>qa<CR>", { desc = "Quit: All" })
 vim.keymap.set("n", "<leader>qQ", "<Cmd>qa!<CR>", { desc = "Quit: All (force)" })
+
+-- Flash jump keymaps
+vim.keymap.set({ "n", "v" }, "<C-s>", "<Cmd>Flash<CR>", { desc = "Flash: Jump to word" })
 
 -- ============================================================
 -- UI TOGGLES  (<leader>u group)
