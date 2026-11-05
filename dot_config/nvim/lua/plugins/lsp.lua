@@ -1,5 +1,10 @@
 return {
 	"neovim/nvim-lspconfig",
+	-- Deferred to the first file open (or after startup via VeryLazy) so empty
+	-- sessions don't pay for lspconfig + Mason + blink setup.
+	-- blink.cmp must be set up BEFORE capabilities are merged into
+	-- vim.lsp.config — hence it is a dependency (lazy loads deps first).
+	event = { "BufReadPre", "BufNewFile", "VeryLazy" },
 	dependencies = {
 		{ "mason-org/mason.nvim", opts = {
 			ui = {
@@ -9,6 +14,7 @@ return {
 		"mason-org/mason-lspconfig.nvim",
 		-- Required for require("vtsls").commands.* in the vtsls on_attach below
 		"yioneko/nvim-vtsls",
+		"saghen/blink.cmp",
 	},
 	config = function()
 		require("mason-lspconfig").setup({ ensure_installed = {}, automatic_enable = true })
