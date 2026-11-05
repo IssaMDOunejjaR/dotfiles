@@ -110,6 +110,13 @@ M.on_attach = function(client, bufnr)
 	end
 
 	-- ============================================================
+	-- NAVIC (breadcrumbs — rendered by lualine's 'navic' winbar component)
+	-- ============================================================
+	if client:supports_method("textDocument/documentSymbol") then
+		require("nvim-navic").attach(client, bufnr)
+	end
+
+	-- ============================================================
 	-- DOCUMENT HIGHLIGHT ON CURSOR HOLD
 	-- Highlights all references to symbol under cursor
 	-- ============================================================
