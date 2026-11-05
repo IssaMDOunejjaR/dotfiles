@@ -213,3 +213,5 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		end
 	end,
 })
+
+-- For maintenance: Run `:checkhealth vim.lsp` and `:checkhealth vim.treesitter` monthly to verify health.
