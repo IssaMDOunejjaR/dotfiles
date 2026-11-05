@@ -246,9 +246,7 @@ return {
 
 	config = function(_, opts)
 		require("fzf-lua").setup(opts)
-		-- Override vim.ui.select with fzf-lua
-		-- Note: Neovim 0.12 improved built-in vim.ui.select
-		-- fzf-lua's version is still superior for fuzzy finding
-		-- require("fzf-lua").register_ui_select()
+		-- Override vim.ui.select with fzf-lua (nicer LSP code action pickers)
+		require("fzf-lua").register_ui_select()
 	end,
 }

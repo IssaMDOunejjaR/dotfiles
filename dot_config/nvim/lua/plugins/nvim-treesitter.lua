@@ -35,15 +35,9 @@ return {
 				enable = true,
 			},
 
-		incremental_selection = {
-			enable = true,
-			keymaps = {
-				init_selection = "<C-Space>",
-				node_incremental = "<C-Space>",
-				scope_incremental = "<C-S-Space>",
-				node_decremental = "<BS>",
-			},
-		},
+			-- NOTE: 'incremental_selection' was removed from this block: the
+			-- module no longer exists in the new main-branch API. Treesitter
+			-- selection/jumping is covered by textobjects + flash instead.
 		})
 
 		-- AUTO_INSTALL FEATURE: Install parsers on-demand when opening files

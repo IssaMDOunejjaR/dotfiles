@@ -93,9 +93,7 @@ vim.api.nvim_create_autocmd("FileType", {
 			"qf", -- covers both quickfix and location list (filetype is always "qf")
 			"startuptime",
 			"plug",
-			"tsplayground",
 			"checkhealth",
-			"aerial",
 			"git",
 			"query", -- treesitter query editor
 			"neotest-output",

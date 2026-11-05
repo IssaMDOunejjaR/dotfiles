@@ -2,31 +2,6 @@ return {
 	"nickjvandyke/opencode.nvim",
 	version = "*",
 	event = "VeryLazy",
-	dependencies = {
-		-- snacks.nvim is already in this config; opt-in to the opencode enhancements
-		{
-			"folke/snacks.nvim",
-			optional = true,
-			opts = {
-				input = {}, -- enhances opencode's ask() input prompt
-				picker = {
-					actions = {
-						opencode_send = function(...)
-							return require("opencode").snacks_picker_send(...)
-						end,
-					},
-					win = {
-						input = {
-							keys = {
-								-- <A-a> in any snacks picker → send selected files to opencode
-								["<a-a>"] = { "opencode_send", mode = { "n", "i" } },
-							},
-						},
-					},
-				},
-			},
-		},
-	},
 	config = function()
 		vim.o.autoread = true -- required for automatic buffer reload after opencode edits
 
