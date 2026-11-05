@@ -17,7 +17,10 @@ vim.keymap.set("v", "#", [[y?\V<C-R>=escape(@", '?\')<CR><CR>N]], { desc = "Sear
 -- ============================================================
 vim.keymap.set("n", "<leader>bn", "<Cmd>bnext<CR>", { desc = "Buffer: Next" })
 vim.keymap.set("n", "<leader>bp", "<Cmd>bprevious<CR>", { desc = "Buffer: Previous" })
-vim.keymap.set("n", "<leader>bd", "<Cmd>bdelete<CR>", { desc = "Buffer: Close" })
+-- Close buffer while preserving windows/splits (mini.bufremove)
+vim.keymap.set("n", "<leader>bd", function()
+	require("mini.bufremove").delete(0, false)
+end, { desc = "Buffer: Close" })
 vim.keymap.set("n", "<leader>bD", [[<Cmd>%bd|e#|bd#<CR>]], { desc = "Buffer: Close all others" })
 vim.keymap.set("n", "<leader>bN", "<Cmd>enew<CR>", { desc = "Buffer: New empty" })
 
@@ -56,18 +59,10 @@ vim.keymap.set("n", "<<", "<<", { desc = "Indent line left" })
 -- ============================================================
 vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines (keep cursor position)" })
 
-vim.keymap.set("n", "<A-j>", "<Cmd>m .+1<CR>==", { desc = "Move line down" })
-vim.keymap.set("n", "<A-k>", "<Cmd>m .-2<CR>==", { desc = "Move line up" })
-vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
-vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
+-- Normal/visual <A-hjkl> line/block moves come from mini.move; moving while
+-- writing stays here (mini.move does not map insert mode)
 vim.keymap.set("i", "<A-j>", "<Cmd>m .+1<CR>==gi", { desc = "Move line down (insert)" })
 vim.keymap.set("i", "<A-k>", "<Cmd>m .-2<CR>==gi", { desc = "Move line up (insert)" })
-
--- ============================================================
--- PASTE
--- ============================================================
--- Paste over selection without losing yanked content
-vim.keymap.set("x", "p", [["_dP]], { desc = "Paste without overwriting register" })
 
 -- ============================================================
 -- UNDO BREAKPOINTS (insert mode)
@@ -97,11 +92,8 @@ vim.keymap.set("n", "<leader>lc", "<Cmd>lclose<CR>", { desc = "Location: Close l
 -- ============================================================
 vim.keymap.set("n", "<leader>rc", "<Cmd>e ~/.config/nvim/init.lua<CR>", { desc = "Config: Edit init.lua" })
 
--- Neotest (test runner)
-vim.keymap.set("n", "<leader>tt", ":Neotest run<CR>", { desc = "Test: Run nearest" })
-vim.keymap.set("n", "<leader>tT", ":Neotest run file<CR>", { desc = "Test: Run file" })
-vim.keymap.set("n", "<leader>ts", ":Neotest summary<CR>", { desc = "Test: Summary" })
-vim.keymap.set("n", "<leader>to", ":Neotest output<CR>", { desc = "Test: Output" })
+-- Neotest keymaps live in lua/plugins/neotest.lua (fully lazy via lazy.nvim
+-- `keys` — the plugin only loads the first time you run a test)
 
 -- Harpoon (hot files)
 vim.keymap.set("n", "<leader>m", "<Cmd>HarpoonMark<CR>", { desc = "Harpoon: Mark file" })
@@ -112,7 +104,7 @@ vim.keymap.set("n", "<leader>C", "<Cmd>HarpoonPrev<CR>", { desc = "Harpoon: Prev
 -- TERMINAL
 -- ============================================================
 vim.keymap.set("n", "<leader>tv", "<Cmd>vsplit | terminal<CR>", { desc = "Terminal: Vertical split" })
-vim.keymap.set("n", "<leader>ts", "<Cmd>split | terminal<CR>", { desc = "Terminal: Horizontal split" })
+vim.keymap.set("n", "<leader>tS", "<Cmd>split | terminal<CR>", { desc = "Terminal: Horizontal split" })
 -- Double-Escape to exit terminal insert mode (single Esc is sent to the running program)
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Terminal: Exit to normal mode" })
 
