@@ -12,6 +12,12 @@ srcs/**
 **/__pycache__/**
 **/*.py[cod]
 
+# Downloaded explicitly by setup/bootstrap-user.sh on each machine
+.config/zsh/plugins/
+.config/zsh/plugins/**
+.config/tmux/plugins/
+.config/tmux/plugins/**
+
 # Keep personal calendar/task data and logs local
 .config/calcure/*.log
 .config/calcure/events.csv
