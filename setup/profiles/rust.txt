@@ -1,0 +1,4 @@
+# Distro toolchain; do not install rustup alongside the conflicting rust package.
+rust
+rust-analyzer
+rust-src

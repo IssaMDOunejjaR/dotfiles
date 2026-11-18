@@ -41,12 +41,13 @@ wiremix
 bluez
 bluez-utils
 bluetui
-iwd
-impala
+networkmanager
 power-profiles-daemon
 brightnessctl
 btop
 calcure
+abook
+calcurse
 
 # Bound applications and development/configuration tools.
 # Velocitty (valvesky) is installed separately from its official GitHub release.
@@ -68,6 +69,27 @@ base-devel
 shellcheck
 lua
 python
+python-pip
+
+# Core shell/editor and package-build prerequisites. Node itself is fnm-managed.
+zsh
+tmux
+starship
+zoxide
+fzf
+fd
+ripgrep
+bat
+eza
+less
+lazygit
+xdg-utils
+unzip
+tree-sitter-cli
+luarocks
+fnm
+go
+opencode
 
 # Gaming diagnostics (no Steam account or GPU driver changes here).
 gamemode

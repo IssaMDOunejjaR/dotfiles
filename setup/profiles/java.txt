@@ -1,0 +1,2 @@
+# SDKMAN itself is installed per-user; no JDK is chosen automatically.
+zip

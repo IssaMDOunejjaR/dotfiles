@@ -21,7 +21,9 @@ state = json.loads(state_path.read_text())
 with open(os.environ["MOCK_LOG"], "a") as log:
     log.write(json.dumps([name, *args]) + "\n")
 if name == "pacman":
-    if args[0] == "-T":
+    if args[0] == "-Qq":
+        sys.exit(0 if args[1] in state.get("installed", []) else 1)
+    elif args[0] == "-T":
         sys.exit(0 if args[1] in state["installed"] + state.get("provided", []) else 127)
     if args[0] == "-Si":
         sys.exit(0)
@@ -35,6 +37,9 @@ elif name == "sudo":
 elif name == "curl":
     import shutil
     target = pathlib.Path(args[args.index("--output") + 1])
+    if "get.sdkman.io" in args[-1]:
+        target.write_text('#!/bin/bash\nmkdir -p "$SDKMAN_DIR/bin"\nprintf "# SDKMAN stub\\n" > "$SDKMAN_DIR/bin/sdkman-init.sh"\n')
+        sys.exit(0)
     fixture = pathlib.Path(os.environ["MOCK_ARCHIVE"])
     if args[-1].endswith("/SHA256SUMS"):
         import hashlib
@@ -47,6 +52,32 @@ elif name == "curl":
 elif name == "make":
     # Simulate the installed command, never run a real Makefile or sudo.
     pathlib.Path(sys.argv[0]).with_name("velocitty").symlink_to(sys.argv[0])
+elif name == "fnm":
+    if args[0] == "exec":
+        if os.environ.get("MOCK_NODE_MISSING") == "1" and not state.get("node_ready"):
+            sys.exit(1)
+        print("v24.21.0" if "node" in args else "11.19.0")
+    elif args[0] == "install":
+        if os.environ.get("MOCK_FNM_FAIL") == "1":
+            sys.exit(1)
+        state["node_ready"] = True
+        state_path.write_text(json.dumps(state))
+elif name == "nvim":
+    print(os.environ.get("MOCK_NVIM_VERSION", "NVIM v0.12.6"))
+elif name == "tree-sitter":
+    print(os.environ.get("MOCK_TS_VERSION", "tree-sitter 0.26.9"))
+elif name == "ldd":
+    print("libQt6Quick.so.6" if os.environ.get("MOCK_QT6") else "libQt5Quick.so.5")
+elif name == "getent":
+    print("tester:x:1000:1000::/home/tester:" + os.environ.get("MOCK_LOGIN_SHELL", "/bin/bash"))
+elif name == "git":
+    if "clone" in args:
+        if os.environ.get("MOCK_GIT_FAIL") == "1":
+            sys.exit(1)
+        destination = pathlib.Path(args[-1])
+        (destination / ".git").mkdir(parents=True)
+    elif "rev-parse" in args:
+        sys.exit(0 if (pathlib.Path(args[1]) / ".git").exists() else 1)
 elif name in ("pgrep", "pkill"):
     sys.exit(1)
 elif name == "slurp":
@@ -94,6 +125,14 @@ class DesktopTests(unittest.TestCase):
             "velocitty",
             "curl",
             "make",
+            "fnm",
+            "nvim",
+            "tree-sitter",
+            "sddm-greeter",
+            "ldd",
+            "git",
+            "chsh",
+            "getent",
             "xdg-user-dirs-update",
             "systemctl",
             "pgrep",
@@ -116,7 +155,13 @@ class DesktopTests(unittest.TestCase):
             os.environ,
             PATH=f"{self.bin}:{os.environ['PATH']}",
             HOME=str(self.path),
+            XDG_CONFIG_HOME=str(self.path / ".config"),
+            XDG_CACHE_HOME=str(self.path / ".cache"),
+            XDG_DATA_HOME=str(self.path / ".local/share"),
+            XDG_STATE_HOME=str(self.path / ".local/state"),
             XDG_RUNTIME_DIR=str(self.path),
+            FNM_DIR=str(self.path / ".local/share/fnm"),
+            SDKMAN_DIR=str(self.path / ".sdkman"),
             MOCK_STATE=str(self.state),
             MOCK_LOG=str(self.log),
         )
@@ -255,6 +300,141 @@ class DesktopTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(len(self.calls("systemctl")), 10)
         self.assertFalse(any("enable" in c for c in self.calls("systemctl")))
+
+    def test_all_profiles_dry_run_is_read_only(self):
+        result = self.run_script(
+            "setup/install.sh",
+            "--dry-run",
+            "--rust",
+            "--docker",
+            "--posting",
+            "--java",
+            "--sddm-theme",
+            "--bootstrap-user",
+            "--set-shell",
+            "--enable-services",
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        for package in (
+            "rust-analyzer",
+            "rust-src",
+            "docker",
+            "lazydocker",
+            "posting",
+            "fx",
+            "qt5-quickcontrols",
+        ):
+            self.assertIn(package, result.stdout)
+        for command in ("sudo", "yay", "curl", "fnm", "git", "chsh", "systemctl"):
+            self.assertFalse(self.calls(command), command)
+        self.assertFalse((self.path / ".sdkman").exists())
+
+    @unittest.skipIf(os.geteuid() == 0, "installer intentionally rejects root")
+    def test_docker_service_is_explicit_and_never_changes_groups(self):
+        result = self.run_script(
+            "setup/install.sh", "--docker", "--docker", "--enable-services"
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            self.calls("yay"), [["yay", "-S", "--needed", "docker", "lazydocker"]]
+        )
+        self.assertEqual(
+            len([c for c in self.calls("systemctl") if "docker.service" in c]), 2
+        )
+        self.assertFalse(self.calls("chsh"))
+
+    @unittest.skipIf(os.geteuid() == 0, "installer intentionally rejects root")
+    def test_fnm_runtime_install_and_rerun_skip(self):
+        for _ in range(2):
+            result = self.run_script("setup/install-node.sh", MOCK_NODE_MISSING="1")
+            self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(len([c for c in self.calls("fnm") if "install" in c]), 1)
+        self.assertIn(["fnm", "default", "lts-latest"], self.calls("fnm"))
+
+    @unittest.skipIf(os.geteuid() == 0, "installer intentionally rejects root")
+    def test_fnm_failed_install_does_not_change_default(self):
+        result = self.run_script(
+            "setup/install-node.sh", MOCK_NODE_MISSING="1", MOCK_FNM_FAIL="1"
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse(any("default" == c[1] for c in self.calls("fnm")))
+
+    @unittest.skipIf(os.geteuid() == 0, "installer intentionally rejects root")
+    def test_sdkman_manager_only_and_rerun_skip(self):
+        for _ in range(2):
+            result = self.run_script("setup/install-sdkman.sh")
+            self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(len(self.calls("curl")), 1)
+        self.assertIn("rcupdate=false", self.calls("curl")[0][-1])
+        self.assertFalse((self.path / ".zshrc").exists())
+        self.assertFalse((self.path / ".sdkman/candidates/java").exists())
+
+    @unittest.skipIf(os.geteuid() == 0, "installer intentionally rejects root")
+    def test_sdkman_partial_directory_is_not_overwritten(self):
+        (self.path / ".sdkman").mkdir()
+        result = self.run_script("setup/install-sdkman.sh")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse(self.calls("curl"))
+
+    def plugin_configs(self):
+        import shutil
+
+        for app, filename in (("zsh", "plugins.zsh"), ("tmux", "tmux.conf")):
+            target = self.path / ".config" / app / filename
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / "dot_config" / app / filename, target)
+
+    @unittest.skipIf(os.geteuid() == 0, "installer intentionally rejects root")
+    def test_plugin_bootstrap_rerun_and_no_tmux_server(self):
+        self.plugin_configs()
+        for _ in range(2):
+            result = self.run_script("setup/bootstrap-user.sh")
+            self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(len([c for c in self.calls("git") if "clone" in c]), 15)
+        self.assertTrue((self.path / ".config/tmux/plugins/tpm/.git").is_dir())
+        self.assertFalse(self.calls("tmux"))
+
+    @unittest.skipIf(os.geteuid() == 0, "installer intentionally rejects root")
+    def test_bootstrap_requires_configs_and_failed_clone_can_retry(self):
+        result = self.run_script("setup/bootstrap-user.sh")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse(self.calls("git"))
+        self.plugin_configs()
+        failed = self.run_script("setup/bootstrap-user.sh", MOCK_GIT_FAIL="1")
+        self.assertNotEqual(failed.returncode, 0)
+        self.assertFalse(list((self.path / ".config").rglob(".bootstrap.*")))
+        retried = self.run_script("setup/bootstrap-user.sh")
+        self.assertEqual(retried.returncode, 0, retried.stderr)
+
+    def test_theme_qt6_refused_before_any_transaction(self):
+        result = self.run_script(
+            "setup/install.sh", "--dry-run", "--sddm-theme", MOCK_QT6="1"
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Qt6", result.stderr)
+        self.assertFalse(self.calls("pacman"))
+        self.assertFalse(self.calls("sudo"))
+
+    def test_existing_rustup_requires_explicit_resolution(self):
+        self.set_installed(self.packages + ["rustup"])
+        result = self.run_script("setup/install.sh", "--dry-run", "--rust")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("rustup", result.stderr)
+        self.assertFalse(self.calls("sudo"))
+
+    @unittest.skipIf(os.geteuid() == 0, "installer intentionally rejects root")
+    def test_login_shell_change_is_opt_in_and_symlink_aware(self):
+        result = self.run_script(
+            "setup/install.sh", "--set-shell", MOCK_LOGIN_SHELL="/bin/zsh"
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(self.calls("chsh"))
+        changed = self.run_script(
+            "setup/install.sh", "--set-shell", MOCK_LOGIN_SHELL="/bin/bash"
+        )
+        self.assertEqual(changed.returncode, 0, changed.stderr)
+        self.assertEqual(len(self.calls("chsh")), 1)
+        self.assertEqual(self.calls("chsh")[0][1], "-s")
 
     def test_recorder_audio_is_two_arguments(self):
         result = self.run_script(

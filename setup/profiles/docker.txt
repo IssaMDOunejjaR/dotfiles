@@ -1,0 +1,3 @@
+# No automatic group membership changes; docker group access is root-equivalent.
+docker
+lazydocker

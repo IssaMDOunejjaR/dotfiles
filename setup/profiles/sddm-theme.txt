@@ -1,0 +1,6 @@
+# Chili is Qt5-only. An existing compatible SDDM greeter is required.
+qt5-declarative
+qt5-quickcontrols
+qt5-graphicaleffects
+qt5-svg
+qt5-virtualkeyboard

@@ -7,15 +7,25 @@ dry_run=false
 amd=false
 enable_services=false
 upgrade=false
+bootstrap_user=false
+set_shell=false
+profiles=()
 
 usage() {
   cat <<'EOF'
-Usage: bash setup/install.sh [--dry-run] [--amd] [--enable-services] [--upgrade]
+Usage: bash setup/install.sh [options]
 
   --dry-run          Report missing packages/actions without changing anything.
   --amd              Include AMD Mesa and 32-bit gaming packages (multilib needed).
-  --enable-services  Enable Bluetooth, power profiles, and user audio services.
+  --enable-services  Enable Bluetooth/power/audio services, plus Docker with --docker.
   --upgrade          Request a full system upgrade even if no packages are missing.
+  --rust             Include distro Rust, Rust Analyzer, and standard-library sources.
+  --docker           Include Docker/lazydocker (no docker group changes).
+  --posting          Include Posting and its fx JSON pager.
+  --java             Install SDKMAN only; select/install your JDK manually.
+  --sddm-theme       Deploy Chili only with an existing Qt5-compatible SDDM greeter.
+  --bootstrap-user   Download configured Zsh/tmux plugins (apply dotfiles first).
+  --set-shell        Opt into changing your login shell to Zsh using chsh.
   --help             Show this help.
 
 Run as your regular user, not with sudo. Privileged commands request sudo as needed.
@@ -31,6 +41,9 @@ for arg in "$@"; do
     --amd) amd=true ;;
     --enable-services) enable_services=true ;;
     --upgrade) upgrade=true ;;
+    --rust|--docker|--posting|--java|--sddm-theme) profiles+=("${arg#--}") ;;
+    --bootstrap-user) bootstrap_user=true ;;
+    --set-shell) set_shell=true ;;
     --help|-h) usage; exit 0 ;;
     *) printf 'Unknown option: %s\n' "$arg" >&2; usage >&2; exit 2 ;;
   esac
@@ -57,6 +70,24 @@ load_packages() {
 load_packages "$script_dir/packages.txt"
 if "$amd"; then
   load_packages "$script_dir/packages-amd.txt"
+fi
+declare -A selected=()
+for profile in "${profiles[@]}"; do
+  if [[ ! -v selected[$profile] ]]; then
+    selected[$profile]=1
+    load_packages "$script_dir/profiles/$profile.txt"
+  fi
+done
+
+if [[ -v selected[rust] ]] && pacman -Qq rustup >/dev/null 2>&1; then
+  echo 'The distro Rust profile conflicts with an existing rustup setup. Resolve the toolchain choice manually; nothing was replaced.' >&2
+  exit 1
+fi
+
+# Fail before installing anything if an explicitly requested legacy theme would
+# be incompatible. This does not install/switch a display manager.
+if [[ -v selected[sddm-theme] ]]; then
+  bash "$script_dir/install-sddm-theme.sh" --check
 fi
 
 missing=()
@@ -90,9 +121,14 @@ if "$dry_run"; then
   fi
   ((${#missing[@]} == 0)) || echo 'Would install only the missing packages using yay -S --needed.'
   if "$enable_services"; then
-    echo 'Would check/enable Bluetooth, power profiles, and user audio services.'
+    echo 'Would check/enable Bluetooth, power profiles, and user audio services; Docker only with --docker.'
   fi
   bash "$script_dir/install-velocitty.sh" --dry-run
+  bash "$script_dir/install-node.sh" --dry-run
+  [[ ! -v selected[java] ]] || bash "$script_dir/install-sdkman.sh" --dry-run
+  [[ ! -v selected[sddm-theme] ]] || bash "$script_dir/install-sddm-theme.sh" --dry-run
+  ! "$bootstrap_user" || bash "$script_dir/bootstrap-user.sh" --dry-run
+  ! "$set_shell" || echo 'Would check the login-shell database and request chsh to Zsh if needed.'
   exit 0
 fi
 
@@ -119,6 +155,13 @@ if ((${#missing[@]})); then
 fi
 
 bash "$script_dir/install-velocitty.sh"
+bash "$script_dir/install-node.sh"
+[[ ! -v selected[java] ]] || bash "$script_dir/install-sdkman.sh"
+
+# The pinned Treesitter main branch requires Neovim 0.12+ and CLI 0.26.1+.
+python3 "$script_dir/check-editor.py"
+! "$bootstrap_user" || bash "$script_dir/bootstrap-user.sh"
+[[ ! -v selected[sddm-theme] ]] || bash "$script_dir/install-sddm-theme.sh"
 
 if [[ ! -s "${XDG_CONFIG_HOME:-$HOME/.config}/user-dirs.dirs" ]] && command -v xdg-user-dirs-update >/dev/null; then
   # Initialize standard folders once; leave existing user settings alone.
@@ -146,6 +189,20 @@ if "$enable_services"; then
   enable_service user pipewire.socket
   enable_service user pipewire-pulse.socket
   enable_service user wireplumber.service
+  if [[ -v selected[docker] ]]; then
+    enable_service system docker.service
+  fi
 fi
 
-echo 'Dependencies are ready. Waybar remains manual; no dotfiles or network settings were changed.'
+if "$set_shell"; then
+  zsh_path=$(command -v zsh)
+  current_shell=$(getent passwd "$(id -un)" | cut -d: -f7)
+  if [[ "$(readlink -f -- "$current_shell")" == "$(readlink -f -- "$zsh_path")" ]]; then
+    echo 'Zsh is already your login shell (skip).'
+  else
+    grep -Fxq "$zsh_path" /etc/shells || { echo "$zsh_path is not listed in /etc/shells." >&2; exit 1; }
+    chsh -s "$zsh_path"
+  fi
+fi
+
+echo 'Requested dependencies/actions are ready. Waybar remains manual; networking services were not changed.'
