@@ -63,7 +63,3 @@ export SDKMAN_DIR="${SDKMAN_DIR:-$HOME/.sdkman}"
 if [[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]]; then
   source "$SDKMAN_DIR/bin/sdkman-init.sh"
 fi
-
-if [[ -o interactive && -z "$TMUX" ]] && command -v tmux >/dev/null 2>&1; then
-  tmux attach -t home || tmux new -s home
-fi
