@@ -3,3 +3,14 @@ dot_config/zsh/plugins
 dot_config/hypr/wayland-env
 *.o
 .luarc.json
+
+# Generated tooling caches and bytecode
+.ruff_cache/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+
+# Calcure runtime data belongs to each machine, not the dotfiles checkout
+dot_config/calcure/*.log
+dot_config/calcure/events.csv
+dot_config/calcure/tasks.csv

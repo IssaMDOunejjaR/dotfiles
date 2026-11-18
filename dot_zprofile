@@ -1,3 +1,0 @@
-export BRAVE_PASSWORD_STORE=kwallet
-
-if [ "$TMUX" = "" ]; then tmux attach -t home || tmux new -s home; fi

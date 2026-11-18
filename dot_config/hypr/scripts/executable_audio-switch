@@ -1,0 +1,12 @@
+#!/bin/bash
+set -euo pipefail
+
+# Use installed PipeWire/PulseAudio tools, not an external Omarchy script.
+selection=$(pactl -f json list sinks | jq -r '.[] | "\(.name)\t\(.description)"' |
+  rofi -dmenu -i -p 'Audio output') || exit 0
+[[ -n "$selection" ]] || exit 0
+sink=${selection%%$'\t'*}
+pactl set-default-sink "$sink"
+while read -r input; do
+  pactl move-sink-input "$input" "$sink" || true
+done < <(pactl -f json list sink-inputs | jq -r '.[].index')

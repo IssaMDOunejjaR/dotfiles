@@ -3,7 +3,7 @@
 -- Tag Chromium-based browsers
 hl.window_rule({
 	match = {
-		class = "((google-)?[cC]hrom(e|ium)|[bB]rave-browser|Microsoft-edge|Vivaldi-stable|helium)",
+		class = "((google-)?[cC]hrom(e|ium)|[bB]rave-(browser|origin)|Microsoft-edge|Vivaldi-stable|helium)",
 	},
 	tag = "+chromium-based-browser",
 })
@@ -22,21 +22,18 @@ hl.window_rule({
 		tag = "chromium-based-browser",
 	},
 	tile = true,
-	opacity = "1 0.97",
 })
 
--- Only a subtle opacity change for Firefox
+-- Browser opacity is a multiplier unless explicitly overridden. Keep media
+-- readable when focus moves to another window; this also covers normal tabs.
 hl.window_rule({
 	match = {
-		tag = "firefox-based-browser",
+		tag = "chromium-based-browser",
 	},
-	opacity = "1 0.97",
+	opacity = "1.0 override 1.0 override 1.0 override",
 })
 
--- Video sites should never have opacity applied
 hl.window_rule({
-	match = {
-		initial_title = "((?i)(?:[a-z0-9-]+\\.)*youtube\\.com_/|app\\.zoom\\.us_/wc/home)",
-	},
-	opacity = "1.0 1.0",
+	match = { tag = "firefox-based-browser" },
+	opacity = "1.0 override 1.0 override 1.0 override",
 })

@@ -1,2 +1,18 @@
 setup/
+setup/**
 srcs/
+srcs/**
+
+# Never deploy generated tooling artifacts
+**/.ruff_cache/
+**/.ruff_cache/**
+**/.pytest_cache/
+**/.pytest_cache/**
+**/__pycache__/
+**/__pycache__/**
+**/*.py[cod]
+
+# Keep personal calendar/task data and logs local
+.config/calcure/*.log
+.config/calcure/events.csv
+.config/calcure/tasks.csv

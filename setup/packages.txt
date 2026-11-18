@@ -1,0 +1,76 @@
+# Hyprland session and desktop helpers (Waybar is installed, never autostarted).
+hyprland
+hypridle
+hyprlock
+hyprpaper
+hyprpolkitagent
+hyprpicker
+hyprshot
+waybar
+swaync
+swayosd
+wlogout
+rofi
+xdg-desktop-portal
+xdg-desktop-portal-hyprland
+xdg-desktop-portal-gtk
+xdg-user-dirs
+ttf-jetbrains-mono-nerd
+
+# Capture, clipboard, and recorder/webcam helpers.
+grim
+slurp
+wayfreeze
+satty
+wl-clipboard
+cliphist
+gpu-screen-recorder
+ffmpeg
+v4l-utils
+libnotify
+jq
+
+# PipeWire, audio-output selection, and the Waybar helper apps.
+pipewire
+pipewire-audio
+pipewire-pulse
+wireplumber
+libpulse
+playerctl
+wiremix
+bluez
+bluez-utils
+bluetui
+iwd
+impala
+power-profiles-daemon
+brightnessctl
+btop
+calcure
+
+# Bound applications and development/configuration tools.
+# Velocitty (valvesky) is installed separately from its official GitHub release.
+# The AUR package named velocitty is an unrelated xapp-project terminal.
+curl
+fontconfig
+wayland
+libxkbcommon
+libx11
+libxcursor
+libxi
+libxrandr
+brave-origin-bin
+nautilus
+neovim
+chezmoi
+git
+base-devel
+shellcheck
+lua
+python
+
+# Gaming diagnostics (no Steam account or GPU driver changes here).
+gamemode
+mangohud
+vulkan-tools
+mesa-utils

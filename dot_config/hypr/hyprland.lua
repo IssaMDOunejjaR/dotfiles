@@ -7,6 +7,7 @@ require("env")
 require("monitor")
 require("autostart")
 require("bindings")
+require("browser")
 
 -- ====== Variables ======
 local terminal = "velocitty"
@@ -61,8 +62,9 @@ hl.config({
 
 		blur = {
 			enabled = true,
+			new_optimizations = true,
 			size = 3,
-			passes = 3,
+			passes = 1,
 		},
 	},
 })
@@ -301,20 +303,41 @@ hl.window_rule({
 	suppress_event = "maximize",
 })
 
--- Tearing for CS2
+-- Explicit fallback for CS2 when it does not advertise game content.
 hl.window_rule({
 	match = {
 		class = "^(cs2)$",
-	},
-	immediate = true,
-})
-
--- Tearing for all fullscreen games
-hl.window_rule({
-	match = {
 		fullscreen = true,
 	},
 	immediate = true,
+	idle_inhibit = "fullscreen",
+	confine_pointer = true,
+	opaque = true,
+})
+
+-- Do not allow tearing on fullscreen browsers, terminals, or movies.
+hl.window_rule({
+	match = {
+		content = "game",
+		fullscreen = true,
+	},
+	immediate = true,
+	idle_inhibit = "fullscreen",
+	confine_pointer = true,
+	opaque = true,
+})
+
+hl.window_rule({
+	match = { content = "video" },
+	idle_inhibit = "fullscreen",
+	opaque = true,
+})
+
+-- Fallback for players that do not advertise a content type.
+hl.window_rule({
+	match = { class = "^(mpv|vlc)$" },
+	idle_inhibit = "fullscreen",
+	opaque = true,
 })
 
 -- no gaps when there is only one window
@@ -382,10 +405,10 @@ hl.config({
 	misc = {
 		force_default_wallpaper = 0,
 		disable_hyprland_logo = true,
-		focus_on_activate = true,
+		focus_on_activate = false,
 		allow_session_lock_restore = true,
 		font_family = "JetBrains Mono",
-		vrr = 1,
+		vrr = 3,
 	},
 })
 
@@ -403,6 +426,12 @@ hl.config({
 			natural_scroll = false,
 		},
 	},
+})
+
+-- Leave other mice and touchpads at their own defaults.
+hl.device({
+	name = "logitech-g502-hero-gaming-mouse",
+	accel_profile = "flat",
 })
 
 -- ============================================================

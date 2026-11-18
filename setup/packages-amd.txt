@@ -1,0 +1,9 @@
+# Optional AMD Mesa stack, including 32-bit Vulkan for Steam/Proton.
+# Requires the multilib repository. Do not select this for NVIDIA-only systems.
+mesa
+vulkan-radeon
+lib32-mesa
+lib32-vulkan-radeon
+lib32-gamemode
+lib32-mangohud
+gamescope

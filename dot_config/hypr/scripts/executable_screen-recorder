@@ -36,17 +36,17 @@ start_webcam_overlay() {
 
   # Try preferred 16:9 resolutions in order, use first available
   local preferred_resolutions=("640x360" "1280x720" "1920x1080")
-  local video_size_arg=""
+  local video_size_args=()
   local available_formats=$(v4l2-ctl --list-formats-ext -d /dev/video0 2>/dev/null)
 
   for resolution in "${preferred_resolutions[@]}"; do
     if echo "$available_formats" | grep -q "$resolution"; then
-      video_size_arg="-video_size $resolution"
+      video_size_args=(-video_size "$resolution")
       break
     fi
   done
 
-  ffplay -f v4l2 "$video_size_arg" -framerate 30 /dev/video0 \
+  ffplay -f v4l2 "${video_size_args[@]}" -framerate 30 /dev/video0 \
     -vf "scale=${target_width}:-1" \
     -window_title "WebcamOverlay" \
     -noborder \
@@ -58,15 +58,18 @@ start_webcam_overlay() {
 
 start_screenrecording() {
   local filename="$OUTPUT_DIR/screenrecording-$(date +'%Y-%m-%d_%H-%M-%S').mp4"
-  local audio_args=""
+  local audio_args=()
 
   # Merge audio tracks into one - separate tracks only play one at a time in most players
-  [[ "$AUDIO" == "true" ]] && audio_args="-a default_output|default_input"
+  [[ "$AUDIO" == "true" ]] && audio_args=(-a 'default_output|default_input')
 
-  if [ "$AUDIO" == "true" ]; then
-    gpu-screen-recorder -w "$@" -f 60 -c mp4 -o "$filename" "$audio_args" &
-  else
-    gpu-screen-recorder -w "$@" -f 60 -c mp4 -o "$filename" &
+  gpu-screen-recorder -w "$@" -f 60 -c mp4 -o "$filename" "${audio_args[@]}" &
+  local recorder_pid=$!
+  sleep 0.3
+  if ! kill -0 "$recorder_pid" 2>/dev/null; then
+    cleanup_webcam
+    notify-send "Screen recording failed" "Check gpu-screen-recorder output and capture permissions." -u critical
+    return 1
   fi
 
   toggle_screenrecording_indicator
@@ -94,7 +97,7 @@ stop_screenrecording() {
 }
 
 toggle_screenrecording_indicator() {
-  pkill -RTMIN+8 waybar
+  pkill -RTMIN+8 -x waybar || true
 }
 
 screenrecording_active() {
@@ -134,7 +137,7 @@ else
     exit 1
   fi
 
-  if [[ "$region" =~ ^([0-9]+)x([0-9]+)\+([0-9]+)\+([0-9]+)$ ]]; then
+  if [[ "$region" =~ ^([0-9]+)x([0-9]+)\+(-?[0-9]+)\+(-?[0-9]+)$ ]]; then
     w=$(awk "BEGIN {printf \"%.0f\", ${BASH_REMATCH[1]} * $scale}")
     h=$(awk "BEGIN {printf \"%.0f\", ${BASH_REMATCH[2]} * $scale}")
     x=$(awk "BEGIN {printf \"%.0f\", ${BASH_REMATCH[3]} * $scale}")

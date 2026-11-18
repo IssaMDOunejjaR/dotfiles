@@ -102,8 +102,8 @@ hl.bind(
 -- ============================================================
 
 hl.bind(
-	"XF86AudioMute",
-	hl.dsp.exec_cmd("omarchy-cmd-audio-switch"),
+	mainMod .. "XF86AudioMute",
+	hl.dsp.exec_cmd("~/.config/hypr/scripts/audio-switch"),
 	{ locked = true, description = "Switch audio output" }
 )
 
@@ -119,7 +119,7 @@ hl.bind(
 	{ description = "Screenshot to clipboard" }
 )
 
-hl.bind("Print", hl.dsp.exec_cmd("pkill hyprpicker || hyprpicker -a"), { description = "Color picker" })
+hl.bind(mainMod .. "Print", hl.dsp.exec_cmd("pkill hyprpicker || hyprpicker -a"), { description = "Color picker" })
 
 hl.bind("ALT + Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screen-recorder"), { description = "Screenrecording" })
 
@@ -127,14 +127,14 @@ hl.bind("ALT + Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screen-recorder")
 -- Clipboard history
 -- ============================================================
 
-hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("cliphist list | wofi -dmenu | cliphist decode | wl-copy"))
+hl.bind(mainMod .. "A", hl.dsp.exec_cmd("~/.config/hypr/scripts/clipboard"))
 
 -- ============================================================
 -- Pop window out (float & pin)
 -- ============================================================
 
 hl.bind(
-	mainMod .. " + O",
+	mainMod .. "O",
 	hl.dsp.exec_cmd("~/.config/hypr/scripts/window-popup"),
 	{ description = "Pop window out (float & pin)" }
 )
@@ -143,7 +143,7 @@ hl.bind(
 -- Submap: passthrough
 -- ============================================================
 
-hl.bind(mainMod .. " + F12", hl.dsp.submap("passthrough"))
+hl.bind(mainMod .. "F12", hl.dsp.submap("passthrough"))
 
 hl.define_submap("passthrough", function()
 	hl.bind("Escape", hl.dsp.submap("reset"))
