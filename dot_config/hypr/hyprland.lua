@@ -407,7 +407,7 @@ hl.config({
 		disable_hyprland_logo = true,
 		focus_on_activate = false,
 		allow_session_lock_restore = true,
-		font_family = "JetBrains Mono",
+		font_family = "JetBrainsMono Nerd Font",
 		vrr = 3,
 	},
 })
