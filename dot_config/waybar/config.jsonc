@@ -58,7 +58,7 @@
     "tooltip-format-wifi": "{essid} ({frequency} GHz)",
     "tooltip-format-ethernet": "Ethernet",
     "tooltip-format-disconnected": "Disconnected",
-    "on-click": "$TERMINAL --class waybar-kitty -e impala",
+    "on-click": "$TERMINAL --class waybar-kitty -e nmtui",
   },
   "battery": {
     "format": "{capacity}% {icon}",
