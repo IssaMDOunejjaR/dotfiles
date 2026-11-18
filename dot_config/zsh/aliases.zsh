@@ -1,8 +1,10 @@
 alias c='clear'
-alias kubectl='kubecolor'
-alias kc='kubectl'
+if (( $+commands[kubectl] )); then
+  (( $+commands[kubecolor] )) && alias kubectl='kubecolor'
+  alias kc='kubectl'
+fi
 alias lgit='lazygit'
-alias ldc='lazydocker'
+(( $+commands[lazydocker] )) && alias ldc='lazydocker'
 
 # Better ls
 alias ls='eza'
@@ -30,15 +32,18 @@ alias df='df -h'
 # Navigation
 alias -- -='cd -' # -- prevents - being parsed as a flag; cd - jumps to previous directory
 
-lf() { # zsh follow lf navigation
-  tmp=$(mktemp)
-  command lf -last-dir-path="$tmp" "$@"
-  if [ -f "$tmp" ]; then
-    dir=$(cat "$tmp")
-    rm -f "$tmp"
-    [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
-  fi
-}
+if (( $+commands[lf] )); then
+  lf() { # zsh follow lf navigation
+    local tmp dir
+    tmp=$(mktemp) || return
+    command lf -last-dir-path="$tmp" "$@"
+    if [[ -f "$tmp" ]]; then
+      dir=$(<"$tmp")
+      rm -f -- "$tmp"
+      [[ -d "$dir" && "$dir" != "$PWD" ]] && cd -- "$dir"
+    fi
+  }
+fi
 
 # Editor
 alias v='nvim'
@@ -49,4 +54,6 @@ alias gadog='PAGER="less -F -X" git log --all --decorate --oneline --graph'
 alias dotfiles='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
 
 # Video
-alias stream='mpv av://v4l2:/dev/video4 --fullscreen --demuxer-lavf-o=input_format=mjpeg,framerate=30 --profile=low-latency --untimed'
+if (( $+commands[mpv] )); then
+  alias stream='mpv "av://v4l2:${CAMERA_DEVICE:-/dev/video4}" --fullscreen --demuxer-lavf-o=input_format=mjpeg,framerate=30 --profile=low-latency --untimed'
+fi

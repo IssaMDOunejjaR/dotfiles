@@ -1,4 +1,5 @@
 # History
+mkdir -p "$XDG_STATE_HOME/zsh" "$XDG_CACHE_HOME/zsh"
 HISTFILE="$XDG_STATE_HOME/zsh/history"
 HISTSIZE=100000
 SAVEHIST=100000
@@ -15,6 +16,11 @@ setopt AUTOCD
 setopt NOBEEP
 setopt NUMERIC_GLOB_SORT # sort file10 after file9, not after file1
 
+# Node versions are managed by fnm; shell startup never installs a runtime.
+if command -v fnm >/dev/null 2>&1; then
+  eval "$(fnm env --use-on-cd --shell zsh)"
+fi
+
 # Initialize zoxide
 eval "$(zoxide init --cmd cd zsh)"
 
@@ -23,7 +29,7 @@ eval "$(zoxide init --cmd cd zsh)"
 autoload -Uz compinit
 
 # Initialize completion with cached metadata file
-if [[ -n ${XDG_CACHE_HOME}/zsh/zcompdump(#qN.mh+24) ]]; then
+if [[ ! -s "$XDG_CACHE_HOME/zsh/zcompdump" || -n ${XDG_CACHE_HOME}/zsh/zcompdump(#qN.mh+24) ]]; then
   compinit -d "$XDG_CACHE_HOME/zsh/zcompdump"
 else
   compinit -C -d "$XDG_CACHE_HOME/zsh/zcompdump"
@@ -52,4 +58,12 @@ source "$ZDOTDIR/plugins.zsh"
 # Prompt/theme
 source "$ZDOTDIR/prompt.zsh"
 
-if [[ -o interactive ]] && [[ "$TMUX" = "" ]]; then tmux attach -t home || tmux new -s home; fi
+# SDKMAN remains optional; Java itself is selected manually with `sdk install`.
+export SDKMAN_DIR="${SDKMAN_DIR:-$HOME/.sdkman}"
+if [[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]]; then
+  source "$SDKMAN_DIR/bin/sdkman-init.sh"
+fi
+
+if [[ -o interactive && -z "$TMUX" ]] && command -v tmux >/dev/null 2>&1; then
+  tmux attach -t home || tmux new -s home
+fi
