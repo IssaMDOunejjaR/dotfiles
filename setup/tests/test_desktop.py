@@ -4,6 +4,7 @@
 import io
 import json
 import os
+import shutil
 from pathlib import Path
 import subprocess
 import tarfile
@@ -26,14 +27,35 @@ if name == "pacman":
     elif args[0] == "-T":
         sys.exit(0 if args[1] in state["installed"] + state.get("provided", []) else 127)
     if args[0] == "-Si":
-        sys.exit(0)
+        sys.exit(1 if os.environ.get("MOCK_YAY_AUR") else 0)
+    if args[0] == "-S" and "yay" in args:
+        (pathlib.Path(os.environ["MOCK_BIN"]) / "yay").symlink_to("mock")
 elif name == "yay":
     if os.environ.get("MOCK_FAIL") == "1":
         sys.exit(1)
-    state["installed"] += [a for a in args if not a.startswith("-")]
+    values = iter(args)
+    for arg in values:
+        if arg in ("--answerclean", "--answerdiff", "--answeredit", "--sudo"):
+            next(values)
+        elif not arg.startswith("-"):
+            state["installed"].append(arg)
     state_path.write_text(json.dumps(state))
 elif name == "sudo":
+    if args in (["-v"], ["-n", "-v"]):
+        sys.exit(1 if os.environ.get("MOCK_AUTH_FAIL") else 0)
+    if args[0] == "python3" and args[1].endswith("deploy-sddm-theme.py"):
+        # Pure deployment tests exercise this against temporary files instead.
+        sys.exit(0)
     os.execvp(args[0], args)
+elif name == "sleep":
+    if args == ["50"]:
+        with open(os.environ["MOCK_SLEEP_PIDS"], "a") as pids:
+            pids.write(str(os.getpid()) + "\n")
+        marker = pathlib.Path(os.environ["MOCK_SLEEP_PIDS"] + ".refreshed")
+        if os.environ.get("MOCK_REFRESH") == "1" and not marker.exists():
+            marker.touch()
+            sys.exit(0)
+    time.sleep(float(args[0]))
 elif name == "curl":
     import shutil
     target = pathlib.Path(args[args.index("--output") + 1])
@@ -52,6 +74,8 @@ elif name == "curl":
 elif name == "make":
     # Simulate the installed command, never run a real Makefile or sudo.
     pathlib.Path(sys.argv[0]).with_name("velocitty").symlink_to(sys.argv[0])
+elif name == "makepkg":
+    (pathlib.Path(os.environ["MOCK_BIN"]) / "yay").symlink_to("mock")
 elif name == "fnm":
     if args[0] == "exec":
         if os.environ.get("MOCK_NODE_MISSING") == "1" and not state.get("node_ready"):
@@ -67,7 +91,20 @@ elif name == "nvim":
 elif name == "tree-sitter":
     print(os.environ.get("MOCK_TS_VERSION", "tree-sitter 0.26.9"))
 elif name == "ldd":
-    print("libQt6Quick.so.6" if os.environ.get("MOCK_QT6") else "libQt5Quick.so.5")
+    print("libQt5Quick.so.5" if os.environ.get("MOCK_QT5_ONLY") else "libQt6Quick.so.6")
+elif name == "systemctl":
+    if args == ["get-default"]:
+        print(state.get("default_target", "multi-user.target"))
+    elif args == ["set-default", "graphical.target"]:
+        state["default_target"] = "graphical.target"
+        state_path.write_text(json.dumps(state))
+    elif "show" in args:
+        print(os.environ.get("MOCK_DISPLAY_MANAGER", ""))
+    elif "is-enabled" in args and "sddm.service" in args:
+        sys.exit(0 if state.get("sddm_enabled") else 1)
+    elif args == ["enable", "sddm.service"]:
+        state["sddm_enabled"] = True
+        state_path.write_text(json.dumps(state))
 elif name == "getent":
     print("tester:x:1000:1000::/home/tester:" + os.environ.get("MOCK_LOGIN_SHELL", "/bin/bash"))
 elif name == "git":
@@ -125,16 +162,19 @@ class DesktopTests(unittest.TestCase):
             "velocitty",
             "curl",
             "make",
+            "makepkg",
             "fnm",
             "nvim",
             "tree-sitter",
             "sddm-greeter",
+            "sddm-greeter-qt6",
             "ldd",
             "git",
             "chsh",
             "getent",
             "xdg-user-dirs-update",
             "systemctl",
+            "sleep",
             "pgrep",
             "pkill",
             "slurp",
@@ -164,6 +204,8 @@ class DesktopTests(unittest.TestCase):
             SDKMAN_DIR=str(self.path / ".sdkman"),
             MOCK_STATE=str(self.state),
             MOCK_LOG=str(self.log),
+            MOCK_SLEEP_PIDS=str(self.path / "sudo-sleep-pids"),
+            MOCK_BIN=str(self.bin),
         )
         (self.path / "Videos").mkdir()
         (self.path / "Pictures").mkdir()
@@ -274,9 +316,7 @@ class DesktopTests(unittest.TestCase):
         self.set_installed(self.packages[1:])
         first = self.run_script("setup/install.sh")
         self.assertEqual(first.returncode, 0, first.stderr)
-        self.assertEqual(
-            self.calls("yay"), [["yay", "-S", "--needed", self.packages[0]]]
-        )
+        self.assertEqual(self.calls("yay"), [self.yay_command(self.packages[0])])
         second = self.run_script("setup/install.sh")
         self.assertEqual(second.returncode, 0, second.stderr)
         self.assertEqual(len(self.calls("yay")), 1)
@@ -322,7 +362,10 @@ class DesktopTests(unittest.TestCase):
             "lazydocker",
             "posting",
             "fx",
-            "qt5-quickcontrols",
+            "sddm",
+            "qt6-5compat",
+            "qt6-virtualkeyboard",
+            "xorg-server",
         ):
             self.assertIn(package, result.stdout)
         for command in ("sudo", "yay", "curl", "fnm", "git", "chsh", "systemctl"):
@@ -335,9 +378,7 @@ class DesktopTests(unittest.TestCase):
             "setup/install.sh", "--docker", "--docker", "--enable-services"
         )
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(
-            self.calls("yay"), [["yay", "-S", "--needed", "docker", "lazydocker"]]
-        )
+        self.assertEqual(self.calls("yay"), [self.yay_command("docker", "lazydocker")])
         self.assertEqual(
             len([c for c in self.calls("systemctl") if "docker.service" in c]), 2
         )
@@ -406,14 +447,138 @@ class DesktopTests(unittest.TestCase):
         retried = self.run_script("setup/bootstrap-user.sh")
         self.assertEqual(retried.returncode, 0, retried.stderr)
 
-    def test_theme_qt6_refused_before_any_transaction(self):
+    def test_theme_preflight_does_not_require_an_installed_greeter(self):
+        result = self.run_script("setup/install-sddm-theme.sh", "--check")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(self.calls("ldd"))
+        self.assertFalse(self.calls("systemctl"))
+        self.assertFalse(self.calls("sudo"))
+
+    @unittest.skipIf(os.geteuid() == 0, "installer intentionally rejects root")
+    def test_theme_profile_installs_deploys_enables_without_restart(self):
+        for _ in range(2):
+            result = self.run_script("setup/install.sh", "--sddm-theme")
+            self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("sddm", self.calls("yay")[0])
+        self.assertEqual(len(self.calls("yay")), 1)
+        deployed = [c for c in self.calls("sudo") if "python3" in c]
+        self.assertEqual(len(deployed), 2)
+        self.assertTrue(all(c[2].endswith("deploy-sddm-theme.py") for c in deployed))
+        self.assertEqual(len([c for c in self.calls("systemctl") if "enable" in c]), 1)
+        self.assertEqual(
+            self.calls("systemctl").count(
+                ["systemctl", "set-default", "graphical.target"]
+            ),
+            1,
+        )
+        for call in self.calls("systemctl"):
+            self.assertTrue(
+                set(call).isdisjoint({"start", "restart", "stop", "--now", "--force"})
+            )
+
+    @unittest.skipIf(os.geteuid() == 0, "installer intentionally rejects root")
+    def test_theme_refuses_to_replace_other_display_manager(self):
         result = self.run_script(
-            "setup/install.sh", "--dry-run", "--sddm-theme", MOCK_QT6="1"
+            "setup/install-sddm-theme.sh", MOCK_DISPLAY_MANAGER="gdm.service"
         )
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn("Qt6", result.stderr)
-        self.assertFalse(self.calls("pacman"))
+        self.assertIn("refusing to replace", result.stderr)
         self.assertFalse(self.calls("sudo"))
+
+    @unittest.skipIf(os.geteuid() == 0, "installer intentionally rejects root")
+    def test_theme_checks_actual_greeter_after_install(self):
+        result = self.run_script("setup/install-sddm-theme.sh", MOCK_QT5_ONLY="1")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Qt6 SDDM greeter", result.stderr)
+        self.assertFalse(self.calls("sudo"))
+
+    @staticmethod
+    def yay_command(*packages):
+        return [
+            "yay",
+            "-S",
+            "--needed",
+            "--noconfirm",
+            "--answerclean",
+            "None",
+            "--answerdiff",
+            "None",
+            "--answeredit",
+            "None",
+            "--noremovemake",
+            "--sudo",
+            "sudo",
+            *packages,
+        ]
+
+    def assert_refresh_stopped(self):
+        path = self.path / "sudo-sleep-pids"
+        for pid in path.read_text().splitlines() if path.exists() else []:
+            with self.assertRaises(ProcessLookupError):
+                os.kill(int(pid), 0)
+
+    @unittest.skipIf(os.geteuid() == 0, "installer intentionally rejects root")
+    def test_noninteractive_packages_and_sudo_refresh_stops_on_exit(self):
+        self.set_installed(self.packages[1:])
+        result = self.run_script("setup/install.sh", MOCK_REFRESH="1")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        sudo_calls = self.calls("sudo")
+        self.assertEqual(sudo_calls[0], ["sudo", "-v"])
+        self.assertEqual(sudo_calls.count(["sudo", "-v"]), 1)
+        self.assertIn(["sudo", "-n", "-v"], sudo_calls)
+        transactions = [c for c in self.calls("pacman") if "-Syu" in c]
+        self.assertEqual(transactions, [["pacman", "-Syu", "--noconfirm"]])
+        self.assertEqual(self.calls("yay"), [self.yay_command(self.packages[0])])
+        self.assert_refresh_stopped()
+
+    @unittest.skipIf(os.geteuid() == 0, "installer intentionally rejects root")
+    def test_sudo_refresh_cleanup_on_package_failure(self):
+        self.set_installed(self.packages[1:])
+        result = self.run_script("setup/install.sh", MOCK_FAIL="1", MOCK_REFRESH="1")
+        self.assertNotEqual(result.returncode, 0)
+        self.assert_refresh_stopped()
+
+    @unittest.skipIf(os.geteuid() == 0, "installer intentionally rejects root")
+    def test_auth_failure_prevents_all_mutations(self):
+        self.set_installed(self.packages[1:])
+        result = self.run_script("setup/install.sh", MOCK_AUTH_FAIL="1")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(self.calls("sudo"), [["sudo", "-v"]])
+        self.assertFalse(self.calls("yay"))
+        self.assertFalse(any("-Syu" in c for c in self.calls("pacman")))
+
+    def isolate_missing_yay(self):
+        (self.bin / "yay").unlink()
+        # Do not let command -v find a real host yay outside the mocks.
+        for command in ("bash", "python3", "dirname", "mktemp", "rm", "id"):
+            (self.bin / command).symlink_to(shutil.which(command))
+        self.env["PATH"] = str(self.bin)
+        self.env["TMPDIR"] = str(self.path)
+
+    @unittest.skipIf(os.geteuid() == 0, "installer intentionally rejects root")
+    def test_yay_repository_bootstrap_automatically_approves(self):
+        self.isolate_missing_yay()
+        result = self.run_script("setup/install.sh")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn(
+            ["pacman", "-S", "--needed", "--noconfirm", "yay"], self.calls("pacman")
+        )
+        self.assertFalse(self.calls("makepkg"))
+        self.assertEqual(self.calls("sudo")[0], ["sudo", "-v"])
+        self.assert_refresh_stopped()
+
+    @unittest.skipIf(os.geteuid() == 0, "installer intentionally rejects root")
+    def test_yay_aur_bootstrap_approves_and_cleans_build_and_refresh(self):
+        self.isolate_missing_yay()
+        result = self.run_script("setup/install.sh", MOCK_YAY_AUR="1")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn(
+            ["pacman", "-S", "--needed", "--noconfirm", "git", "base-devel"],
+            self.calls("pacman"),
+        )
+        self.assertEqual(self.calls("makepkg"), [["makepkg", "-si", "--noconfirm"]])
+        self.assertFalse(list(self.path.glob("hypr-yay.*")))
+        self.assert_refresh_stopped()
 
     def test_existing_rustup_requires_explicit_resolution(self):
         self.set_installed(self.packages + ["rustup"])

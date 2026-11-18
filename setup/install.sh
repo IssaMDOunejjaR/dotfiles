@@ -23,14 +23,14 @@ Usage: bash setup/install.sh [options]
   --docker           Include Docker/lazydocker (no docker group changes).
   --posting          Include Posting and its fx JSON pager.
   --java             Install SDKMAN only; select/install your JDK manually.
-  --sddm-theme       Deploy Chili only with an existing Qt5-compatible SDDM greeter.
+  --sddm-theme       Install SDDM + Qt6 Chili; enable SDDM for the next boot.
   --bootstrap-user   Download configured Zsh/tmux plugins (apply dotfiles first).
   --set-shell        Opt into changing your login shell to Zsh using chsh.
   --help             Show this help.
 
-Run as your regular user, not with sudo. Privileged commands request sudo as needed.
+Run as your regular user, not with sudo. Sudo is validated once and refreshed until exit.
 Installed packages/providers and already-running enabled services are skipped.
-Yay handles repository and AUR packages; AUR review prompts remain interactive.
+Package confirmations are automatic, including AUR builds (only use trusted sources).
 Velocitty (valvesky) uses its verified official release, not the unrelated AUR package.
 EOF
 }
@@ -84,8 +84,7 @@ if [[ -v selected[rust] ]] && pacman -Qq rustup >/dev/null 2>&1; then
   exit 1
 fi
 
-# Fail before installing anything if an explicitly requested legacy theme would
-# be incompatible. This does not install/switch a display manager.
+# Validate the bundled source, not a greeter that may not be installed yet.
 if [[ -v selected[sddm-theme] ]]; then
   bash "$script_dir/install-sddm-theme.sh" --check
 fi
@@ -117,9 +116,10 @@ fi
 if "$dry_run"; then
   "$have_yay" || echo 'Would install yay from the repositories, or build it from the official AUR PKGBUILD.'
   if ((${#missing[@]})) || "$upgrade" || ! "$have_yay"; then
-    echo 'Would run a full pacman -Syu before installing missing packages (no partial upgrades).'
+    echo 'Would run a full pacman -Syu --noconfirm before installing missing packages (no partial upgrades).'
   fi
-  ((${#missing[@]} == 0)) || echo 'Would install only the missing packages using yay -S --needed.'
+  ((${#missing[@]} == 0)) || echo 'Would install only the missing packages using yay -S --needed --noconfirm (AUR review menus skipped).'
+  echo 'Would validate sudo once and keep its timestamp alive until setup exits.'
   if "$enable_services"; then
     echo 'Would check/enable Bluetooth, power profiles, and user audio services; Docker only with --docker.'
   fi
@@ -132,26 +132,58 @@ if "$dry_run"; then
   exit 0
 fi
 
+build_dir=''
+sudo_refresh_pid=''
+cleanup() {
+  local status=$?
+  trap - EXIT
+  if [[ -n "$sudo_refresh_pid" ]]; then
+    kill "$sudo_refresh_pid" 2>/dev/null || true
+    wait "$sudo_refresh_pid" 2>/dev/null || true
+  fi
+  [[ -z "$build_dir" ]] || rm -rf -- "$build_dir"
+  exit "$status"
+}
+trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+trap 'exit 129' HUP
+
+# Keep the normal sudo policy: never store a password or modify sudoers.
+sudo -v
+(
+  sleeper=''
+  trap 'if [[ -n "$sleeper" ]]; then kill "$sleeper" 2>/dev/null || true; wait "$sleeper" 2>/dev/null || true; fi' EXIT
+  trap 'exit 0' INT TERM HUP
+  while true; do
+    sleep 50 &
+    sleeper=$!
+    wait "$sleeper" || exit 0
+    kill -0 "$$" 2>/dev/null || exit 0
+    sudo -n -v || { echo 'Sudo refresh failed; later privileged steps may require authentication again.' >&2; exit 1; }
+  done
+) &
+sudo_refresh_pid=$!
+
 if ((${#missing[@]})) || "$upgrade" || ! "$have_yay"; then
   # Never refresh the databases and then perform a partial upgrade with -Sy.
-  sudo pacman -Syu
+  sudo pacman -Syu --noconfirm
 fi
 
 if ! "$have_yay"; then
   if pacman -Si yay >/dev/null 2>&1; then
-    sudo pacman -S --needed yay
+    sudo pacman -S --needed --noconfirm yay
   else
-    sudo pacman -S --needed git base-devel
+    sudo pacman -S --needed --noconfirm git base-devel
     build_dir=$(mktemp -d "${TMPDIR:-/tmp}/hypr-yay.XXXXXXXX")
-    cleanup() { rm -rf -- "$build_dir"; }
-    trap cleanup EXIT
     git clone https://aur.archlinux.org/yay.git "$build_dir/yay"
-    (cd -- "$build_dir/yay" && makepkg -si)
+    (cd -- "$build_dir/yay" && makepkg -si --noconfirm)
   fi
 fi
 
 if ((${#missing[@]})); then
-  yay -S --needed "${missing[@]}"
+  yay -S --needed --noconfirm --answerclean None --answerdiff None --answeredit None \
+    --noremovemake --sudo sudo "${missing[@]}"
 fi
 
 bash "$script_dir/install-velocitty.sh"
@@ -201,7 +233,7 @@ if "$set_shell"; then
     echo 'Zsh is already your login shell (skip).'
   else
     grep -Fxq "$zsh_path" /etc/shells || { echo "$zsh_path is not listed in /etc/shells." >&2; exit 1; }
-    chsh -s "$zsh_path"
+    sudo chsh -s "$zsh_path" "$(id -un)"
   fi
 fi
 

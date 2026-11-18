@@ -18,10 +18,9 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import QtQuick 2.2
-import QtQuick.Layouts 1.1
-import QtQuick.Controls 1.4
-import QtQuick.Controls.Styles 1.4
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls.Basic
 
 LoginFormLayout {
 
@@ -44,6 +43,7 @@ LoginFormLayout {
 
         TextField {
             id: passwordField
+            objectName: "passwordField"
 
 
         	placeholderText: textConstants.password
@@ -56,22 +56,21 @@ LoginFormLayout {
             implicitHeight: usernameFontSize * 2.75
             opacity: 0.5
 
-            style: TextFieldStyle {
-                textColor: passwordFieldOutlined ? "white" : "black"
-                placeholderTextColor: passwordFieldOutlined ? "white" : "black"
-                background: Rectangle {
-                    radius: 3
-                    border.color: "white"
-                    border.width: 1
-                    color: passwordFieldOutlined ? "transparent" : "white"
-                }
+            color: passwordFieldOutlined ? "white" : "black"
+            placeholderTextColor: passwordFieldOutlined ? "white" : "black"
+            padding: 8
+            background: Rectangle {
+                radius: 3
+                border.color: "white"
+                border.width: 1
+                color: passwordFieldOutlined ? "transparent" : "white"
             }
 
-        	Keys.onEscapePressed: {
-                loginFormStack.currentItem.forceActiveFocus();
+            Keys.onEscapePressed: {
+                userList.forceActiveFocus();
             }
 
-            Keys.onPressed: {
+            Keys.onPressed: function(event) {
                 if (event.key == Qt.Key_Left && !text) {
                     userList.decrementCurrentIndex();
                     event.accepted = true
@@ -93,7 +92,7 @@ LoginFormLayout {
 
             Connections {
                 target: sddm
-                onLoginFailed: {
+                function onLoginFailed() {
                     passwordField.selectAll()
                     passwordField.forceActiveFocus()
                 }

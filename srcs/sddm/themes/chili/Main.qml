@@ -18,9 +18,9 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import QtQuick 2.2
-import QtQuick.Controls 1.4
-import QtQuick.Layouts 1.1
+import QtQuick
+import QtQuick.Controls.Basic
+import QtQuick.Layouts
 import SddmComponents 2.0
 
 import "components"
@@ -33,7 +33,7 @@ Rectangle {
 
     property string notificationMessage
     property string generalFontColor: "white"
-    property int generalFontSize: config.FontPointSize ? config.FontPointSize : root.height / 80
+    property int generalFontSize: Math.max(1, config.FontPointSize ? config.FontPointSize : root.height / 80)
 
     TextConstants { id: textConstants }
 
@@ -44,7 +44,7 @@ Rectangle {
             y: geometry.y
             width: geometry.width
             height: geometry.height
-            imageSource: config.background
+            imageSource: Qt.resolvedUrl(config.background)
         }
     }
 
@@ -135,21 +135,21 @@ Rectangle {
 
                 actionItems: [
                     ActionButton {
-                        iconSource: "assets/suspend.svgz"
+                        iconSource: Qt.resolvedUrl("assets/suspend.svgz")
                         text: config.translationSuspend ? config.translationSuspend : "Suspend"
                         onClicked: sddm.suspend()
                         enabled: sddm.canSuspend
                         iconSize: root.generalFontSize * 3
                     },
                     ActionButton {
-                        iconSource: "assets/reboot.svgz"
+                        iconSource: Qt.resolvedUrl("assets/reboot.svgz")
                         text: config.translationReboot ? config.translationReboot : textConstants.reboot
                         onClicked: sddm.reboot()
                         enabled: sddm.canReboot
                         iconSize: root.generalFontSize * 3
                     },
                     ActionButton {
-                        iconSource: "assets/shutdown.svgz"
+                        iconSource: Qt.resolvedUrl("assets/shutdown.svgz")
                         text: config.translationPowerOff ? config.translationPowerOff : textConstants.shutdown
                         onClicked: sddm.powerOff()
                         enabled: sddm.canPowerOff
@@ -157,7 +157,7 @@ Rectangle {
                     }
                 ]
 
-                onLoginRequest: {
+                onLoginRequest: function(username, password) {
                     root.notificationMessage = ""
                     sddm.login(username, password, sessionMenu.currentIndex)
                 }
@@ -174,6 +174,7 @@ Rectangle {
 
         Loader {
             id: inputPanel
+            parent: root
             state: "hidden"
             property bool keyboardActive: item ? item.active : false
             onKeyboardActiveChanged: {
@@ -198,7 +199,7 @@ Rectangle {
                     name: "visible"
                     PropertyChanges {
                         target: loginFormStack
-                        y: Math.min(0, root.height - inputPanel.height - userListComponent.visibleBoundary)
+                        y: Math.min(0, root.height - inputPanel.height - userListComponent.height)
                     }
                     PropertyChanges {
                         target: inputPanel
@@ -226,7 +227,7 @@ Rectangle {
                     SequentialAnimation {
                         ScriptAction {
                             script: {
-                                inputPanel.item.activated = true;
+                                if (inputPanel.item) inputPanel.item.activated = true;
                                 Qt.inputMethod.show();
                             }
                         }
@@ -234,18 +235,18 @@ Rectangle {
                             NumberAnimation {
                                 target: loginFormStack
                                 property: "y"
-                                duration: units.longDuration
+                                duration: 250
                                 easing.type: Easing.InOutQuad
                             }
                             NumberAnimation {
                                 target: inputPanel
                                 property: "y"
-                                duration: units.longDuration
+                                duration: 250
                                 easing.type: Easing.OutQuad
                             }
                             OpacityAnimator {
                                 target: inputPanel
-                                duration: units.longDuration
+                                duration: 250
                                 easing.type: Easing.OutQuad
                             }
                         }
@@ -259,18 +260,18 @@ Rectangle {
                             NumberAnimation {
                                 target: loginFormStack
                                 property: "y"
-                                duration: units.longDuration
+                                duration: 250
                                 easing.type: Easing.InOutQuad
                             }
                             NumberAnimation {
                                 target: inputPanel
                                 property: "y"
-                                duration: units.longDuration
+                                duration: 250
                                 easing.type: Easing.InQuad
                             }
                             OpacityAnimator {
                                 target: inputPanel
-                                duration: units.longDuration
+                                duration: 250
                                 easing.type: Easing.InQuad
                             }
                         }
@@ -302,8 +303,8 @@ Rectangle {
 
         Connections {
             target: sddm
-            onLoginFailed: {
-                notificationMessage = textConstants.loginFailed
+            function onLoginFailed() {
+                root.notificationMessage = textConstants.loginFailed
                 notificationResetTimer.start();
             }
         }

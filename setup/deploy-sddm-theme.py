@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Explicit, backed-up deployment of the legacy theme; never touch services."""
+"""Backed-up deployment of the Qt6 Chili port; service setup is handled outside."""
 
 from datetime import datetime
 import filecmp

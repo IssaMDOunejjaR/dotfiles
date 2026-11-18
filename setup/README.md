@@ -22,7 +22,11 @@ Tree-sitter CLI, build tools, and OpenCode. OpenCode/Copilot credentials remain
 manual; project dependencies such as Jest and pytest stay in each project.
 Yay resolves both CachyOS/repository and AUR packages (including `wayfreeze` and
 `calcure` where necessary). If yay is absent, the installer tries the repositories
-first, then builds the official AUR PKGBUILD. Review AUR prompts before accepting.
+first, then builds the official AUR PKGBUILD. **Package installation is
+noninteractive:** pacman/makepkg/yay confirmations are accepted automatically,
+and yay's clean-build/diff/edit menus are skipped. AUR packages run third-party
+build scripts: only use package sources you trust. Checksums/signature checks
+are not disabled, and unresolvable conflicts still stop the run.
 
 | Flag | Additional behavior |
 | --- | --- |
@@ -30,9 +34,9 @@ first, then builds the official AUR PKGBUILD. Review AUR prompts before acceptin
 | `--docker` | Docker and lazydocker; daemon activation requires `--enable-services` too. |
 | `--posting` | Posting and the `fx` JSON pager used by its config. |
 | `--java` | SDKMAN manager only, plus its prerequisites; **no JDK is installed or selected**. |
-| `--sddm-theme` | Explicit Qt5-only Chili deployment with backups; see below. |
+| `--sddm-theme` | Install SDDM + Qt6 Chili with backups; enable SDDM for next boot without restarting the current session. |
 | `--bootstrap-user` | Download declared Zsh/tmux plugins after dotfiles are applied. |
-| `--set-shell` | Request `chsh` to Zsh only if your login shell differs; may prompt for authentication. |
+| `--set-shell` | Use the setup sudo session to change your login shell to Zsh only if it differs. |
 
 Unselected profiles do not uninstall anything. Aliases for lf, kubectl/kubecolor,
 and the mpv camera stream are available only when their commands exist; these
@@ -66,14 +70,20 @@ apps are not installed. Set `CAMERA_DEVICE` if you use something other than
 ## Reruns and safety
 
 - Installed dependencies **and virtual providers** are checked with `pacman -T`.
-  Only missing packages are requested with `yay -S --needed`.
+  Only missing packages are requested with `yay -S --needed --noconfirm`.
+- After the read-only checks, setup authenticates with `sudo -v` once and refreshes
+  the timestamp every 50 seconds until it exits (including on failure/signals).
+  The refresher never prompts in the background. Passwords are never stored and
+  sudoers is not modified. Standard sudo policies normally need one password for
+  the run; policies that disable or isolate credential caching, credential
+  revocation, and package-specific authentication can still require another.
 - There are no fragile "done" marker files. Failed or interrupted runs can be
   retried; removing a dependency makes the next run reinstall it.
 - A full `pacman -Syu` runs before a package transaction. No `-Sy` partial upgrades.
   A fully satisfied rerun skips upgrades unless `--upgrade` is supplied.
 - `--dry-run` makes no changes. `--enable-services` checks existing state before
   enabling/starting services. Log into a normal user session for user services.
-- This does **not** apply dotfiles, switch display managers, enable Waybar,
+- This does **not** apply dotfiles, replace another display manager, enable Waybar,
   configure fingerprint authentication, install Steam, change network services,
   or add your user to groups. Login shell/theme changes require their own flags.
 - `--amd` requires multilib. Without it, GPU drivers remain the OS install's choice.
@@ -81,7 +91,8 @@ apps are not installed. Set `CAMERA_DEVICE` if you use something other than
 - Network actions now use `nmcli`/`nmtui`, supplied by NetworkManager. No iwd/impala
   dependency or automatic network migration is introduced. If another manager
   controls your network, plan the switch manually; never enable competing daemons.
-  `power-profiles-daemon` may conflict with TLP/tuned; review package/service prompts.
+  `power-profiles-daemon` may conflict with TLP/tuned; resolve conflicts explicitly
+  instead of forcing package removals.
 - Docker access through the `docker` group is root-equivalent. Setup never adds
   group membership; use an explicitly configured context or `sudo docker` until
   you deliberately choose an access policy. It does not silently configure rootless Docker.
@@ -118,22 +129,36 @@ missing Zsh plugins with a hint instead of cloning on its own. Some tmux plugins
 can still fetch their own helper binaries on first actual use. Review those
 upstream behaviors before running them. TPM updates remain a deliberate action.
 
-## Optional legacy SDDM theme
+## Optional SDDM + Chili profile
 
 ```bash
 bash setup/install.sh --dry-run --sddm-theme
 bash setup/install.sh --sddm-theme
 ```
 
-This profile requires an **already installed Qt5 `sddm-greeter`**. Chili imports
-Qt Quick Controls 1 and QtGraphicalEffects, so Qt6 is refused before package
-transactions. The profile installs Qt5 QML/SVG/virtual-keyboard dependencies,
-then backs up changed theme/config files to `/var/backups/chezmoi-sddm/`, merges
+This profile works on a fresh VM: it installs **SDDM**, its Xorg greeter server,
+and Qt6 QML/effects/SVG/virtual-keyboard dependencies. The bundled Chili theme is
+ported to Qt6 Quick Controls; its `QtVersion=6` metadata selects the Qt6 greeter.
+There is no requirement to preinstall a Qt5 greeter or legacy Qt5 packages.
+
+It backs up changed theme/config files to `/var/backups/chezmoi-sddm/`, merges
 the retained assets into `/usr/share/sddm/themes/chili`, and changes only the
 `Current`/`ThemeDir` keys in `/etc/sddm.conf`. Existing extra theme files are
 preserved; symlinked theme trees are refused. Reruns skip matching contents.
-SDDM is **never enabled, restarted, or made the display manager**. Test a greeter
-preview before logging out; restoring the backup requires an administrator.
+The profile **enables SDDM for the next boot**, independently of
+`--enable-services`, and selects `graphical.target` as the boot default. It never
+starts/restarts SDDM during setup or uses `--force`
+to replace another display manager. If GDM/LightDM/etc. already owns
+`display-manager.service`, disable that manager explicitly before rerunning.
+Reboot the VM after applying your dotfiles to exercise the real login flow.
+You can preview the theme first (no authentication or service changes):
+
+```bash
+sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/chili
+```
+
+Restoring the backup requires an administrator. The installer does not change
+existing autologin, display-server, or session settings.
 
 ## Desktop notes
 

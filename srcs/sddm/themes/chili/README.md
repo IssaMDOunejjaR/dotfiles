@@ -1,5 +1,12 @@
 ![Screenshot of the theme](preview.jpg "Preview")
 
+# Local Qt6 port
+
+This checkout ports Chili to Qt6 Quick Controls and Qt5Compat graphical effects.
+Use `bash setup/install.sh --sddm-theme` from the repository root to install
+SDDM, the matching dependencies, and this theme with backups. The upstream
+documentation below describes the original Qt5 theme.
+
 # Chili login theme for SDDM
 
 Chili is hot, just like a real chili! Spice up the login experience for your users, your family and yourself. Chili reduces all the clutter and leaves you with a clean, easy to use, login interface with a modern yet classy touch.

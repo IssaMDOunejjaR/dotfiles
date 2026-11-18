@@ -21,6 +21,32 @@ def load_helper(filename):
 
 
 class SetupTests(unittest.TestCase):
+    @unittest.skipUnless(
+        Path("/usr/lib/qt6/bin/qmltestrunner").exists(),
+        "Qt6 QML test runner is not installed",
+    )
+    def test_chili_qt6_login_and_menus(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            env = dict(
+                os.environ,
+                QT_QPA_PLATFORM="offscreen",
+                QT_QUICK_BACKEND="software",
+                XDG_CACHE_HOME=tmp,
+                QML_DISK_CACHE_PATH=tmp,
+            )
+            result = subprocess.run(
+                [
+                    "/usr/lib/qt6/bin/qmltestrunner",
+                    "-input",
+                    str(ROOT / "setup/tests/qml"),
+                ],
+                env=env,
+                text=True,
+                capture_output=True,
+                timeout=20,
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_editor_minimum_versions(self):
         check = load_helper("check-editor.py").check
         for version, valid in (
