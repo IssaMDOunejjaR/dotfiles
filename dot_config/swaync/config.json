@@ -76,8 +76,8 @@
           "label": "直",
           "type": "toggle",
           "active": true,
-          "command": "sh -c '[[ $SWAYNC_TOGGLE_STATE == true ]] && nmcli radio wifi on || nmcli radio wifi off'",
-          "update-command": "sh -c '[[ $(nmcli radio wifi) == \"enabled\" ]] && echo true || echo false'"
+          "command": "sh -c 'if [ \"$SWAYNC_TOGGLE_STATE\" = true ]; then nmcli radio wifi on; else nmcli radio wifi off; fi'",
+          "update-command": "sh -c 'if [ \"$(nmcli radio wifi)\" = enabled ]; then echo true; else echo false; fi'"
         }
       ]
     }
