@@ -17,7 +17,23 @@ return {
 		"saghen/blink.cmp",
 	},
 	config = function()
-		require("mason-lspconfig").setup({ ensure_installed = {}, automatic_enable = true })
+		local excluded = { "rust_analyzer" } -- provided by the distro, not Mason
+		if not require("utils.toolchain").java_ready() then
+			table.insert(excluded, "jdtls")
+		end
+		require("mason-lspconfig").setup({ ensure_installed = {}, automatic_enable = { exclude = excluded } })
+
+		if vim.fn.executable("rust-analyzer") == 1 and vim.fn.executable("rustc") == 1 then
+			vim.lsp.enable("rust_analyzer")
+		else
+			vim.api.nvim_create_autocmd("FileType", {
+				group = vim.api.nvim_create_augroup("RustToolchainHint", { clear = true }),
+				pattern = "rust",
+				callback = function()
+					vim.notify_once("Rust LSP paused: run setup/install.sh --rust, then restart Neovim.", vim.log.levels.WARN)
+				end,
+			})
+		end
 
 		-- Merge blink.cmp capabilities into every LSP server so completion
 		-- works correctly even in edge cases not covered by automatic_enable.

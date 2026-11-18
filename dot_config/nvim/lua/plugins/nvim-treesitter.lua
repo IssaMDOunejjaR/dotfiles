@@ -1,82 +1,70 @@
 return {
 	"nvim-treesitter/nvim-treesitter",
+	branch = "main",
+	lazy = false, -- the rewritten main branch does not support lazy-loading
 	build = ":TSUpdate",
-	event = { "BufReadPost", "BufNewFile" },
 	config = function()
-		require("nvim-treesitter").setup({
-			-- ✅ List of parsers to install
-			ensure_installed = {
-				"bash",
-				"c",
-				"cpp",
-				"lua",
-				"markdown",
-				"markdown_inline",
-				"vim",
-				"vimdoc",
-				"query", -- Required for treesitter queries
-			},
+		local ts = require("nvim-treesitter")
+		ts.setup({})
+		local pending = {}
+		local available = ts.get_available()
 
-			-- ✅ Modern way to configure modules (NEW API)
-			highlight = {
-				enable = true,
-				additional_vim_regex_highlighting = false,
-				disable = function(lang, buf)
-					-- Optional: Disable for large files
-					local max_filesize = 256 * 1024 -- 256KB
-					local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
-					if ok and stats and stats.size > max_filesize then
-						return true
+		local function start(buf, lang)
+			if not vim.api.nvim_buf_is_valid(buf) or vim.bo[buf].buftype ~= "" then
+				return false
+			end
+			local stats = vim.uv.fs_stat(vim.api.nvim_buf_get_name(buf))
+			if stats and stats.size > 256 * 1024 then
+				return false
+			end
+			if pcall(vim.treesitter.start, buf, lang) then
+				vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+				return true
+			end
+			return false
+		end
+
+		local function install(languages)
+			for _, lang in ipairs(languages) do
+				pending[lang] = true
+			end
+			ts.install(languages):await(function(err, success)
+				vim.schedule(function()
+					for _, lang in ipairs(languages) do
+						pending[lang] = nil
 					end
-				end,
-			},
+					if err or not success then
+						vim.notify("Treesitter: parser installation failed; check :messages and retry :TSInstall.", vim.log.levels.WARN)
+					end
+					-- Activate successful parsers, including buffers opened during installation.
+					for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+						local lang = vim.treesitter.language.get_lang(vim.bo[buf].filetype)
+						if lang and vim.list_contains(languages, lang) then
+							start(buf, lang)
+						end
+					end
+				end)
+			end)
+		end
 
-			indent = {
-				enable = true,
-			},
-
-			-- NOTE: 'incremental_selection' was removed from this block: the
-			-- module no longer exists in the new main-branch API. Treesitter
-			-- selection/jumping is covered by textobjects + flash instead.
-		})
-
-		-- AUTO_INSTALL FEATURE: Install parsers on-demand when opening files
 		vim.api.nvim_create_autocmd("FileType", {
 			group = vim.api.nvim_create_augroup("TreesitterAutoInstall", { clear = true }),
 			callback = function(ev)
 				local lang = vim.treesitter.language.get_lang(ev.match)
-
-				-- Skip if we can't detect language or if treesitter already active
-				if not lang then
+				if not lang or vim.bo[ev.buf].buftype ~= "" then
 					return
 				end
-
-				-- Check if parser is installed
-				local ok, parser = pcall(vim.treesitter.get_parser, ev.buf, lang)
-				if ok and parser then
-					-- Parser exists and working, start highlighting
-					pcall(vim.treesitter.start, ev.buf, lang)
+				local stats = vim.uv.fs_stat(vim.api.nvim_buf_get_name(ev.buf))
+				if stats and stats.size > 256 * 1024 then
 					return
 				end
-
-				-- Parser missing - AUTO INSTALL IT!
-				local ts = require("nvim-treesitter")
-
-				-- Check if this language is available for installation
-				local available = ts.get_available()
-				if not available or not vim.tbl_contains(available, lang) then
-					return -- Language not supported by treesitter
+				if start(ev.buf, lang) or pending[lang] or not vim.list_contains(available, lang) then
+					return
 				end
-
-				-- Install the parser asynchronously (non-blocking)
-				ts.install({ lang })
-
-				vim.notify(
-					string.format("Installing treesitter parser for: %s", lang),
-					vim.log.levels.INFO,
-					{ title = "nvim-treesitter" }
-				)
+				install({ lang })
 			end,
 		})
+		-- Install shared query/injection parsers in addition to on-demand languages.
+		install({ "bash", "c", "cpp", "lua", "markdown", "markdown_inline", "vim", "vimdoc", "query" })
 	end,
 }

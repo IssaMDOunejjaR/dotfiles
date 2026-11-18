@@ -20,6 +20,9 @@ local function ensure_installed(registry, tool_name)
 	end
 
 	if not pkg:is_installed() and not pkg:is_installing() then
+		if not require("utils.toolchain").can_install(tool_name, pkg) then
+			return
+		end
 		vim.notify("Mason: installing " .. tool_name .. "...", vim.log.levels.INFO)
 		pkg:install()
 	end
@@ -158,6 +161,7 @@ local filetype_tools = {
 		"angular-language-server",
 		"vtsls",
 		"eslint-lsp",
+		"eslint_d",
 		"js-debug-adapter",
 	}),
 
@@ -165,6 +169,10 @@ local filetype_tools = {
 	scss = { "css-lsp", "prettierd", "stylelint" },
 
 	json = { "json-lsp", "prettierd", "jsonlint" },
+	jsonc = { "json-lsp", "prettierd" },
+	markdown = { "prettierd" },
+	["markdown.mdx"] = { "prettierd" },
+	svelte = merge(groups.html_base, { "svelte-language-server", "eslint-lsp", "eslint_d" }),
 
 	python = { "basedpyright", "ruff" },
 
@@ -173,8 +181,8 @@ local filetype_tools = {
 	zsh = groups.shell_base,
 
 	go   = { "gopls", "goimports", "gomodifytags", "golangci-lint", "gofumpt", "delve" },
-	rust = { "codelldb" }, -- rust-analyzer is installed via rustup, not Mason
-	templ = { "gopls", "templ", "goimports", "tailwindcss-language-server" },
+	rust = { "codelldb" }, -- rust-analyzer comes from the distro Rust profile, not Mason
+	templ = { "gopls", "templ", "goimports", "tailwindcss-language-server", "rustywind" },
 
 	dockerfile = { "dockerfile-language-server", "hadolint" },
 	["yaml.docker-compose"] = { "docker-compose-language-service", "yamllint", "yamlfmt" },
