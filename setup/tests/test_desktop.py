@@ -107,6 +107,18 @@ elif name == "systemctl":
         state_path.write_text(json.dumps(state))
 elif name == "getent":
     print("tester:x:1000:1000::/home/tester:" + os.environ.get("MOCK_LOGIN_SHELL", "/bin/bash"))
+elif name == "id":
+    if args == ["-un"]:
+        print("tester")
+    elif args == ["-nG", "tester"]:
+        print(" ".join(state.get("groups", ["users", "wheel"])))
+    else:
+        os.execv("/usr/bin/id", ["id", *args])
+elif name == "usermod":
+    if os.environ.get("MOCK_USERMOD_FAIL"):
+        sys.exit(1)
+    state.setdefault("groups", ["users", "wheel"]).append("docker")
+    state_path.write_text(json.dumps(state))
 elif name == "git":
     if "clone" in args:
         if os.environ.get("MOCK_GIT_FAIL") == "1":
@@ -172,6 +184,8 @@ class DesktopTests(unittest.TestCase):
             "git",
             "chsh",
             "getent",
+            "id",
+            "usermod",
             "xdg-user-dirs-update",
             "systemctl",
             "sleep",
@@ -368,12 +382,21 @@ class DesktopTests(unittest.TestCase):
             "xorg-server",
         ):
             self.assertIn(package, result.stdout)
-        for command in ("sudo", "yay", "curl", "fnm", "git", "chsh", "systemctl"):
+        for command in (
+            "sudo",
+            "yay",
+            "curl",
+            "fnm",
+            "git",
+            "chsh",
+            "systemctl",
+            "usermod",
+        ):
             self.assertFalse(self.calls(command), command)
         self.assertFalse((self.path / ".sdkman").exists())
 
     @unittest.skipIf(os.geteuid() == 0, "installer intentionally rejects root")
-    def test_docker_service_is_explicit_and_never_changes_groups(self):
+    def test_docker_service_is_explicit_and_adds_user_to_group(self):
         result = self.run_script(
             "setup/install.sh", "--docker", "--docker", "--enable-services"
         )
@@ -383,6 +406,34 @@ class DesktopTests(unittest.TestCase):
             len([c for c in self.calls("systemctl") if "docker.service" in c]), 2
         )
         self.assertFalse(self.calls("chsh"))
+        self.assertEqual(
+            self.calls("usermod"), [["usermod", "-aG", "docker", "tester"]]
+        )
+
+    @unittest.skipIf(os.geteuid() == 0, "installer intentionally rejects root")
+    def test_docker_membership_is_idempotent_without_service_opt_in(self):
+        for _ in range(2):
+            result = self.run_script("setup/install.sh", "--docker")
+            self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            self.calls("usermod"), [["usermod", "-aG", "docker", "tester"]]
+        )
+        self.assertFalse(self.calls("systemctl"))
+        state = json.loads(self.state.read_text())
+        self.assertEqual(state["groups"], ["users", "wheel", "docker"])
+
+    @unittest.skipIf(os.geteuid() == 0, "installer intentionally rejects root")
+    def test_without_docker_profile_never_changes_groups(self):
+        result = self.run_script("setup/install.sh")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(self.calls("usermod"))
+
+    @unittest.skipIf(os.geteuid() == 0, "installer intentionally rejects root")
+    def test_docker_group_failure_stops_setup(self):
+        result = self.run_script("setup/install.sh", "--docker", MOCK_USERMOD_FAIL="1")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse(self.calls("fnm"))
+        self.assert_refresh_stopped()
 
     @unittest.skipIf(os.geteuid() == 0, "installer intentionally rejects root")
     def test_fnm_runtime_install_and_rerun_skip(self):
@@ -550,7 +601,7 @@ class DesktopTests(unittest.TestCase):
     def isolate_missing_yay(self):
         (self.bin / "yay").unlink()
         # Do not let command -v find a real host yay outside the mocks.
-        for command in ("bash", "python3", "dirname", "mktemp", "rm", "id"):
+        for command in ("bash", "python3", "dirname", "mktemp", "rm"):
             (self.bin / command).symlink_to(shutil.which(command))
         self.env["PATH"] = str(self.bin)
         self.env["TMPDIR"] = str(self.path)

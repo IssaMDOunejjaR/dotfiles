@@ -31,7 +31,7 @@ are not disabled, and unresolvable conflicts still stop the run.
 | Flag | Additional behavior |
 | --- | --- |
 | `--rust` | Distro Rust/Cargo, Rust Analyzer, and standard-library sources; refuses an existing rustup setup instead of replacing it. |
-| `--docker` | Docker and lazydocker; daemon activation requires `--enable-services` too. |
+| `--docker` | Docker and lazydocker; add your user to the `docker` group. Daemon activation requires `--enable-services` too. |
 | `--posting` | Posting and the `fx` JSON pager used by its config. |
 | `--java` | SDKMAN manager only, plus its prerequisites; **no JDK is installed or selected**. |
 | `--sddm-theme` | Install SDDM + Qt6 Chili with backups; enable SDDM for next boot without restarting the current session. |
@@ -85,7 +85,8 @@ apps are not installed. Set `CAMERA_DEVICE` if you use something other than
   enabling/starting services. Log into a normal user session for user services.
 - This does **not** apply dotfiles, replace another display manager, enable Waybar,
   configure fingerprint authentication, install Steam, change network services,
-  or add your user to groups. Login shell/theme changes require their own flags.
+  or add your user to groups except `docker` when `--docker` is selected.
+  Login shell/theme changes require their own flags.
 - `--amd` requires multilib. Without it, GPU drivers remain the OS install's choice.
   Do not use it on an NVIDIA-only machine. Other GPUs need their own driver stack.
 - Network actions now use `nmcli`/`nmtui`, supplied by NetworkManager. No iwd/impala
@@ -93,9 +94,11 @@ apps are not installed. Set `CAMERA_DEVICE` if you use something other than
   controls your network, plan the switch manually; never enable competing daemons.
   `power-profiles-daemon` may conflict with TLP/tuned; resolve conflicts explicitly
   instead of forcing package removals.
-- Docker access through the `docker` group is root-equivalent. Setup never adds
-  group membership; use an explicitly configured context or `sudo docker` until
-  you deliberately choose an access policy. It does not silently configure rootless Docker.
+- Docker access through the `docker` group is **root-equivalent**. Selecting
+  `--docker` explicitly opts into adding the current user to that group; existing
+  memberships are skipped and other groups are preserved. Log out and back in
+  (or reboot the VM) afterward. Setup does not launch a `newgrp` shell or configure
+  rootless Docker. Starting/enabling the daemon still requires `--enable-services`.
 - `setup/install.sh` is the supported installer; obsolete installers and legacy
   Hyprland fragments have been removed.
 

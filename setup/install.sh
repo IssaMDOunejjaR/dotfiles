@@ -20,7 +20,7 @@ Usage: bash setup/install.sh [options]
   --enable-services  Enable Bluetooth/power/audio services, plus Docker with --docker.
   --upgrade          Request a full system upgrade even if no packages are missing.
   --rust             Include distro Rust, Rust Analyzer, and standard-library sources.
-  --docker           Include Docker/lazydocker (no docker group changes).
+  --docker           Include Docker/lazydocker and add your user to the docker group.
   --posting          Include Posting and its fx JSON pager.
   --java             Install SDKMAN only; select/install your JDK manually.
   --sddm-theme       Install SDDM + Qt6 Chili; enable SDDM for the next boot.
@@ -120,6 +120,7 @@ if "$dry_run"; then
   fi
   ((${#missing[@]} == 0)) || echo 'Would install only the missing packages using yay -S --needed --noconfirm (AUR review menus skipped).'
   echo 'Would validate sudo once and keep its timestamp alive until setup exits.'
+  [[ ! -v selected[docker] ]] || echo 'Would add your user to the docker group if needed (root-equivalent access; log out/in afterward).'
   if "$enable_services"; then
     echo 'Would check/enable Bluetooth, power profiles, and user audio services; Docker only with --docker.'
   fi
@@ -184,6 +185,17 @@ fi
 if ((${#missing[@]})); then
   yay -S --needed --noconfirm --answerclean None --answerdiff None --answeredit None \
     --noremovemake --sudo sudo "${missing[@]}"
+fi
+
+if [[ -v selected[docker] ]]; then
+  docker_user=$(id -un)
+  if [[ " $(id -nG "$docker_user") " == *" docker "* ]]; then
+    printf 'User %s is already in the docker group (skip).\n' "$docker_user"
+  else
+    echo 'The docker group grants root-equivalent access.'
+    sudo usermod -aG docker "$docker_user"
+    echo 'Docker group membership added. Log out and back in (or reboot the VM) for it to take effect.'
+  fi
 fi
 
 bash "$script_dir/install-velocitty.sh"
