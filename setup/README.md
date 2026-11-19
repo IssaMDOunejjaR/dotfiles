@@ -181,6 +181,19 @@ Waybar's `waybar-kitty` class is just a retained window-rule identifier and work
 with Velocitty's `--class` option; no Kitty configuration is needed.
 `Super+Shift+B` is still the only Waybar start/stop binding.
 
+`Super+Shift+P` and Waybar's power button use `~/.config/hypr/scripts/logout-menu`.
+It reads the managed wlogout layout, hides sleep actions logind cannot currently
+perform, and uses a private temporary layout with shortcut hints, adaptive margins,
+and a single-monitor menu. A Cancel tile fills a five-button layout because
+wlogout 1.2.2 expects a complete rectangular grid. Concurrent launches are skipped;
+temporary files and the menu lock are released when the menu exits.
+Logout, shutdown, and reboot require a Rofi confirmation with Cancel selected by
+default. Logout terminates only the current login session, never every session
+belonging to the user. If the session cannot be identified, it fails safely.
+Sleep capabilities are rechecked when selected. Lock and suspend retain Hypridle's
+existing lock/readiness coordination; the menu never starts a second lock process.
+Python, Rofi, busctl/loginctl, and wlogout are already covered by the base setup.
+
 Log out and back in after initial setup/environment changes. Hyprland reloads do
 not rerun startup hooks or remove driver variables inherited by existing apps.
 The monitor profile matches the MSI display by description; unknown displays use
@@ -198,6 +211,10 @@ it is a reproducibility lockfile, not a disposable cache.
 
 - Lock/unlock with the password, then test suspend/resume and screen-off/wake.
   Idle and helper scripts use the Lua dispatcher API required by Hyprland 0.57+.
+- Open the logout menu from both entry points. Check shortcut hints, small-screen
+  sizing, and cancellation of logout/shutdown/reboot before testing real actions.
+  Verify unsupported Hibernate is hidden, and any separate SSH/TTY session survives
+  a confirmed desktop logout. Power actions are never executed by automated tests.
 - Play a fullscreen movie/YouTube video longer than five minutes: it should not
   lock. Apps must advertise video content or a native idle inhibitor; add a narrow
   app-specific fullscreen rule if they do neither. Do not blanket-inhibit browsers

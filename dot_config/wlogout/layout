@@ -1,41 +1,41 @@
 {
   "label" : "lock",
-  "action" : "loginctl lock-session",
+  "action" : "~/.config/hypr/scripts/logout-menu --action lock",
   "text" : "Lock",
   "keybind" : "l"
 }
 
 {
   "label" : "hibernate",
-  "action" : "systemctl hibernate",
+  "action" : "~/.config/hypr/scripts/logout-menu --action hibernate",
   "text" : "Hibernate",
   "keybind" : "h"
 }
 
 {
   "label" : "logout",
-  "action" : "loginctl terminate-user $USER",
+  "action" : "~/.config/hypr/scripts/logout-menu --action logout",
   "text" : "Logout",
   "keybind" : "e"
 }
 
 {
   "label" : "shutdown",
-  "action" : "systemctl poweroff",
+  "action" : "~/.config/hypr/scripts/logout-menu --action shutdown",
   "text" : "Shutdown",
   "keybind" : "s"
 }
 
 {
   "label" : "suspend",
-  "action" : "systemctl suspend",
+  "action" : "~/.config/hypr/scripts/logout-menu --action suspend",
   "text" : "Suspend",
   "keybind" : "u"
 }
 
 {
   "label" : "reboot",
-  "action" : "systemctl reboot",
+  "action" : "~/.config/hypr/scripts/logout-menu --action reboot",
   "text" : "Reboot",
   "keybind" : "r"
 }

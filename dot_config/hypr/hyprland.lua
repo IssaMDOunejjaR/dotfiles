@@ -468,7 +468,7 @@ hl.bind(mainMod .. "D", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. "SHIFT + D", hl.dsp.exec_cmd(run))
 hl.bind(mainMod .. "N", hl.dsp.exec_cmd(notifications))
 hl.bind(mainMod .. "P", hl.dsp.window.pseudo())
-hl.bind(mainMod .. "SHIFT + P", hl.dsp.exec_cmd("wlogout"))
+hl.bind(mainMod .. "SHIFT + P", hl.dsp.exec_cmd("~/.config/hypr/scripts/logout-menu"))
 hl.bind(mainMod .. "SHIFT + W", hl.dsp.exec_cmd("hyprlock"))
 
 -- Focus movement (Vim keys)

@@ -114,7 +114,7 @@
   },
   "custom/power": {
     "format": "⏻",
-    "on-click": "wlogout",
+    "on-click": "~/.config/hypr/scripts/logout-menu",
     "tooltip-format": "Power",
   },
   "custom/notification": {

@@ -1,0 +1,158 @@
+#!/usr/bin/env python3
+"""Launch wlogout safely without changing other login sessions."""
+
+import argparse
+import fcntl
+import json
+import math
+import os
+from pathlib import Path
+import shlex
+import subprocess
+import sys
+import tempfile
+
+
+SLEEP = {"suspend": "CanSuspend", "hibernate": "CanHibernate"}
+CONFIRM = {"logout": "Log out", "shutdown": "Shut down", "reboot": "Reboot"}
+ACTIONS = {"lock", "cancel", *SLEEP, *CONFIRM}
+
+
+def run(args, *, input=None, timeout=5):
+    return subprocess.run(
+        args, input=input, text=True, capture_output=True, check=True, timeout=timeout
+    ).stdout.strip()
+
+
+def available(action):
+    try:
+        result = run([
+            "busctl", "call", "org.freedesktop.login1", "/org/freedesktop/login1",
+            "org.freedesktop.login1.Manager", SLEEP[action],
+        ])
+        return shlex.split(result) in (["s", "yes"], ["s", "challenge"])
+    except (OSError, subprocess.SubprocessError, ValueError):
+        return False
+
+
+def confirm(action):
+    try:
+        return run(
+            ["rofi", "-dmenu", "-i", "-no-custom", "-format", "i", "-selected-row", "0",
+             "-p", "Confirm", "-mesg", f"{CONFIRM[action]}? Unsaved work may be lost."],
+            input=f"Cancel\n{CONFIRM[action]}\n", timeout=None,
+        ) == "1"
+    except subprocess.CalledProcessError:
+        return False
+
+
+def current_session():
+    session = os.environ.get("XDG_SESSION_ID") or run(
+        ["loginctl", "show-session", "self", "--property=Id", "--value"]
+    )
+    if not session or "\n" in session:
+        raise RuntimeError("Cannot identify the current login session; refusing a session action.")
+    return session
+
+
+def action(name):
+    if name == "cancel":
+        return
+    if name in SLEEP and not available(name):
+        raise RuntimeError(f"{name.capitalize()} is not currently available.")
+    if name in CONFIRM and not confirm(name):
+        return
+    if name == "logout":
+        run(["loginctl", "terminate-session", current_session()], timeout=None)
+    elif name == "lock":
+        # Hypridle owns lock startup/readiness, including the before-sleep path.
+        run(["loginctl", "lock-session", current_session()], timeout=None)
+    else:
+        command = {"shutdown": "poweroff", "reboot": "reboot", "suspend": "suspend", "hibernate": "hibernate"}[name]
+        run(["systemctl", command], timeout=None)
+
+
+def read_layout(path):
+    text = path.read_text()
+    decoder = json.JSONDecoder()
+    buttons = []
+    while text.strip():
+        button, end = decoder.raw_decode(text.lstrip())
+        if button.get("label") not in ACTIONS:
+            raise RuntimeError("Unknown action in wlogout layout.")
+        buttons.append(button)
+        text = text.lstrip()[end:]
+    if not buttons or len({b["label"] for b in buttons}) != len(buttons):
+        raise RuntimeError("Empty or duplicate wlogout buttons.")
+    return buttons
+
+
+def prepare_layout(buttons):
+    buttons = [dict(b) for b in buttons if b["label"] not in SLEEP or available(b["label"])]
+    if not buttons:
+        raise RuntimeError("No available actions in the wlogout layout.")
+    # wlogout 1.2.2 fills a rectangular grid, including its final row.
+    if len(buttons) == 5:
+        buttons.append({"label": "cancel", "text": "Cancel", "keybind": "c"})
+    helper = f"{shlex.quote(sys.executable)} {shlex.quote(str(Path(__file__).resolve()))}"
+    # Upstream's JSON tokenizer does not unescape action strings.
+    if '"' in helper or "\\" in helper:
+        raise RuntimeError("The logout helper path cannot contain double quotes or backslashes.")
+    for button in buttons:
+        button["action"] = f"{helper} --action {button['label']}"
+    columns = next(n for n in (3, 2, 1) if len(buttons) % n == 0)
+    return buttons, columns
+
+
+def margin():
+    try:
+        monitors = json.loads(run(["hyprctl", "-j", "monitors"]))
+        shortest = min(min(m["width"], m["height"]) / float(m.get("scale", 1)) for m in monitors)
+        if not math.isfinite(shortest) or shortest <= 0:
+            raise ValueError("Invalid monitor size")
+        return max(16, min(80, int(shortest * 0.08)))
+    except (OSError, subprocess.SubprocessError, ValueError, KeyError, TypeError, ZeroDivisionError):
+        return 40
+
+
+def launch():
+    runtime = os.environ.get("XDG_RUNTIME_DIR")
+    if not runtime:
+        raise RuntimeError("XDG_RUNTIME_DIR is required for the logout menu.")
+    # Keep the inode in place so concurrent launches always lock the same file.
+    with open(Path(runtime) / "hyprland-logout-menu.lock", "a") as lock:
+        os.chmod(lock.name, 0o600)
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return
+        config = Path(os.environ.get("XDG_CONFIG_HOME", str(Path.home() / ".config"))) / "wlogout"
+        buttons, columns = prepare_layout(read_layout(config / "layout"))
+        with tempfile.TemporaryDirectory(prefix="logout-menu-", dir=runtime) as tmp:
+            layout = Path(tmp) / "layout"
+            layout.write_text("\n".join(json.dumps(b) for b in buttons) + "\n")
+            run(["wlogout", "--layout", str(layout), "--css", str(config / "style.css"),
+                 "--buttons-per-row", str(columns), "--margin", str(margin()),
+                 "--row-spacing", "12", "--column-spacing", "12", "--show-binds", "--no-span"],
+                timeout=None)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--action", choices=sorted(ACTIONS))
+    args = parser.parse_args()
+    try:
+        action(args.action) if args.action else launch()
+    except (OSError, subprocess.SubprocessError, ValueError, RuntimeError) as error:
+        message = str(error)
+        print(f"Logout menu: {message}", file=sys.stderr)
+        try:
+            run(["notify-send", "Logout menu", message])
+        except (OSError, subprocess.SubprocessError):
+            pass
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
