@@ -23,6 +23,9 @@ window#waybar {
 
 #workspaces button {
   all: initial;
+  color: white;
+  font-family: "JetBrainsMono Nerd Font";
+  font-size: 15px;
   padding: 0 6px;
   margin: 0 1.5px;
   min-width: 9px;
@@ -33,13 +36,19 @@ window#waybar {
 }
 
 #cpu,
+#backlight,
+#power-profiles-daemon,
 #battery,
+#bluetooth,
+#network,
 #pulseaudio,
 #custom-menu,
 #custom-screenrecording-indicator,
 #custom-update,
 #custom-power,
 #custom-notification {
+  font-family: "JetBrainsMono Nerd Font";
+  font-size: 15px;
   min-width: 12px;
   margin: 0 6px;
 }
@@ -72,7 +81,7 @@ tooltip {
 }
 
 #custom-update {
-  font-size: 10px;
+  font-size: 15px;
 }
 
 #clock {
@@ -86,7 +95,7 @@ tooltip {
 #custom-screenrecording-indicator {
   min-width: 12px;
   margin-left: 8.75px;
-  font-size: 10px;
+  font-size: 15px;
 }
 
 #custom-screenrecording-indicator.active {
